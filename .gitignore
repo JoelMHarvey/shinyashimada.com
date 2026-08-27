@@ -2,3 +2,6 @@ node_modules/
 .netlify/
 .env
 .DS_Store
+
+# Home relay secrets — camera credentials and a tunnel token.
+homelab/.env

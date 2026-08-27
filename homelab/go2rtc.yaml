@@ -1,0 +1,23 @@
+# go2rtc — pulls RTSP from the Tapo camera and republishes it in formats a
+# browser can actually play. Values come from .env.
+#
+# stream1 is 1080p, stream2 is 360p. The balcony is a fixed shot of some
+# pots, so stream2 is usually the better trade: far less upstream bandwidth
+# from a home connection, and it still shows whether anything is wilting.
+
+streams:
+  balcony:
+    - rtsp://${CAMERA_USER}:${CAMERA_PASS}@${CAMERA_IP}:554/stream2
+  balcony_hd:
+    - rtsp://${CAMERA_USER}:${CAMERA_PASS}@${CAMERA_IP}:554/stream1
+
+api:
+  listen: ":1984"
+
+# Bound to localhost only: nothing here should be reachable from the LAN
+# directly. The Cloudflare tunnel is the single way in.
+rtsp:
+  listen: "127.0.0.1:8554"
+
+log:
+  level: info

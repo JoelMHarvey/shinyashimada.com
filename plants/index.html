@@ -55,6 +55,22 @@
       </div>
     </div>
 
+    <section class="cam hidden" id="camera" data-state="idle">
+      <div class="cam__head">
+        <span class="cam__dot"></span>
+        <span class="cam__title" id="cam-title"></span>
+        <span class="cam__spacer"></span>
+        <button type="button" class="btn btn--ghost btn--sm" id="cam-stop" hidden data-i18n="cam.stop"></button>
+      </div>
+      <div class="cam__stage" id="cam-stage">
+        <div class="cam__placeholder" id="cam-placeholder">
+          <div class="cam__icon">📷</div>
+          <p id="cam-message"></p>
+          <button type="button" class="btn btn--sm" id="cam-start" data-i18n="cam.watch"></button>
+        </div>
+      </div>
+    </section>
+
     <div class="advisory-strip" id="advisories"></div>
 
     <div class="grid grid--4 mb-3" id="stats"></div>
@@ -216,5 +232,6 @@
 <script src="/assets/js/care.js"></script>
 <script src="/assets/js/plants.js"></script>
 <script src="/assets/js/plants-trello.js"></script>
+<script src="/assets/js/plants-camera.js"></script>
 </body>
 </html>

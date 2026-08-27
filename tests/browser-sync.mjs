@@ -20,6 +20,9 @@ async function page({ authRequired, rejectWrites }) {
   const posts = [];
   await p.route('**/api/weather*', r => r.fulfill({ status: 200, contentType: 'application/json',
     body: JSON.stringify({ ok: true, current: { temperature_2m: 20, weather_code: 0 }, daily: {}, advisories: [] }) }));
+  // Netlify-only endpoints. Unrouted, the dev server leaves them pending and
+  // `networkidle` never settles.
+  await p.route('**/api/camera*', r => r.fulfill({ status: 503, contentType: 'application/json', body: '{"code":"no-camera"}' }));
   await p.route('**/api/store*', route => {
     const req = route.request();
     const url = new URL(req.url());

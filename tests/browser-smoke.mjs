@@ -12,8 +12,11 @@ for (const path of pages) {
   page.on('pageerror', e => errors.push('pageerror: ' + e.message));
   // Google Fonts is unreachable from this sandbox; the pages are designed to
   // fall back to system fonts, so that failure is expected here.
+  // Optional endpoints answer 503 when unconfigured, and the pages are built
+  // to handle that; the browser still logs a console error for the response.
   const ignorable = t => /fonts\.(googleapis|gstatic)\.com/.test(t) ||
-                         /ERR_CONNECTION_RESET|ERR_NAME_NOT_RESOLVED|ERR_BLOCKED/.test(t);
+                         /ERR_CONNECTION_RESET|ERR_NAME_NOT_RESOLVED|ERR_BLOCKED/.test(t) ||
+                         /status of (401|503)/.test(t);
   page.on('console', m => { if (m.type() === 'error' && !ignorable(m.text())) errors.push('console: ' + m.text()); });
   page.on('requestfailed', r => { if (!ignorable(r.url())) errors.push('request failed: ' + r.url()); });
   // The API routes only exist on Netlify; stub them so the page logic still runs.
@@ -35,6 +38,16 @@ for (const path of pages) {
     body: JSON.stringify({ ok: true, lang: 'en', sources: ['NHK World-Japan'], fetchedAt: new Date().toISOString(),
       items: [{ title: 'Test headline about Tokyo', link: 'https://example.com/1', summary: 'A summary.', publishedAt: new Date().toISOString(), source: 'NHK World-Japan' },
               { title: 'Second headline', link: 'https://example.com/2', summary: '', publishedAt: new Date(Date.now()-3600e3).toISOString(), source: 'NHK World-Japan' }] })
+  }));
+  // Endpoints that only exist on Netlify. Unrouted, the dev server never
+  // answers them and `networkidle` never settles.
+  await page.route('**/api/camera*', r => r.fulfill({
+    status: 503, contentType: 'application/json',
+    body: JSON.stringify({ error: 'not configured', code: 'no-camera' })
+  }));
+  await page.route('**/api/trello*', r => r.fulfill({
+    status: 503, contentType: 'application/json',
+    body: JSON.stringify({ error: 'not configured', code: 'passcode-required' })
   }));
   await page.route('**/api/store*', r => r.fulfill({
     status: 200, contentType: 'application/json',

@@ -1,0 +1,27 @@
+# Runs on the machine that shares a network with the camera.
+#
+#   cp .env.example .env   # fill it in
+#   docker compose up -d
+#
+# No router ports are opened. cloudflared makes an outbound connection and
+# Cloudflare routes your hostname back down it.
+
+services:
+  go2rtc:
+    image: alexxit/go2rtc:latest
+    container_name: balcony-go2rtc
+    restart: unless-stopped
+    network_mode: host          # simplest path to the camera on the LAN
+    env_file: .env
+    volumes:
+      - ./go2rtc.yaml:/config/go2rtc.yaml:ro
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: balcony-tunnel
+    restart: unless-stopped
+    network_mode: host
+    env_file: .env
+    command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+    depends_on:
+      - go2rtc

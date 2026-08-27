@@ -58,6 +58,7 @@ device-only storage.
 | `DATABASE_URL` | Plant + tasting sync | Postgres connection string. A free Neon or Supabase database is plenty. The table is created on first use. |
 | `SITE_PASSCODE` | Protecting the data | A shared passphrase. Required for **all writes**, and for **reading** anything except croissant tastings — so the plant inventory is private while the croissant leaderboard is public. Leave it unset and the store is wide open; set it before putting anything real in. |
 | `TRELLO_KEY`, `TRELLO_TOKEN` | Trello sync (optional) | Turns overdue balcony jobs into Trello cards. See below. |
+| `CAMERA_STREAM_URL`, `CAMERA_LABEL`, `CAMERA_MODE` | Live balcony camera (optional) | The relay's public URL. Served only to passcode holders — see `homelab/`. |
 
 Neither is required for the site to deploy. Without `DATABASE_URL` the store
 returns `503 no-database` and the plant page quietly runs device-only.
@@ -107,6 +108,33 @@ waiting before anyone goes out to the balcony. It does nothing at all until the
 sync is switched on and a list chosen, and it is idempotent, so a repeated run
 costs nothing.
 
+## Live balcony camera (optional)
+
+A Tapo camera on the home network can appear at the top of the balcony page.
+It needs a small always-on relay at home, because a camera's LAN address is
+unreachable from the internet and browsers do not play RTSP — two separate
+blockers, and fixing one does not fix the other. `homelab/` has the compose
+file and the full setup.
+
+The site side is one environment variable, `CAMERA_STREAM_URL`, handed out
+only to callers holding the passcode. `/api/camera` refuses to run at all
+without `SITE_PASSCODE`, for the same reason `/api/trello` does: it returns a
+route into a home network.
+
+Two deliberate behaviours:
+
+- **The stream does not start on its own.** It waits for a click, and stops
+  when the tab is hidden. Auto-playing a live feed spends mobile data and
+  holds the home tunnel open for someone who opened the page to check
+  watering.
+- **The card hides itself entirely** when no camera is configured or the
+  device is not unlocked, rather than showing an error box on every visit.
+
+`homelab/README.md` is honest about the limit: gating the URL narrows who
+learns it, but anyone who does learn it can open the stream directly. That is
+a reasonable trade for a fixed shot of some pots and would not be for a camera
+indoors.
+
 ## Editing the content
 
 The three data files are meant to be edited directly — no code changes needed:
@@ -135,7 +163,7 @@ so nothing queued is ever lost. `tests/browser-sync.mjs` covers both setups.
 ## Tests
 
 ```bash
-npm test              # pure logic: care scheduling, SRS, RSS parsing, Trello sync (125 assertions)
+npm test              # pure logic: care scheduling, SRS, RSS parsing, Trello sync, camera (140 assertions)
 npm run serve &       # browser tests need the site served
 npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the three app flows
 ```

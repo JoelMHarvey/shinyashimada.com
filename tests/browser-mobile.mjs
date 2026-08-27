@@ -15,6 +15,9 @@ for (const path of pages) {
   await page.route('**/api/news*', r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,lang:'en',sources:['NHK'],
     fetchedAt:new Date().toISOString(),items:[{title:'A fairly long Tokyo headline that should wrap rather than overflow the viewport',link:'https://e.com',summary:'Summary text.',publishedAt:new Date().toISOString(),source:'NHK'}]})}));
   await page.route('**/api/store*', r=>r.fulfill({status:200,contentType:'application/json',body:'{"ok":true,"database":false,"authRequired":false,"records":[]}'}));
+  // Netlify-only endpoints; unrouted they never answer on the dev server.
+  await page.route('**/api/camera*', r=>r.fulfill({status:503,contentType:'application/json',body:'{"code":"no-camera"}'}));
+  await page.route('**/api/trello*', r=>r.fulfill({status:503,contentType:'application/json',body:'{"code":"passcode-required"}'}));
   await page.goto('http://127.0.0.1:8899'+path,{waitUntil:'networkidle'});
   await page.waitForTimeout(900);
   const r = await page.evaluate(()=>{

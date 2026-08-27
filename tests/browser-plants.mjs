@@ -4,11 +4,16 @@ const ctx = await browser.newContext();
 const page = await ctx.newPage();
 const errs = [];
 page.on('pageerror', e => errs.push(e.message));
-page.on('console', m => { if (m.type()==='error' && !/fonts\.|ERR_CONNECTION_RESET/.test(m.text())) errs.push(m.text()); });
+// Optional endpoints answer 503 when unconfigured and the page handles it;
+// the browser still logs a console error for the response itself.
+page.on('console', m => { if (m.type()==='error' && !/fonts\.|ERR_CONNECTION_RESET|status of (401|503)/.test(m.text())) errs.push(m.text()); });
 
 // No backend configured -> app should open directly in local mode.
 await page.route('**/api/store*', r => r.fulfill({ status:200, contentType:'application/json',
   body: JSON.stringify({ ok:true, database:false, authRequired:false }) }));
+  // Netlify-only endpoints. Unrouted, the dev server leaves them pending and
+  // `networkidle` never settles.
+  await page.route('**/api/camera*', r => r.fulfill({ status: 503, contentType: 'application/json', body: '{"code":"no-camera"}' }));
 await page.route('**/api/weather*', r => r.fulfill({ status:200, contentType:'application/json',
   body: JSON.stringify({ ok:true, current:{temperature_2m:33,weather_code:0}, daily:{}, advisories:[{key:'heat',severity:'high',value:35}] }) }));
 
