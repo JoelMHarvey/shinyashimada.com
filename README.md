@@ -22,7 +22,6 @@ Everything is in **English, 日本語 and Español**, switchable from the header
 No build step. Any static server works for the pages:
 
 ```bash
-cd shinyashimada.com
 npm run serve          # http://127.0.0.1:8888
 ```
 
@@ -40,11 +39,11 @@ device-only storage.
 
 ## Deploying to Netlify
 
-1. **Connect the repository** and set **Base directory** to `shinyashimada.com`.
-   `netlify.toml` supplies the rest (publish `.`, functions in
-   `netlify/functions`, `npm install --omit=dev`). It also sets a build
-   `ignore` rule, so pushes that touch only the other projects in this
-   workspace do not trigger a rebuild of the site.
+1. **Connect this repository.** Leave **Base directory**, **Build command**,
+   **Publish directory** and **Functions directory** empty in the Netlify UI —
+   `netlify.toml` supplies all of them (publish `.`, functions in
+   `netlify/functions`, `npm install --omit=dev`). Values typed into the UI
+   override the file, which gets confusing later.
 2. **Set the environment variables** below.
 3. **Point the domain.** In Netlify, add `shinyashimada.com` as a custom domain,
    then at your registrar either delegate to Netlify DNS (change the
