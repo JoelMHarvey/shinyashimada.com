@@ -7,6 +7,11 @@
   publish   = "."
   functions = "netlify/functions"
   command   = "npm install --omit=dev --no-audit --no-fund"
+  # This repo holds many unrelated projects, so skip the build when a push
+  # touched nothing inside this directory. Netlify reads the exit code:
+  # 0 = skip, non-zero = build. On the first build CACHED_COMMIT_REF is
+  # unset, git errors, and the build runs — which is the safe direction.
+  ignore    = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- ."
 
 [functions]
   node_bundler = "esbuild"
