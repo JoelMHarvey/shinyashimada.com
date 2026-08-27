@@ -172,6 +172,15 @@ npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the thr
 (`npm install`) and a server on port 8899 — start one with
 `npx http-server -p 8899 -c-1 .`.
 
+`tests/lockfile.test.mjs` guards the lockfile itself. It exists because a
+Playwright symlink into `node_modules`, added locally so the browser tests
+could resolve it, was swept up by `npm install` and recorded as a linked
+package pointing at an absolute path on that machine. It installed cleanly
+there — the path existed — and broke the deploy where it did not. If you ever
+link a package into `node_modules` by hand, regenerate the lockfile with
+`npm install --package-lock-only` from a clean `node_modules`, and let that
+test tell you whether it is safe to commit.
+
 ## Things worth knowing
 
 - **The bakery shortlist is a starting point, not a verified guide.** It lists
