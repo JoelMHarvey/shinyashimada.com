@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" data-title-key="it.title">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Italian Game — Shinya Shimada</title>
+<meta name="description" content="A spaced-repetition Italian game playable from English, Japanese or Spanish: four modes, 128 A1 phrases, and it remembers what you keep forgetting.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/italian.css">
+<script>(function(){try{var t=localStorage.getItem('ss.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
+<header data-shell="header"></header>
+
+<main id="main" class="wrap">
+  <div class="game-shell">
+
+    <!-- Home ------------------------------------------------------------->
+    <section id="lobby">
+      <div class="page-head">
+        <p class="eyebrow" data-i18n="it.eyebrow"></p>
+        <h1 data-i18n="it.heading"></h1>
+        <p class="lede" data-i18n="it.lede"></p>
+      </div>
+
+      <div class="game-stats mb-3" id="stats"></div>
+
+      <div class="card card--pad mb-2">
+        <h3 style="font-size:1rem" data-i18n="it.from.title"></h3>
+        <p class="tiny muted mb-1" data-i18n="it.from.hint"></p>
+        <div class="segmented" id="source-lang"></div>
+      </div>
+
+      <div class="card card--pad mb-2">
+        <div class="toolbar">
+          <h3 class="mb-0" style="font-size:1rem" data-i18n="it.topics.title"></h3>
+          <div class="toolbar__spacer"></div>
+          <button class="btn btn--ghost btn--sm" id="topics-all" data-i18n="it.topics.all"></button>
+        </div>
+        <div class="topic-grid" id="topics"></div>
+      </div>
+
+      <button class="btn btn--block" id="start" style="font-size:1rem;padding:.85rem"></button>
+      <p class="tiny muted center mt-1" id="start-note"></p>
+    </section>
+
+    <!-- Playing ---------------------------------------------------------->
+    <section id="play" class="hidden">
+      <div class="progress-line">
+        <button class="icon-button" id="quit" data-i18n-attr="aria-label:it.quit">×</button>
+        <span class="bar"><i id="progress-fill" style="width:0%"></i></span>
+        <span id="progress-text"></span>
+      </div>
+      <div class="q-card" id="question"></div>
+      <div id="answer-area"></div>
+      <div id="feedback-area"></div>
+    </section>
+
+    <!-- Summary ---------------------------------------------------------->
+    <section id="done" class="hidden">
+      <div class="card summary">
+        <p class="q-kicker" data-i18n="it.done.kicker"></p>
+        <p class="summary__score" id="summary-score"></p>
+        <p class="muted" id="summary-line"></p>
+        <p class="summary__xp" id="summary-xp"></p>
+        <ul class="summary__list" id="summary-list" style="list-style:none;padding:0"></ul>
+        <div class="flex gap-1 mt-3" style="justify-content:center">
+          <button class="btn" id="again" data-i18n="it.done.again"></button>
+          <button class="btn btn--ghost" id="back-lobby" data-i18n="it.done.back"></button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer data-shell="footer"></footer>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="/assets/js/srs.js"></script>
+<script src="/assets/js/italian.js"></script>
+</body>
+</html>

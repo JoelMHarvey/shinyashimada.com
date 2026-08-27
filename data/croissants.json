@@ -1,0 +1,106 @@
+{
+  "_readme": "A shortlist to taste, not a ranking. Every score on the site comes from a tasting you record yourself — nothing here is pre-rated. The bakery list is a starting point drawn from Tokyo bakeries known for viennoiserie; check opening days and whether pain au chocolat is actually on the counter before travelling, and edit this file freely.",
+  "criteria": [
+    {
+      "id": "lamination", "weight": 1.2,
+      "name": { "en": "Lamination", "ja": "層", "es": "Laminado" },
+      "hint": {
+        "en": "Distinct, open layers — honeycomb inside, not bread.",
+        "ja": "層がはっきり分かれ、断面がハニカム状か。",
+        "es": "Capas abiertas y definidas, panal por dentro, no pan."
+      }
+    },
+    {
+      "id": "chocolate", "weight": 1.2,
+      "name": { "en": "Chocolate", "ja": "チョコレート", "es": "Chocolate" },
+      "hint": {
+        "en": "Quality of the batons and whether there is enough to reach both ends.",
+        "ja": "チョコの質と量。端まで届いているか。",
+        "es": "Calidad de las barras y si llegan a ambos extremos."
+      }
+    },
+    {
+      "id": "butter", "weight": 1.1,
+      "name": { "en": "Butter", "ja": "バター", "es": "Mantequilla" },
+      "hint": {
+        "en": "Depth of butter flavour without greasiness.",
+        "ja": "バターの風味の深さ。脂っぽくないか。",
+        "es": "Profundidad del sabor a mantequilla sin resultar grasa."
+      }
+    },
+    {
+      "id": "shatter", "weight": 1.0,
+      "name": { "en": "Shatter", "ja": "サクサク感", "es": "Crujido" },
+      "hint": {
+        "en": "How the crust breaks. Flakes on the plate are a good sign.",
+        "ja": "外側の割れ方。皿に薄片が落ちるほどよい。",
+        "es": "Cómo se rompe la corteza. Escamas en el plato es buena señal."
+      }
+    },
+    {
+      "id": "crumb", "weight": 1.0,
+      "name": { "en": "Crumb", "ja": "中の食感", "es": "Miga" },
+      "hint": {
+        "en": "Interior: custardy and stretchy, never doughy or dry.",
+        "ja": "中身がしっとり伸びやかか。生っぽさや乾きがないか。",
+        "es": "Interior tierno y elástico, nunca crudo ni seco."
+      }
+    },
+    {
+      "id": "value", "weight": 0.8,
+      "name": { "en": "Value", "ja": "コスパ", "es": "Relación calidad-precio" },
+      "hint": {
+        "en": "Worth the price and the train ride?",
+        "ja": "値段と、そこまで行く手間に見合うか。",
+        "es": "¿Compensa el precio y el viaje?"
+      }
+    }
+  ],
+  "bakeries": [
+    { "id": "gontran-cherrier", "name": "Gontran Cherrier",
+      "area": { "en": "Shibuya", "ja": "渋谷", "es": "Shibuya" },
+      "note": { "en": "French baker’s Tokyo outpost; viennoiserie is the draw.", "ja": "フランス人ブーランジェの東京店。ヴィエノワズリーが看板。", "es": "Sucursal en Tokio de un panadero francés; la viennoiserie es el reclamo." } },
+    { "id": "viron", "name": "VIRON",
+      "area": { "en": "Shibuya / Marunouchi", "ja": "渋谷・丸の内", "es": "Shibuya / Marunouchi" },
+      "note": { "en": "Uses French Retrodor flour; long-standing benchmark.", "ja": "フランス産レトロドール粉。定番のベンチマーク。", "es": "Usa harina francesa Retrodor; una referencia de siempre." } },
+    { "id": "maison-landemaine", "name": "Maison Landemaine",
+      "area": { "en": "Azabu-Juban / Takanawa", "ja": "麻布十番・高輪", "es": "Azabu-Juban / Takanawa" },
+      "note": { "en": "Paris bakery’s Tokyo branch.", "ja": "パリの人気店の東京支店。", "es": "Filial en Tokio de una panadería parisina." } },
+    { "id": "comme-n", "name": "Comme’N TOKYO",
+      "area": { "en": "Todoroki", "ja": "等々力", "es": "Todoroki" },
+      "note": { "en": "Bakery World Cup winner; expect a queue.", "ja": "ベーカリーW杯優勝店。行列必至。", "es": "Ganador de la Copa del Mundo de Panadería; habrá cola." } },
+    { "id": "bread-espresso", "name": "Bread & Espresso &",
+      "area": { "en": "Omotesando", "ja": "表参道", "es": "Omotesando" },
+      "note": { "en": "Famous for its “Mu” loaf, but the pastries hold up.", "ja": "「ムー」で有名だが、ペストリーも実力派。", "es": "Famosa por su pan “Mu”, pero la bollería está a la altura." } },
+    { "id": "boulangerie-sudo", "name": "Boulangerie Sudo",
+      "area": { "en": "Yoyogi-Uehara", "ja": "代々木上原", "es": "Yoyogi-Uehara" },
+      "note": { "en": "Small, serious, sells out early.", "ja": "小さな実力店。早い時間に売り切れる。", "es": "Pequeña, seria, se agota pronto." } },
+    { "id": "katane", "name": "Katane Bakery",
+      "area": { "en": "Yoyogi-Uehara", "ja": "代々木上原", "es": "Yoyogi-Uehara" },
+      "note": { "en": "Neighbourhood institution; wide counter.", "ja": "地元の名店。品ぞろえが広い。", "es": "Institución del barrio; mostrador amplio." } },
+    { "id": "365nichi", "name": "365日",
+      "area": { "en": "Yoyogi-Koen", "ja": "代々木公園", "es": "Yoyogi-Koen" },
+      "note": { "en": "Ingredient-led baking, playful counter.", "ja": "素材にこだわる人気店。", "es": "Panadería centrada en el producto." } },
+    { "id": "signifiant", "name": "Signifiant Signifié",
+      "area": { "en": "Setagaya", "ja": "世田谷", "es": "Setagaya" },
+      "note": { "en": "Long-fermentation specialist.", "ja": "長時間発酵で知られる。", "es": "Especialista en fermentación larga." } },
+    { "id": "beaver-bread", "name": "BEAVER BREAD",
+      "area": { "en": "Higashi-Nihonbashi", "ja": "東日本橋", "es": "Higashi-Nihonbashi" },
+      "note": { "en": "Modern, well-reviewed, east side.", "ja": "東側エリアの評価の高いモダンな店。", "es": "Moderna y bien valorada, en el este." } },
+    { "id": "bricolage", "name": "Bricolage bread & co.",
+      "area": { "en": "Roppongi", "ja": "六本木", "es": "Roppongi" },
+      "note": { "en": "Bakery-café; easy to sit down with one.", "ja": "ベーカリーカフェ。座って食べられる。", "es": "Panadería-café; fácil sentarse a comerlo." } },
+    { "id": "truffle-bakery", "name": "Truffle BAKERY",
+      "area": { "en": "Monzen-Nakacho & others", "ja": "門前仲町ほか", "es": "Monzen-Nakacho y otras" },
+      "note": { "en": "Several branches; useful as a control sample.", "ja": "複数店舗。比較の基準として便利。", "es": "Varias sucursales; útil como muestra de control." } },
+    { "id": "dominique-ansel", "name": "Dominique Ansel Bakery",
+      "area": { "en": "Omotesando", "ja": "表参道", "es": "Omotesando" },
+      "note": { "en": "Pastry-forward; the benchmark for showmanship.", "ja": "菓子寄り。話題性のベンチマーク。", "es": "Muy pastelera; referencia en espectáculo." } },
+    { "id": "blondir", "name": "Blondir",
+      "area": { "en": "Kami-Itabashi", "ja": "上板橋", "es": "Kami-Itabashi" },
+      "note": { "en": "Worth the trip north if the day is free.", "ja": "時間があれば北へ行く価値あり。", "es": "Merece el viaje al norte si hay tiempo." } },
+    { "id": "tolo-pan", "name": "Tolo Pan Tokyo",
+      "area": { "en": "Ikejiri-Ohashi", "ja": "池尻大橋", "es": "Ikejiri-Ohashi" },
+      "note": { "en": "Small shop, strong viennoiserie reputation.", "ja": "小さな店ながらヴィエノワズリーの評価が高い。", "es": "Tienda pequeña con buena fama en viennoiserie." } }
+  ]
+}

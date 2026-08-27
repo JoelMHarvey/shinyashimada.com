@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" data-title-key="rh.title">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Research Library — Shinya Shimada</title>
+<meta name="description" content="An empty research portal, ready to fill: library, folders, tags, chats, notes, highlights, key ideas, discovery and import.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/research.css">
+<script>(function(){try{var t=localStorage.getItem('ss.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
+<header data-shell="header"></header>
+
+<main id="main" class="wrap-wide">
+
+  <div class="page-head">
+    <p class="eyebrow" data-i18n="rh.eyebrow"></p>
+    <h1 data-i18n="rh.heading"></h1>
+    <p class="lede" data-i18n="rh.lede"></p>
+  </div>
+
+  <div class="notice mb-2">
+    <span class="notice__icon">📚</span>
+    <div><strong data-i18n="rh.blank.title"></strong><br><span data-i18n="rh.blank.body"></span></div>
+  </div>
+
+  <div class="rh">
+    <aside class="rh__side">
+      <p class="rh__brand" data-i18n="rh.brand"></p>
+
+      <div class="rh__search">
+        <input type="search" id="rh-search" data-i18n-attr="placeholder:rh.searchPh" autocomplete="off">
+      </div>
+
+      <ul class="rh__nav" id="rh-nav"></ul>
+
+      <p class="rh__label" data-i18n="rh.folders"></p>
+      <ul class="rh__nav" id="rh-folders"></ul>
+      <form class="rh__newfolder" id="rh-newfolder">
+        <input type="text" id="rh-foldername" data-i18n-attr="placeholder:rh.newFolder" maxlength="40">
+        <button type="submit" data-i18n-attr="aria-label:common.add">+</button>
+      </form>
+
+      <p class="rh__label" data-i18n="rh.tags"></p>
+      <ul class="rh__nav" id="rh-tags"></ul>
+      <form class="rh__newfolder" id="rh-newtag">
+        <input type="text" id="rh-tagname" data-i18n-attr="placeholder:rh.newTag" maxlength="24">
+        <button type="submit" data-i18n-attr="aria-label:common.add">+</button>
+      </form>
+    </aside>
+
+    <section class="rh__main">
+      <div class="rh__head">
+        <h2 id="rh-title"></h2>
+        <span class="rh__spacer"></span>
+        <span class="chip" id="rh-count"></span>
+      </div>
+      <p class="rh__sub" id="rh-sub"></p>
+      <div id="rh-toolbar"></div>
+      <div id="rh-body"></div>
+      <p class="rh__hint" id="rh-hint"></p>
+    </section>
+  </div>
+
+</main>
+
+<footer data-shell="footer"></footer>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="/assets/js/research.js"></script>
+</body>
+</html>

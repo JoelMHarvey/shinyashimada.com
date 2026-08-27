@@ -1,0 +1,68 @@
+/* Tokyo Today ------------------------------------------------------------ */
+
+.now-panel {
+  display: grid; gap: 1.4rem;
+  grid-template-columns: minmax(220px, 300px) 1fr;
+  align-items: center;
+  padding: 1.6rem 1.8rem;
+}
+@media (max-width: 720px) { .now-panel { grid-template-columns: 1fr; } }
+
+.now-main { display: flex; align-items: center; gap: 1rem; }
+.now-icon { font-size: 3.4rem; line-height: 1; }
+.now-temp {
+  font-size: 3.2rem; font-weight: 650; line-height: 1;
+  letter-spacing: -.03em; font-variant-numeric: proportional-nums;
+}
+.now-desc { color: var(--ink-soft); font-size: .95rem; }
+
+.now-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: .9rem; }
+.now-fact__label {
+  font-size: .7rem; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--ink-faint); margin: 0 0 .15rem;
+}
+.now-fact__value { font-size: 1.06rem; font-weight: 600; margin: 0; font-variant-numeric: proportional-nums; }
+
+/* Seven-day outlook */
+.week { display: grid; gap: .45rem; }
+.day-row {
+  display: grid; align-items: center; gap: .8rem;
+  grid-template-columns: 3.6rem 1.6rem 1fr 3rem;
+  padding: .5rem .7rem; border-radius: var(--r-sm);
+}
+.day-row:hover { background: var(--paper-sunk); }
+.day-row__name { font-size: .86rem; font-weight: 560; }
+.day-row__icon { font-size: 1.15rem; text-align: center; }
+.day-row__rain { font-size: .78rem; color: var(--sky); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Temperature range track: low → high as a span, on a shared scale. */
+.range {
+  display: block;
+  position: relative; height: 8px; border-radius: 999px;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+}
+.range__span {
+  display: block;
+  position: absolute; top: 0; height: 8px; border-radius: 999px;
+  background: linear-gradient(90deg, var(--sky), var(--terracotta));
+}
+.range__labels {
+  display: flex; justify-content: space-between;
+  font-size: .74rem; color: var(--ink-faint); margin-top: .15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* News */
+.news-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .2rem; }
+.news-item {
+  display: block; padding: .8rem .9rem; border-radius: var(--r-md);
+  text-decoration: none; color: inherit; border: 1px solid transparent;
+  transition: background .15s, border-color .15s;
+}
+.news-item:hover { background: var(--paper-raised); border-color: var(--line); text-decoration: none; }
+.news-item__title { display: block; font-weight: 560; font-size: .96rem; line-height: 1.4; margin-bottom: .2rem; }
+.news-item__summary { display: block; font-size: .85rem; color: var(--ink-soft); margin-bottom: .25rem; }
+.news-item__meta { font-size: .75rem; color: var(--ink-faint); display: flex; gap: .5rem; }
+
+.two-col { display: grid; gap: 1.6rem; grid-template-columns: 1fr; }
+@media (min-width: 940px) { .two-col { grid-template-columns: 1.05fr .95fr; align-items: start; } }

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-title-key="home.title">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shinya Shimada</title>
+<meta name="description" content="Shinya Shimada — a balcony plant journal, Tokyo weather and headlines, a chocolate croissant hunt, an Italian language game, and a research library.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Shinya Shimada">
+<meta property="og:description" content="A balcony plant journal, Tokyo today, a chocolate croissant hunt, and an Italian game.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shinyashimada.com/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/home.css">
+<script>
+  /* Set the theme before first paint so the page never flashes white. */
+  (function () {
+    try {
+      var t = localStorage.getItem('ss.theme');
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+  })();
+</script>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
+<header data-shell="header"></header>
+
+<main id="main">
+
+  <section class="hero">
+    <div class="wrap-wide">
+      <p class="hero__eyebrow" data-i18n="home.eyebrow"></p>
+      <h1 data-i18n-html="home.headline"></h1>
+      <p class="hero__lede" data-i18n="home.lede"></p>
+      <div class="hero__actions">
+        <a class="btn" href="/plants/" data-i18n="home.cta.plants"></a>
+        <a class="btn btn--ghost" href="/tokyo/" data-i18n="home.cta.tokyo"></a>
+      </div>
+
+      <div class="now-strip" id="now-strip" hidden>
+        <span class="now-strip__item">
+          <span class="now-strip__label" data-i18n="home.now.label"></span>
+          <span class="now-strip__value" id="now-temp">—</span>
+        </span>
+        <span class="now-strip__item">
+          <span id="now-desc" class="muted">—</span>
+        </span>
+        <a href="/tokyo/" data-i18n="home.now.more"></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap-wide" style="padding-bottom:1rem">
+    <div class="section-grid">
+
+      <a class="section-card card-plants" href="/plants/">
+        <div class="section-card__icon">🪴</div>
+        <h2 data-i18n="home.card.plants.title"></h2>
+        <p data-i18n="home.card.plants.body"></p>
+        <span class="section-card__go" data-i18n="home.card.plants.go"></span>
+      </a>
+
+      <a class="section-card card-tokyo" href="/tokyo/">
+        <div class="section-card__icon">🗼</div>
+        <h2 data-i18n="home.card.tokyo.title"></h2>
+        <p data-i18n="home.card.tokyo.body"></p>
+        <span class="section-card__go" data-i18n="home.card.tokyo.go"></span>
+      </a>
+
+      <a class="section-card card-croissants" href="/croissants/">
+        <div class="section-card__icon">🥐</div>
+        <h2 data-i18n="home.card.croissants.title"></h2>
+        <p data-i18n="home.card.croissants.body"></p>
+        <span class="section-card__go" data-i18n="home.card.croissants.go"></span>
+      </a>
+
+      <a class="section-card card-italian" href="/italian/">
+        <div class="section-card__icon">🇮🇹</div>
+        <h2 data-i18n="home.card.italian.title"></h2>
+        <p data-i18n="home.card.italian.body"></p>
+        <span class="section-card__go" data-i18n="home.card.italian.go"></span>
+      </a>
+
+      <a class="section-card card-research" href="/research/">
+        <div class="section-card__icon">📚</div>
+        <h2 data-i18n="home.card.research.title"></h2>
+        <p data-i18n="home.card.research.body"></p>
+        <span class="section-card__go" data-i18n="home.card.research.go"></span>
+      </a>
+
+    </div>
+
+    <div class="home-note">
+      <h2 data-i18n="home.note.title"></h2>
+      <p data-i18n="home.note.body"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer data-shell="footer"></footer>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="/assets/js/weather.js"></script>
+<script>
+I18N.extend({
+  'home.title': {
+    en: 'Shinya Shimada',
+    ja: '島田 慎也',
+    es: 'Shinya Shimada'
+  },
+  'home.eyebrow': { en: 'For Shin', ja: 'しんへ', es: 'Para Shin' },
+  'home.headline': {
+    en: 'A small corner of the internet, <em>tended by hand</em>.',
+    ja: 'インターネットの小さな片隅を、<em>手入れしながら</em>。',
+    es: 'Un pequeño rincón de internet, <em>cuidado a mano</em>.'
+  },
+  'home.lede': {
+    en: 'The balcony garden, the weather it has to survive, the search for Tokyo’s best pain au chocolat, and a bit of Italian practice along the way.',
+    ja: 'ベランダの植物、それが耐える東京の天気、都内で一番のパン・オ・ショコラ探し、そして少しのイタリア語。',
+    es: 'El jardín del balcón, el clima que debe soportar, la búsqueda del mejor pain au chocolat de Tokio y algo de práctica de italiano.'
+  },
+  'home.cta.plants':  { en: 'Open the balcony', ja: 'ベランダを開く', es: 'Abrir el balcón' },
+  'home.cta.tokyo':   { en: 'Tokyo right now',  ja: '東京の今',      es: 'Tokio ahora' },
+
+  'home.now.label': { en: 'Tokyo now', ja: '東京の今', es: 'Tokio ahora' },
+  'home.now.more':  { en: 'Full forecast →', ja: '天気の詳細 →', es: 'Pronóstico completo →' },
+
+  'home.card.plants.title': { en: 'The Balcony',  ja: 'ベランダ',   es: 'El Balcón' },
+  'home.card.plants.body': {
+    en: 'Every plant, what it needs, and when it was last watered, fed or pruned. Synced between phone and laptop.',
+    ja: 'すべての植物、その世話の内容、水やり・肥料・剪定の記録。スマホとパソコンで同期。',
+    es: 'Cada planta, lo que necesita y cuándo se regó, abonó o podó por última vez. Sincronizado entre móvil y portátil.'
+  },
+  'home.card.plants.go': { en: 'See what needs doing →', ja: '今日のお世話を見る →', es: 'Ver qué hacer hoy →' },
+
+  'home.card.tokyo.title': { en: 'Tokyo Today', ja: '東京の今日', es: 'Tokio Hoy' },
+  'home.card.tokyo.body': {
+    en: 'Headlines and a seven-day forecast — read as balcony weather, with warnings for frost, heat and typhoon winds.',
+    ja: 'ニュースの見出しと週間予報。霜・猛暑・台風の風など、ベランダ目線の注意つき。',
+    es: 'Titulares y pronóstico de siete días, leído como clima de balcón, con avisos de heladas, calor y viento.'
+  },
+  'home.card.tokyo.go': { en: 'Read the day →', ja: '今日を読む →', es: 'Leer el día →' },
+
+  'home.card.croissants.title': { en: 'Croissant Hunt', ja: 'クロワッサン探し', es: 'La Caza del Croissant' },
+  'home.card.croissants.body': {
+    en: 'A scored, honest search for the best chocolate croissant in Tokyo. Six criteria, one running leaderboard.',
+    ja: '東京で一番のチョコレート・クロワッサンを探す採点記録。6つの基準でランキング。',
+    es: 'Una búsqueda puntuada del mejor croissant de chocolate de Tokio. Seis criterios, una clasificación.'
+  },
+  'home.card.croissants.go': { en: 'See the leaderboard →', ja: 'ランキングを見る →', es: 'Ver la clasificación →' },
+
+  'home.card.italian.title': { en: 'Italian Game', ja: 'イタリア語ゲーム', es: 'Juego de Italiano' },
+  'home.card.italian.body': {
+    en: 'Learn Italian from English, Japanese or Spanish. Spaced repetition, four game modes, and it remembers what you keep forgetting.',
+    ja: '英語・日本語・スペイン語からイタリア語を学ぶ。間隔反復と4つのモードで、忘れやすい単語を覚えています。',
+    es: 'Aprende italiano desde el inglés, el japonés o el español. Repetición espaciada y cuatro modos de juego.'
+  },
+  'home.card.italian.go': { en: 'Play a round →', ja: '一回遊ぶ →', es: 'Jugar una ronda →' },
+
+  'home.card.research.title': { en: 'Research Library', ja: 'リサーチ・ライブラリー', es: 'Biblioteca de Investigación' },
+  'home.card.research.body': {
+    en: 'An empty, ready-to-fill research portal — documents, folders, notes, highlights and citations.',
+    ja: '空の状態から始めるリサーチ・ポータル。文献、フォルダ、メモ、ハイライト、引用。',
+    es: 'Un portal de investigación vacío y listo para llenar: documentos, carpetas, notas y citas.'
+  },
+  'home.card.research.go': { en: 'Open the library →', ja: 'ライブラリーを開く →', es: 'Abrir la biblioteca →' },
+
+  'home.note.title': {
+    en: 'Why this exists',
+    ja: 'このサイトについて',
+    es: 'Por qué existe esto'
+  },
+  'home.note.body': {
+    en: 'The old site had been sitting still for years. This one is built to be used — a place that changes as the plants grow, the weather turns and the croissant list gets longer.',
+    ja: '以前のサイトは何年も止まったままでした。これは「使うため」のサイトです。植物が育ち、季節が変わり、クロワッサンのリストが増えるたびに変化します。',
+    es: 'El sitio anterior llevaba años parado. Este está hecho para usarse: un lugar que cambia según crecen las plantas, cambia el tiempo y se alarga la lista de croissants.'
+  }
+});
+
+Shell.init('home');
+
+/* A quiet live touch: current Tokyo temperature in the hero strip. */
+(function () {
+  var strip = document.getElementById('now-strip');
+  var tempEl = document.getElementById('now-temp');
+  var descEl = document.getElementById('now-desc');
+  var latest = null;
+
+  function paint() {
+    if (!latest || !latest.current) return;
+    tempEl.textContent = Math.round(latest.current.temperature_2m) + '\u00b0C';
+    descEl.textContent = Weather.icon(latest.current.weather_code, latest.current.is_day) + ' ' +
+                         Weather.describe(latest.current.weather_code);
+  }
+
+  fetch('/api/weather')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (data) {
+      if (!data || !data.ok || !data.current) return;
+      latest = data;
+      strip.hidden = false;
+      paint();
+    })
+    .catch(function () { /* the hero reads fine without it */ });
+
+  document.addEventListener('langchange', paint);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+# Netlify configuration for shinyashimada.com
+#
+# In the Netlify UI set "Base directory" to `shinyashimada.com` so that the
+# paths below resolve relative to this folder rather than the repo root.
+
+[build]
+  publish   = "."
+  functions = "netlify/functions"
+  command   = "npm install --omit=dev --no-audit --no-fund"
+
+[functions]
+  node_bundler = "esbuild"
+
+[functions."store"]
+  # The plant/tasting store talks to Postgres; give it room to cold-start.
+  included_files = []
+
+# Friendly API paths: /api/weather -> /.netlify/functions/weather
+[[redirects]]
+  from   = "/api/*"
+  to     = "/.netlify/functions/:splat"
+  status = 200
+
+# SPA-ish fallback for unknown paths -> custom 404
+[[redirects]]
+  from   = "/*"
+  to     = "/404.html"
+  status = 404
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options        = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+    Permissions-Policy     = "geolocation=(), camera=(), microphone=()"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=600"

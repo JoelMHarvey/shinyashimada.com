@@ -1,0 +1,481 @@
+{
+  "_readme": "Care defaults for balcony plants in Tokyo. `water` is days between waterings per Tokyo season; adjust freely — a plant's own record can override any of this. Seasons: spring (Mar–May), rainy (Jun–Jul), summer (Aug–Sep), autumn (Oct–Nov), winter (Dec–Feb).",
+  "species": [
+    {
+      "id": "monstera", "emoji": "🌿", "category": "foliage",
+      "name": { "en": "Monstera", "ja": "モンステラ", "es": "Costilla de Adán" },
+      "botanical": "Monstera deliciosa",
+      "sun": "bright-indirect", "minTemp": 10,
+      "water": { "spring": 7, "rainy": 7, "summer": 5, "autumn": 9, "winter": 14 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Cut back leggy stems in late spring, just above a node — it will branch from there. Bring it inside below 10°C.",
+        "ja": "5〜6月に節のすぐ上で切り戻すと枝分かれします。10℃を下回ったら室内へ。",
+        "es": "Poda los tallos largos a finales de primavera justo encima de un nudo. Métela dentro por debajo de 10°C."
+      }
+    },
+    {
+      "id": "pothos", "emoji": "🌱", "category": "foliage",
+      "name": { "en": "Pothos", "ja": "ポトス", "es": "Potos" },
+      "botanical": "Epipremnum aureum",
+      "sun": "bright-indirect", "minTemp": 10,
+      "water": { "spring": 7, "rainy": 8, "summer": 5, "autumn": 10, "winter": 14 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6, 7], "repotMonths": [5, 6],
+      "tip": {
+        "en": "Trim any vine that has gone bare — cuttings root in a glass of water in about two weeks.",
+        "ja": "間延びしたツルは切り戻しを。切った枝は水に挿せば2週間ほどで根が出ます。",
+        "es": "Corta las guías que se queden peladas; los esquejes enraízan en agua en unas dos semanas."
+      }
+    },
+    {
+      "id": "olive", "emoji": "🫒", "category": "tree",
+      "name": { "en": "Olive tree", "ja": "オリーブ", "es": "Olivo" },
+      "botanical": "Olea europaea",
+      "sun": "full-sun", "minTemp": -5,
+      "water": { "spring": 4, "rainy": 6, "summer": 2, "autumn": 6, "winter": 10 },
+      "fertiliseDays": 60, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [3, 4], "repotMonths": [3, 4],
+      "tip": {
+        "en": "Prune in early spring before growth starts — open the centre so wind and light get through. Two varieties fruit far better than one.",
+        "ja": "芽吹く前の3〜4月に、樹の内側が透けるよう剪定を。実つきには2品種以上を並べて。",
+        "es": "Poda a comienzos de primavera y abre el centro para que pase la luz. Dos variedades fructifican mucho mejor que una."
+      }
+    },
+    {
+      "id": "rosemary", "emoji": "🌿", "category": "herb",
+      "name": { "en": "Rosemary", "ja": "ローズマリー", "es": "Romero" },
+      "botanical": "Salvia rosmarinus",
+      "sun": "full-sun", "minTemp": -5,
+      "water": { "spring": 5, "rainy": 8, "summer": 3, "autumn": 7, "winter": 12 },
+      "fertiliseDays": 60, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [4, 5, 9, 10], "repotMonths": [4, 9],
+      "tip": {
+        "en": "Hates wet feet more than cold. Thin it before the rainy season so air moves through the middle.",
+        "ja": "寒さより蒸れに弱い。梅雨前に枝を透かして風通しをよくしましょう。",
+        "es": "Le molesta más la humedad que el frío. Acláralo antes de la temporada de lluvias."
+      }
+    },
+    {
+      "id": "basil", "emoji": "🌿", "category": "herb",
+      "name": { "en": "Basil", "ja": "バジル", "es": "Albahaca" },
+      "botanical": "Ocimum basilicum",
+      "sun": "full-sun", "minTemp": 12,
+      "water": { "spring": 2, "rainy": 3, "summer": 1, "autumn": 3, "winter": 6 },
+      "fertiliseDays": 21, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [6, 7, 8, 9], "repotMonths": [5],
+      "tip": {
+        "en": "Pinch the growing tips constantly and remove flower spikes — the moment it flowers the leaves turn bitter.",
+        "ja": "こまめに摘芯し、花穂は早めに摘みます。花が咲くと葉が硬く苦くなります。",
+        "es": "Pellizca las puntas sin parar y quita las flores: en cuanto florece, las hojas amargan."
+      }
+    },
+    {
+      "id": "mint", "emoji": "🌿", "category": "herb",
+      "name": { "en": "Mint", "ja": "ミント", "es": "Menta" },
+      "botanical": "Mentha",
+      "sun": "part-sun", "minTemp": -10,
+      "water": { "spring": 2, "rainy": 3, "summer": 1, "autumn": 4, "winter": 8 },
+      "fertiliseDays": 45, "fertiliseSeasons": ["spring", "summer"],
+      "pruneMonths": [6, 7, 8], "repotMonths": [3, 4],
+      "tip": {
+        "en": "Keep it in its own pot forever — the runners will strangle anything sharing the soil. Cut it to the ground in midsummer and it comes back fresh.",
+        "ja": "必ず単独の鉢で。地下茎が他の植物を覆います。真夏に刈り込むと新しい葉が出ます。",
+        "es": "Siempre en su propia maceta: los estolones ahogan a sus vecinas. Córtala a ras en pleno verano y rebrota."
+      }
+    },
+    {
+      "id": "shiso", "emoji": "🍃", "category": "herb",
+      "name": { "en": "Shiso (perilla)", "ja": "シソ（大葉）", "es": "Shiso (perilla)" },
+      "botanical": "Perilla frutescens",
+      "sun": "part-sun", "minTemp": 12,
+      "water": { "spring": 2, "rainy": 3, "summer": 1, "autumn": 3, "winter": 7 },
+      "fertiliseDays": 21, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [6, 7, 8], "repotMonths": [5],
+      "tip": {
+        "en": "Pick from the top to keep it bushy. Let one plant flower in autumn and it will seed itself for next year.",
+        "ja": "上の葉から摘むと脇芽が増えます。秋に一株だけ花を残せば、翌年こぼれ種で生えます。",
+        "es": "Cosecha desde arriba para que ramifique. Deja florecer una planta en otoño y se resembrará sola."
+      }
+    },
+    {
+      "id": "tomato", "emoji": "🍅", "category": "fruit",
+      "name": { "en": "Cherry tomato", "ja": "ミニトマト", "es": "Tomate cherry" },
+      "botanical": "Solanum lycopersicum",
+      "sun": "full-sun", "minTemp": 10,
+      "water": { "spring": 2, "rainy": 3, "summer": 1, "autumn": 3, "winter": 7 },
+      "fertiliseDays": 14, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6, 7, 8], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Pinch out every side shoot in the leaf joints weekly and keep a single main stem. Water evenly — swings in moisture split the fruit.",
+        "ja": "毎週わき芽を摘み、一本仕立てに。水やりのムラは実割れの原因になります。",
+        "es": "Quita los chupones cada semana y deja un solo tallo. Riega de forma regular: los altibajos rajan el fruto."
+      }
+    },
+    {
+      "id": "lemon", "emoji": "🍋", "category": "fruit",
+      "name": { "en": "Lemon tree", "ja": "レモン", "es": "Limonero" },
+      "botanical": "Citrus limon",
+      "sun": "full-sun", "minTemp": -3,
+      "water": { "spring": 4, "rainy": 6, "summer": 2, "autumn": 6, "winter": 10 },
+      "fertiliseDays": 45, "fertiliseSeasons": ["spring", "rainy", "autumn"],
+      "pruneMonths": [3], "repotMonths": [3, 4],
+      "tip": {
+        "en": "Prune only in March, before the spring flush. Thin young fruit hard — a small pot can ripen far fewer lemons than it sets.",
+        "ja": "剪定は春の芽が動く前の3月だけ。実は思いきって摘果を。鉢植えでは実らせすぎに注意。",
+        "es": "Poda solo en marzo, antes de la brotación. Aclara mucha fruta joven: una maceta no puede madurar todo lo que cuaja."
+      }
+    },
+    {
+      "id": "blueberry", "emoji": "🫐", "category": "fruit",
+      "name": { "en": "Blueberry", "ja": "ブルーベリー", "es": "Arándano" },
+      "botanical": "Vaccinium",
+      "sun": "full-sun", "minTemp": -15,
+      "water": { "spring": 3, "rainy": 4, "summer": 1, "autumn": 5, "winter": 8 },
+      "fertiliseDays": 60, "fertiliseSeasons": ["spring", "summer"],
+      "pruneMonths": [12, 1, 2], "repotMonths": [11, 12, 2, 3],
+      "tip": {
+        "en": "Needs acidic soil — use peat-based mix, never garden soil. Prune while dormant in winter, and plant two varieties for a real crop.",
+        "ja": "酸性土壌が必須。ピートモス主体の用土で。剪定は冬の休眠期に。実つきには2品種を。",
+        "es": "Necesita sustrato ácido de turba, nunca tierra de jardín. Poda en invierno y planta dos variedades."
+      }
+    },
+    {
+      "id": "hydrangea", "emoji": "💠", "category": "flowering",
+      "name": { "en": "Hydrangea", "ja": "アジサイ（紫陽花）", "es": "Hortensia" },
+      "botanical": "Hydrangea macrophylla",
+      "sun": "part-sun", "minTemp": -10,
+      "water": { "spring": 3, "rainy": 3, "summer": 1, "autumn": 4, "winter": 9 },
+      "fertiliseDays": 60, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [7], "repotMonths": [11, 12, 3],
+      "tip": {
+        "en": "Prune within a few weeks of flowering, by end of July — next year's buds form in autumn, so a late cut means no flowers.",
+        "ja": "花後すぐ、7月中に剪定を。秋に翌年の花芽ができるため、遅い剪定は花が咲かなくなります。",
+        "es": "Poda justo tras la floración, antes de acabar julio: las yemas del año siguiente se forman en otoño."
+      }
+    },
+    {
+      "id": "maple", "emoji": "🍁", "category": "tree",
+      "name": { "en": "Japanese maple", "ja": "モミジ（紅葉）", "es": "Arce japonés" },
+      "botanical": "Acer palmatum",
+      "sun": "part-sun", "minTemp": -15,
+      "water": { "spring": 3, "rainy": 4, "summer": 1, "autumn": 4, "winter": 8 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring", "winter"],
+      "pruneMonths": [11, 12, 1], "repotMonths": [2, 3],
+      "tip": {
+        "en": "Prune only in the leafless months — cut it in spring and it bleeds sap badly. Keep it out of harsh afternoon sun or the leaves scorch.",
+        "ja": "落葉期のみ剪定を。春に切ると樹液が止まりません。西日は葉焼けの原因になります。",
+        "es": "Poda solo sin hojas; en primavera sangra savia. Protégelo del sol fuerte de la tarde."
+      }
+    },
+    {
+      "id": "bougainvillea", "emoji": "🌺", "category": "flowering",
+      "name": { "en": "Bougainvillea", "ja": "ブーゲンビリア", "es": "Buganvilla" },
+      "botanical": "Bougainvillea",
+      "sun": "full-sun", "minTemp": 5,
+      "water": { "spring": 4, "rainy": 7, "summer": 3, "autumn": 7, "winter": 14 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "summer"],
+      "pruneMonths": [4, 9], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Flowers best when kept slightly thirsty and pot-bound. Too much water and feed gives you leaves and nothing else.",
+        "ja": "やや乾かし気味・根詰まり気味のほうがよく咲きます。水と肥料が多いと葉ばかり茂ります。",
+        "es": "Florece mejor con algo de sed y la maceta justa. Con mucha agua y abono solo dará hojas."
+      }
+    },
+    {
+      "id": "lavender", "emoji": "💜", "category": "herb",
+      "name": { "en": "Lavender", "ja": "ラベンダー", "es": "Lavanda" },
+      "botanical": "Lavandula",
+      "sun": "full-sun", "minTemp": -10,
+      "water": { "spring": 5, "rainy": 9, "summer": 4, "autumn": 8, "winter": 14 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring"],
+      "pruneMonths": [6, 9], "repotMonths": [3, 10],
+      "tip": {
+        "en": "Tokyo's summer humidity kills more lavender than any winter. Cut it back by a third after flowering and give it gritty, fast-draining soil.",
+        "ja": "東京では冬より梅雨〜夏の蒸れで枯れます。花後に1/3ほど刈り込み、水はけのよい用土で。",
+        "es": "La humedad del verano de Tokio mata más lavandas que el frío. Recórtala un tercio tras florecer."
+      }
+    },
+    {
+      "id": "jade", "emoji": "🪴", "category": "succulent",
+      "name": { "en": "Jade plant", "ja": "金のなる木（カネノナルキ）", "es": "Árbol de jade" },
+      "botanical": "Crassula ovata",
+      "sun": "full-sun", "minTemp": 3,
+      "water": { "spring": 12, "rainy": 16, "summer": 12, "autumn": 14, "winter": 28 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [4, 5, 9], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Almost every jade that dies was overwatered. Let the soil go bone dry, and keep it nearly dry all winter.",
+        "ja": "枯れる原因はほぼ水のやりすぎ。土が完全に乾いてから。冬はほぼ断水で。",
+        "es": "Casi todos los jades mueren por exceso de riego. Deja secar del todo y en invierno casi sin agua."
+      }
+    },
+    {
+      "id": "aloe", "emoji": "🌵", "category": "succulent",
+      "name": { "en": "Aloe vera", "ja": "アロエ", "es": "Aloe vera" },
+      "botanical": "Aloe vera",
+      "sun": "full-sun", "minTemp": 3,
+      "water": { "spring": 12, "rainy": 16, "summer": 10, "autumn": 14, "winter": 30 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring"],
+      "pruneMonths": [4, 5], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Remove offsets in spring and pot them separately. Keep the rain off it in June — soggy crowns rot fast.",
+        "ja": "春に子株を外して植え替えを。梅雨は雨に当てないこと。株元が腐りやすいです。",
+        "es": "Separa los hijuelos en primavera. Protégela de la lluvia en junio: la corona se pudre rápido."
+      }
+    },
+    {
+      "id": "echeveria", "emoji": "🌵", "category": "succulent",
+      "name": { "en": "Echeveria", "ja": "エケベリア", "es": "Echeveria" },
+      "botanical": "Echeveria",
+      "sun": "full-sun", "minTemp": 0,
+      "water": { "spring": 10, "rainy": 18, "summer": 14, "autumn": 10, "winter": 25 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [4, 10], "repotMonths": [3, 4, 10],
+      "tip": {
+        "en": "Dormant in the heat, not the cold — water least in August. Shelter it entirely from the rainy season.",
+        "ja": "夏に休眠するため8月はごく控えめに。梅雨は完全に雨よけを。",
+        "es": "Descansa con el calor, no con el frío: riega menos en agosto y protégela de las lluvias."
+      }
+    },
+    {
+      "id": "haworthia", "emoji": "🌵", "category": "succulent",
+      "name": { "en": "Haworthia", "ja": "ハオルチア", "es": "Haworthia" },
+      "botanical": "Haworthia",
+      "sun": "bright-indirect", "minTemp": 3,
+      "water": { "spring": 10, "rainy": 14, "summer": 14, "autumn": 10, "winter": 21 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [], "repotMonths": [3, 4, 10],
+      "tip": {
+        "en": "One of the few succulents that resents full sun — bright shade keeps the windows clear and the leaves plump.",
+        "ja": "多肉には珍しく直射日光を嫌います。明るい日陰で葉の窓がきれいに保たれます。",
+        "es": "De las pocas suculentas a las que molesta el sol directo: sombra luminosa y hojas turgentes."
+      }
+    },
+    {
+      "id": "sansevieria", "emoji": "🌱", "category": "foliage",
+      "name": { "en": "Snake plant", "ja": "サンスベリア", "es": "Lengua de suegra" },
+      "botanical": "Dracaena trifasciata",
+      "sun": "part-sun", "minTemp": 8,
+      "water": { "spring": 14, "rainy": 18, "summer": 10, "autumn": 18, "winter": 40 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [5, 6],
+      "tip": {
+        "en": "Stop watering altogether from December to March. It is far likelier to die of kindness than neglect.",
+        "ja": "12〜3月は完全に断水を。世話のしすぎで枯れることのほうが多い植物です。",
+        "es": "Deja de regar del todo de diciembre a marzo. Muere antes por exceso de cuidados que por olvido."
+      }
+    },
+    {
+      "id": "umbellata", "emoji": "🌳", "category": "foliage",
+      "name": { "en": "Ficus umbellata", "ja": "フィカス・ウンベラータ", "es": "Ficus umbellata" },
+      "botanical": "Ficus umbellata",
+      "sun": "bright-indirect", "minTemp": 10,
+      "water": { "spring": 6, "rainy": 7, "summer": 4, "autumn": 9, "winter": 14 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [5, 6],
+      "tip": {
+        "en": "Prune in May or June and it branches beautifully. Turn the pot a quarter each week or it leans hard toward the glass.",
+        "ja": "5〜6月の剪定で枝が増えます。週に1/4ずつ鉢を回さないと光の方へ傾きます。",
+        "es": "Poda en mayo o junio y ramificará bien. Gira la maceta un cuarto cada semana."
+      }
+    },
+    {
+      "id": "rubberplant", "emoji": "🌳", "category": "foliage",
+      "name": { "en": "Rubber plant", "ja": "ゴムの木", "es": "Ficus elástica" },
+      "botanical": "Ficus elastica",
+      "sun": "bright-indirect", "minTemp": 8,
+      "water": { "spring": 7, "rainy": 8, "summer": 5, "autumn": 10, "winter": 16 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [5, 6],
+      "tip": {
+        "en": "Wipe the leaves monthly — dust dulls them quickly on a city balcony. Sap is an irritant, so wear gloves when cutting.",
+        "ja": "月に一度は葉を拭いて。街のベランダは埃で葉が曇ります。樹液は刺激があるので手袋を。",
+        "es": "Limpia las hojas cada mes: el polvo urbano las apaga. La savia irrita, usa guantes al podar."
+      }
+    },
+    {
+      "id": "orchid", "emoji": "🌸", "category": "flowering",
+      "name": { "en": "Moth orchid", "ja": "胡蝶蘭（コチョウラン）", "es": "Orquídea mariposa" },
+      "botanical": "Phalaenopsis",
+      "sun": "bright-indirect", "minTemp": 15,
+      "water": { "spring": 7, "rainy": 8, "summer": 5, "autumn": 8, "winter": 12 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [4, 5], "repotMonths": [5, 6],
+      "tip": {
+        "en": "When the flowers drop, cut the spike just above the second node and it often blooms again. Never let water sit in the crown.",
+        "ja": "花が終わったら花茎を2節目の上で切ると再び咲くことがあります。株元に水を溜めないこと。",
+        "es": "Al caer las flores, corta la vara sobre el segundo nudo y suele rebrotar. Nunca dejes agua en el cogollo."
+      }
+    },
+    {
+      "id": "geranium", "emoji": "🌺", "category": "flowering",
+      "name": { "en": "Geranium", "ja": "ゼラニウム", "es": "Geranio" },
+      "botanical": "Pelargonium",
+      "sun": "full-sun", "minTemp": 0,
+      "water": { "spring": 4, "rainy": 7, "summer": 3, "autumn": 6, "winter": 12 },
+      "fertiliseDays": 21, "fertiliseSeasons": ["spring", "summer", "autumn"],
+      "pruneMonths": [6, 9], "repotMonths": [3, 4, 10],
+      "tip": {
+        "en": "Deadhead constantly and it flowers most of the year in Tokyo. Cut it back hard before the rainy season to stop it rotting.",
+        "ja": "花がらをこまめに摘めば東京ではほぼ通年咲きます。梅雨前に強めに切り戻して蒸れを防ぎます。",
+        "es": "Quita las flores marchitas y florecerá casi todo el año en Tokio. Recórtalo antes de las lluvias."
+      }
+    },
+    {
+      "id": "petunia", "emoji": "🌸", "category": "flowering",
+      "name": { "en": "Petunia", "ja": "ペチュニア", "es": "Petunia" },
+      "botanical": "Petunia",
+      "sun": "full-sun", "minTemp": 3,
+      "water": { "spring": 2, "rainy": 4, "summer": 1, "autumn": 3, "winter": 8 },
+      "fertiliseDays": 14, "fertiliseSeasons": ["spring", "rainy", "summer", "autumn"],
+      "pruneMonths": [6, 8], "repotMonths": [4],
+      "tip": {
+        "en": "Cut the whole plant back by half in late June and again in August — it looks brutal for two weeks, then flowers twice as well.",
+        "ja": "6月末と8月に半分ほど切り戻すと、2週間ほど寂しくなった後によく咲きます。",
+        "es": "Recórtala a la mitad a finales de junio y otra vez en agosto: fea dos semanas, luego el doble de flor."
+      }
+    },
+    {
+      "id": "viola", "emoji": "🌼", "category": "flowering",
+      "name": { "en": "Pansy & viola", "ja": "パンジー・ビオラ", "es": "Pensamiento y viola" },
+      "botanical": "Viola",
+      "sun": "full-sun", "minTemp": -5,
+      "water": { "spring": 2, "rainy": 4, "summer": 2, "autumn": 3, "winter": 5 },
+      "fertiliseDays": 14, "fertiliseSeasons": ["autumn", "winter", "spring"],
+      "pruneMonths": [3], "repotMonths": [10, 11],
+      "tip": {
+        "en": "A winter plant in Tokyo — plant in November, feed through the cold, and pull it out when the heat arrives in May.",
+        "ja": "東京では冬の花。11月に植え、寒い間も追肥を続け、暑くなる5月に終わりです。",
+        "es": "Planta de invierno en Tokio: siembra en noviembre, abona en frío y retírala con el calor de mayo."
+      }
+    },
+    {
+      "id": "clematis", "emoji": "🌸", "category": "flowering",
+      "name": { "en": "Clematis", "ja": "クレマチス", "es": "Clemátide" },
+      "botanical": "Clematis",
+      "sun": "part-sun", "minTemp": -10,
+      "water": { "spring": 3, "rainy": 4, "summer": 1, "autumn": 4, "winter": 9 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [6, 11], "repotMonths": [2, 11],
+      "tip": {
+        "en": "Check which pruning group yours is before cutting — early-flowering types bloom on old wood and a hard cut loses a whole year.",
+        "ja": "剪定は品種の系統次第。早咲き系は旧枝に咲くため、強剪定すると1年花が見られません。",
+        "es": "Comprueba su grupo de poda: las variedades tempranas florecen en madera vieja y una poda fuerte cuesta un año."
+      }
+    },
+    {
+      "id": "camellia", "emoji": "🌺", "category": "flowering",
+      "name": { "en": "Camellia", "ja": "ツバキ（椿）", "es": "Camelia" },
+      "botanical": "Camellia japonica",
+      "sun": "part-sun", "minTemp": -10,
+      "water": { "spring": 4, "rainy": 5, "summer": 2, "autumn": 5, "winter": 9 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [4, 5], "repotMonths": [4, 9],
+      "tip": {
+        "en": "Prune straight after flowering in spring — buds for next winter set by early summer. Watch for tea tussock caterpillars, whose hairs sting.",
+        "ja": "花後すぐ（4〜5月）に剪定を。初夏には翌年の花芽ができます。チャドクガの毛虫に注意。",
+        "es": "Poda justo tras la floración: las yemas del invierno siguiente se forman a comienzos de verano."
+      }
+    },
+    {
+      "id": "azalea", "emoji": "🌸", "category": "flowering",
+      "name": { "en": "Azalea", "ja": "ツツジ", "es": "Azalea" },
+      "botanical": "Rhododendron",
+      "sun": "part-sun", "minTemp": -10,
+      "water": { "spring": 3, "rainy": 4, "summer": 1, "autumn": 4, "winter": 8 },
+      "fertiliseDays": 60, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [5, 6], "repotMonths": [3, 10],
+      "tip": {
+        "en": "Prune before the end of June or you cut off next spring's flowers. Wants acidic soil and shallow roots that dry out fast.",
+        "ja": "剪定は6月中まで。それ以降は翌春の花芽を落とします。酸性土壌を好み、浅根で乾きやすいです。",
+        "es": "Poda antes de acabar junio o perderás la flor del año próximo. Suelo ácido y raíces someras."
+      }
+    },
+    {
+      "id": "strawberry", "emoji": "🍓", "category": "fruit",
+      "name": { "en": "Strawberry", "ja": "イチゴ", "es": "Fresa" },
+      "botanical": "Fragaria × ananassa",
+      "sun": "full-sun", "minTemp": -8,
+      "water": { "spring": 2, "rainy": 3, "summer": 2, "autumn": 4, "winter": 7 },
+      "fertiliseDays": 21, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [6, 7, 10], "repotMonths": [10],
+      "tip": {
+        "en": "Cut off runners while it is fruiting, then keep the best ones in summer to make next year's plants. Old leaves off in autumn.",
+        "ja": "実がついている間はランナーを切り、夏に良いものだけ残して来年の苗に。秋に古葉を取り除きます。",
+        "es": "Corta los estolones mientras fructifica y guarda los mejores en verano para las plantas del año siguiente."
+      }
+    },
+    {
+      "id": "parsley", "emoji": "🌿", "category": "herb",
+      "name": { "en": "Parsley", "ja": "パセリ", "es": "Perejil" },
+      "botanical": "Petroselinum crispum",
+      "sun": "part-sun", "minTemp": -5,
+      "water": { "spring": 2, "rainy": 3, "summer": 1, "autumn": 3, "winter": 6 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "autumn"],
+      "pruneMonths": [5, 6, 9, 10], "repotMonths": [4, 9],
+      "tip": {
+        "en": "Always pick the outer stems and leave the centre. It is biennial — once it flowers in its second spring, start again.",
+        "ja": "外側の茎から収穫し、中心は残します。二年草なので、2年目の春に花が咲いたら植え替えを。",
+        "es": "Corta siempre los tallos exteriores. Es bienal: cuando florece en su segunda primavera, empieza de nuevo."
+      }
+    },
+    {
+      "id": "thyme", "emoji": "🌿", "category": "herb",
+      "name": { "en": "Thyme", "ja": "タイム", "es": "Tomillo" },
+      "botanical": "Thymus vulgaris",
+      "sun": "full-sun", "minTemp": -10,
+      "water": { "spring": 5, "rainy": 9, "summer": 4, "autumn": 8, "winter": 14 },
+      "fertiliseDays": 90, "fertiliseSeasons": ["spring"],
+      "pruneMonths": [5, 6, 9], "repotMonths": [3, 10],
+      "tip": {
+        "en": "Shear it after flowering to stop the middle going woody, and thin it before the rains — humidity, not cold, is what kills it.",
+        "ja": "花後に刈り込むと株元が木質化しにくくなります。梅雨前に透かして。寒さより蒸れに弱いです。",
+        "es": "Recórtalo tras florecer para que el centro no se lignifique y acláralo antes de las lluvias."
+      }
+    },
+    {
+      "id": "spiderplant", "emoji": "🌱", "category": "foliage",
+      "name": { "en": "Spider plant", "ja": "オリヅルラン", "es": "Cinta" },
+      "botanical": "Chlorophytum comosum",
+      "sun": "bright-indirect", "minTemp": 5,
+      "water": { "spring": 5, "rainy": 7, "summer": 4, "autumn": 8, "winter": 14 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Brown tips usually mean tap-water minerals — leave water standing overnight before using it. Pot up the plantlets any time.",
+        "ja": "葉先が茶色くなるのは水道水の成分が原因のことが多いです。水は一晩置いてから。子株はいつでも植えられます。",
+        "es": "Las puntas marrones suelen ser por el agua del grifo: déjala reposar una noche. Enraiza los hijuelos cuando quieras."
+      }
+    },
+    {
+      "id": "ivy", "emoji": "🌿", "category": "foliage",
+      "name": { "en": "Ivy", "ja": "アイビー（ヘデラ）", "es": "Hiedra" },
+      "botanical": "Hedera helix",
+      "sun": "part-sun", "minTemp": -5,
+      "water": { "spring": 5, "rainy": 7, "summer": 3, "autumn": 8, "winter": 12 },
+      "fertiliseDays": 45, "fertiliseSeasons": ["spring", "summer"],
+      "pruneMonths": [4, 5, 9], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Trim whenever it gets away from you. Watch the undersides in dry weather — spider mites love a sheltered balcony.",
+        "ja": "伸びすぎたら随時切り戻しを。乾燥するとハダニがつきやすいので葉裏を確認。",
+        "es": "Recórtala cuando se desmande. Vigila el envés en tiempo seco: la araña roja adora los balcones resguardados."
+      }
+    },
+    {
+      "id": "fern", "emoji": "🌿", "category": "foliage",
+      "name": { "en": "Boston fern", "ja": "タマシダ（ネフロレピス）", "es": "Helecho de Boston" },
+      "botanical": "Nephrolepis exaltata",
+      "sun": "shade", "minTemp": 8,
+      "water": { "spring": 3, "rainy": 3, "summer": 2, "autumn": 4, "winter": 7 },
+      "fertiliseDays": 45, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [4, 5], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Never lets its roots dry out completely. Mist it in winter when the heating is on, and cut old fronds at the base in spring.",
+        "ja": "根を完全に乾かさないこと。冬は暖房で乾くので霧吹きを。春に古い葉を株元から切ります。",
+        "es": "No dejes que las raíces se sequen del todo. Pulveriza en invierno con la calefacción."
+      }
+    }
+  ]
+}

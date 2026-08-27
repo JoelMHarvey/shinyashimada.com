@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" data-title-key="nf.title">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found — Shinya Shimada</title>
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<script>(function(){try{var t=localStorage.getItem('ss.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
+</head>
+<body>
+<header data-shell="header"></header>
+<main id="main" class="wrap" style="padding:5rem 0 3rem;text-align:center">
+  <div style="font-size:3rem;margin-bottom:1rem">🌱</div>
+  <h1 data-i18n="nf.heading"></h1>
+  <p class="lede muted" data-i18n="nf.body" style="max-width:44ch;margin:0 auto 2rem"></p>
+  <a class="btn" href="/" data-i18n="nf.home"></a>
+</main>
+<footer data-shell="footer"></footer>
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script>
+I18N.extend({
+  'nf.title':   { en: 'Not found — Shinya Shimada', ja: 'ページが見つかりません — 島田 慎也', es: 'No encontrado — Shinya Shimada' },
+  'nf.heading': { en: 'Nothing growing here', ja: 'ここには何もありません', es: 'Aquí no crece nada' },
+  'nf.body':    {
+    en: 'That page has either been repotted somewhere else or never sprouted at all.',
+    ja: 'このページは移動したか、そもそも存在していません。',
+    es: 'Esa página se trasplantó a otro sitio o nunca llegó a brotar.'
+  },
+  'nf.home':    { en: 'Back to the start', ja: 'ホームに戻る', es: 'Volver al inicio' }
+});
+Shell.init(null);
+</script>
+</body>
+</html>

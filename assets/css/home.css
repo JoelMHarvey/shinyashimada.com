@@ -1,0 +1,90 @@
+/* Home page ------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  padding: clamp(3.5rem, 9vw, 6.5rem) 0 clamp(2.5rem, 5vw, 4rem);
+  overflow: hidden;
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(60% 70% at 78% 18%, color-mix(in srgb, var(--green-wash) 85%, transparent) 0%, transparent 70%),
+    radial-gradient(48% 60% at 12% 82%, color-mix(in srgb, var(--terracotta-wash) 70%, transparent) 0%, transparent 72%);
+}
+.hero__eyebrow {
+  display: inline-flex; align-items: center; gap: .5rem;
+  font-size: .76rem; font-weight: 650; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--terracotta); margin-bottom: 1rem;
+}
+.hero__eyebrow::before {
+  content: ""; width: 26px; height: 1px; background: currentColor; opacity: .5;
+}
+.hero h1 {
+  font-size: clamp(2.4rem, 6.5vw, 4.1rem);
+  max-width: 18ch; margin-bottom: .55em;
+}
+.hero h1 em { font-style: italic; color: var(--green); }
+.hero__lede {
+  font-size: clamp(1.02rem, 2vw, 1.2rem);
+  color: var(--ink-soft); max-width: 56ch; margin-bottom: 2rem;
+}
+.hero__actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+/* Live conditions strip */
+.now-strip {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.4rem;
+  margin-top: 2.6rem; padding: .85rem 1.15rem;
+  background: color-mix(in srgb, var(--paper-raised) 80%, transparent);
+  border: 1px solid var(--line); border-radius: 999px;
+  box-shadow: var(--shadow-sm); width: fit-content; max-width: 100%;
+}
+.now-strip__item { display: flex; align-items: center; gap: .45rem; font-size: .88rem; }
+.now-strip__label { color: var(--ink-faint); font-size: .78rem; text-transform: uppercase; letter-spacing: .07em; }
+.now-strip__value { font-weight: 600; }
+.now-strip a { margin-left: auto; font-size: .82rem; white-space: nowrap; }
+
+/* Section cards */
+.section-grid { display: grid; gap: 1.15rem; grid-template-columns: repeat(auto-fit, minmax(268px, 1fr)); }
+
+.section-card {
+  position: relative; display: flex; flex-direction: column;
+  padding: 1.5rem 1.5rem 1.35rem;
+  background: var(--paper-raised); border: 1px solid var(--line);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-sm);
+  text-decoration: none; color: inherit; overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.section-card:hover {
+  transform: translateY(-3px); box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--green) 35%, var(--line));
+}
+.section-card::after {
+  content: ""; position: absolute; inset: auto -30% -50% auto;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: var(--accent-wash, var(--green-wash)); opacity: .5; z-index: 0;
+}
+.section-card > * { position: relative; z-index: 1; }
+.section-card__icon { font-size: 1.7rem; line-height: 1; margin-bottom: .85rem; }
+.section-card h2 { font-size: 1.3rem; margin-bottom: .35rem; }
+.section-card p { color: var(--ink-soft); font-size: .92rem; margin-bottom: 1rem; }
+.section-card__go {
+  margin-top: auto; font-size: .85rem; font-weight: 600;
+  color: var(--accent, var(--green)); display: inline-flex; align-items: center; gap: .35rem;
+}
+.section-card:hover .section-card__go { gap: .6rem; }
+.section-card__go span { transition: transform .18s; }
+
+.card-plants     { --accent: var(--green);      --accent-wash: var(--green-wash); }
+.card-tokyo      { --accent: var(--sky);        --accent-wash: var(--sky-wash); }
+.card-croissants { --accent: var(--terracotta); --accent-wash: var(--terracotta-wash); }
+.card-italian    { --accent: var(--gold);       --accent-wash: var(--gold-wash); }
+.card-research   { --accent: var(--plum);       --accent-wash: color-mix(in srgb, var(--plum) 12%, transparent); }
+
+.home-note {
+  margin-top: 3.5rem; padding: 1.6rem 1.8rem;
+  border-left: 3px solid var(--terracotta);
+  background: color-mix(in srgb, var(--terracotta-wash) 55%, transparent);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+.home-note h2 { font-size: 1.15rem; margin-bottom: .4rem; }
+.home-note p { margin-bottom: 0; color: var(--ink-soft); font-size: .95rem; }

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" data-title-key="pl.title">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Balcony — Shinya Shimada</title>
+<meta name="description" content="A living inventory of the balcony plants: what each one needs, and when it was last watered, fed, pruned or repotted.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/plants.css">
+<script>(function(){try{var t=localStorage.getItem('ss.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
+<header data-shell="header"></header>
+
+<main id="main">
+
+  <!-- Locked state -------------------------------------------------------->
+  <section id="lock" class="wrap hidden">
+    <div class="card card--pad lock-panel">
+      <div class="lock-panel__icon">🔒</div>
+      <h1 style="font-size:1.5rem" data-i18n="pl.lock.title"></h1>
+      <p class="muted small" data-i18n="pl.lock.body"></p>
+      <form id="lock-form">
+        <label class="field">
+          <span data-i18n="pl.lock.passcode"></span>
+          <input type="password" id="lock-input" autocomplete="current-password" required>
+        </label>
+        <button class="btn btn--block" type="submit" data-i18n="pl.lock.unlock"></button>
+      </form>
+      <p class="lock-panel__alt">
+        <a href="#" id="lock-offline" data-i18n="pl.lock.offline"></a>
+      </p>
+    </div>
+  </section>
+
+  <!-- App ----------------------------------------------------------------->
+  <section id="app" class="wrap-wide hidden">
+
+    <div class="page-head">
+      <p class="eyebrow" data-i18n="pl.eyebrow"></p>
+      <h1 data-i18n="pl.heading"></h1>
+      <p class="lede" data-i18n="pl.lede"></p>
+      <div class="flex items-center gap-1 wrap-flex mt-1">
+        <span class="sync-pill" id="sync-pill" data-mode="unknown">
+          <span class="sync-pill__dot"></span><span id="sync-text"></span>
+        </span>
+        <span class="chip" id="season-chip"></span>
+      </div>
+    </div>
+
+    <div class="advisory-strip" id="advisories"></div>
+
+    <div class="grid grid--4 mb-3" id="stats"></div>
+
+    <h2 data-i18n="pl.attention.title"></h2>
+    <div class="attention" id="attention"></div>
+
+    <div class="toolbar">
+      <h2 class="mb-0" data-i18n="pl.all.title"></h2>
+      <div class="toolbar__spacer"></div>
+      <div class="segmented" id="filter-category"></div>
+      <button class="btn btn--sm" id="add-plant" data-i18n="pl.add"></button>
+      <button class="btn btn--ghost btn--sm" id="menu-btn" data-i18n="pl.more"></button>
+    </div>
+
+    <div class="plant-grid" id="plant-grid"></div>
+    <div id="grid-empty"></div>
+
+  </section>
+</main>
+
+<footer data-shell="footer"></footer>
+
+<!-- Editor modal ----------------------------------------------------------->
+<dialog class="modal" id="editor">
+  <form method="dialog" id="editor-form">
+    <div class="modal__head">
+      <h2 id="editor-title"></h2>
+      <button type="button" class="icon-button modal__close" data-close data-i18n-attr="aria-label:common.close">×</button>
+    </div>
+    <div class="modal__body">
+      <label class="field">
+        <span data-i18n="pl.f.species"></span>
+        <select id="f-species"></select>
+      </label>
+      <label class="field" id="f-custom-wrap" hidden>
+        <span data-i18n="pl.f.customSpecies"></span>
+        <input type="text" id="f-custom">
+      </label>
+      <label class="field">
+        <span data-i18n="pl.f.nickname"></span>
+        <input type="text" id="f-name" data-i18n-attr="placeholder:pl.f.nicknamePh">
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span data-i18n="pl.f.location"></span>
+          <input type="text" id="f-location" list="location-list" data-i18n-attr="placeholder:pl.f.locationPh">
+          <datalist id="location-list"></datalist>
+        </label>
+        <label class="field">
+          <span data-i18n="pl.f.pot"></span>
+          <input type="number" id="f-pot" min="0" max="200" step="1">
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span data-i18n="pl.f.acquired"></span>
+          <input type="date" id="f-acquired">
+        </label>
+        <label class="field">
+          <span data-i18n="pl.f.waterEvery"></span>
+          <input type="number" id="f-water" min="1" max="120" step="1" data-i18n-attr="placeholder:pl.f.auto">
+        </label>
+      </div>
+      <label class="field">
+        <span data-i18n="pl.f.notes"></span>
+        <textarea id="f-notes" rows="3"></textarea>
+      </label>
+      <p class="tiny muted" id="f-hint"></p>
+    </div>
+    <div class="modal__foot">
+      <button type="button" class="btn btn--danger btn--sm" id="editor-delete" data-i18n="common.delete" hidden></button>
+      <span style="flex:1"></span>
+      <button type="button" class="btn btn--ghost" data-close data-i18n="common.cancel"></button>
+      <button type="submit" class="btn" data-i18n="common.save"></button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Detail modal ----------------------------------------------------------->
+<dialog class="modal" id="detail">
+  <div class="modal__head">
+    <h2 data-i18n="pl.detail.title"></h2>
+    <button type="button" class="icon-button modal__close" data-close data-i18n-attr="aria-label:common.close">×</button>
+  </div>
+  <div class="modal__body" id="detail-body"></div>
+  <div class="modal__foot">
+    <button type="button" class="btn btn--ghost btn--sm" id="detail-edit" data-i18n="common.edit"></button>
+    <button type="button" class="btn" data-close data-i18n="common.close"></button>
+  </div>
+</dialog>
+
+<!-- Data menu modal -------------------------------------------------------->
+<dialog class="modal" id="datamenu">
+  <div class="modal__head">
+    <h2 data-i18n="pl.data.title"></h2>
+    <button type="button" class="icon-button modal__close" data-close data-i18n-attr="aria-label:common.close">×</button>
+  </div>
+  <div class="modal__body stack">
+    <button class="btn btn--ghost btn--block" id="do-sync" data-i18n="pl.data.sync"></button>
+    <button class="btn btn--ghost btn--block" id="do-export" data-i18n="pl.data.export"></button>
+    <label class="btn btn--ghost btn--block" style="cursor:pointer">
+      <span data-i18n="pl.data.import"></span>
+      <input type="file" id="do-import" accept="application/json" hidden>
+    </label>
+    <button class="btn btn--ghost btn--block" id="do-lock" data-i18n="pl.data.lock"></button>
+    <p class="tiny muted mb-0" id="data-status"></p>
+  </div>
+</dialog>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="/assets/js/store.js"></script>
+<script src="/assets/js/care.js"></script>
+<script src="/assets/js/plants.js"></script>
+</body>
+</html>
