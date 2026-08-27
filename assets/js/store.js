@@ -23,11 +23,15 @@
 
   /* -------------------------------------------------------------- auth -- */
 
+  /* Bumped whenever the stored passcode changes, so a collection that was
+     rejected with a 401 knows to try again rather than staying local forever. */
+  var authEpoch = 0;
+
   var auth = {
     get: function () { return L.get(PASS_KEY, ''); },
-    set: function (code) { L.set(PASS_KEY, code || ''); },
+    set: function (code) { L.set(PASS_KEY, code || ''); authEpoch++; },
     has: function () { return !!auth.get(); },
-    clear: function () { L.remove(PASS_KEY); }
+    clear: function () { L.remove(PASS_KEY); authEpoch++; }
   };
 
   /* ------------------------------------------------------------ helpers -- */
@@ -76,7 +80,15 @@
 
   /* -------------------------------------------------------- collection -- */
 
+  /* One live instance per collection. Handing out a second object for the
+     same name would give it its own dirty list and its own back-off state,
+     so the two copies would double-push and disagree about what still needs
+     syncing. */
+  var instances = Object.create(null);
+
   function open(name) {
+    if (instances[name]) return instances[name];
+
     var records = L.get(CACHE_KEY(name), []);
     var dirty   = L.get(DIRTY_KEY(name), []);
     var listeners = [];
@@ -84,7 +96,8 @@
       mode: 'unknown',      // 'cloud' | 'local' | 'unknown'
       syncing: false,
       lastSync: L.get(SYNCED_KEY(name), null),
-      lastError: null
+      lastError: null,
+      unauthorisedAt: null  // authEpoch at which the server last returned 401
     };
 
     if (!Array.isArray(records)) records = [];
@@ -197,7 +210,17 @@
       /** Send dirty records upstream. Silently no-ops when there is nothing to do. */
       push: function () {
         if (!dirty.length) return Promise.resolve(false);
-        if (!auth.has()) { state.mode = 'local'; emit(); return Promise.resolve(false); }
+
+        /* Whether a passcode is needed is the server's call, not ours: with
+           SITE_PASSCODE unset the store accepts anonymous writes, and an
+           earlier version refused to send them, so nothing ever synced.
+           Try the write; only stand down once the server has actually said
+           401, and try again as soon as the passcode changes. */
+        if (state.unauthorisedAt === authEpoch) {
+          state.mode = 'local';
+          emit();
+          return Promise.resolve(false);
+        }
 
         var pending = dirty.slice();
         var payload = pending
@@ -214,12 +237,14 @@
             dirty = dirty.filter(function (id) { return pending.indexOf(id) === -1; });
             state.mode = 'cloud';
             state.lastError = null;
+            state.unauthorisedAt = null;
             persist();
             return true;
           })
           .catch(function (err) {
             state.lastError = err;
-            state.mode = (err.status === 503 || err.code === 'no-database') ? 'local' : state.mode;
+            if (err.status === 401) state.unauthorisedAt = authEpoch;
+            if (err.status === 401 || err.status === 503 || err.code === 'no-database') state.mode = 'local';
             return false;
           })
           .then(function (ok) {
@@ -264,8 +289,8 @@
           })
           .catch(function (err) {
             state.lastError = err;
-            if (err.status === 503 || err.code === 'no-database') state.mode = 'local';
-            else if (err.status === 401) state.mode = 'local';
+            if (err.status === 401) state.unauthorisedAt = authEpoch;
+            if (err.status === 401 || err.status === 503 || err.code === 'no-database') state.mode = 'local';
             return false;
           })
           .then(function (changed) {
@@ -290,6 +315,7 @@
       }
     };
 
+    instances[name] = api;
     return api;
   }
 

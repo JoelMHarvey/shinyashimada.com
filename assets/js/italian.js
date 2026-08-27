@@ -377,7 +377,10 @@
 
   /* -------------------------------------------------------------- grading -- */
 
-  var XP = { correct: 10, typo: 6, wrong: 0 };
+  /* A wrong answer still earns a little: attempting is the behaviour worth
+     reinforcing, and a round where nothing went right should not read as a
+     round that never happened. Mode bonuses are for getting it right. */
+  var XP = { correct: 10, typo: 6, wrong: 2 };
   var MODE_BONUS = { choose: 0, reverse: 2, listen: 3, produce: 5 };
 
   function grade(step, verdict, correctAnswer) {

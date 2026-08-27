@@ -92,12 +92,18 @@ last-write-wins on `updatedAt`. Deletions are tombstones so they propagate
 instead of resurrecting. The Balcony page can export and re-import the whole
 collection as JSON for backups.
 
+Whether a write needs a passcode is the **server's** decision, not the
+client's: with `SITE_PASSCODE` unset the store accepts anonymous writes and
+the browser sends them. The client only stops trying once the server has
+actually answered `401`, and it tries again as soon as a passcode is entered,
+so nothing queued is ever lost. `tests/browser-sync.mjs` covers both setups.
+
 ## Tests
 
 ```bash
 npm test              # pure logic: care scheduling, SRS, RSS parsing (102 assertions)
 npm run serve &       # browser tests need the site served
-npm run test:browser  # page smoke, mobile overflow, and the three app flows
+npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the three app flows
 ```
 
 `npm test` needs nothing but Node. The browser suite needs Playwright

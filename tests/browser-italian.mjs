@@ -52,7 +52,9 @@ await t('summary has a percentage', async()=>/%$/.test((await page.textContent('
 await t('streak started at 1', async()=>(await page.textContent('#summary-line')).includes('1-day streak')?true:await page.textContent('#summary-line'));
 
 await page.click('#back-lobby'); await page.waitForTimeout(400);
-await t('XP recorded', async()=>{const v=+(await statVal('XP')); return v>0?true:`xp ${v}`;});
+// Every completed round earns something: attempts score even when wrong,
+// so this holds regardless of how the randomised questions land.
+await t('XP recorded', async()=>{const v=+(await statVal('XP')); return v>=24?true:`xp ${v} (expected >= 12 attempts x 2)`;});
 await t('due count dropped below 128', async()=>{const v=+(await statVal('Due now')); return v<128?true:`due ${v}`;});
 
 // Persistence
@@ -73,9 +75,12 @@ await page.click('#topics-all'); await page.waitForTimeout(250);
 await page.locator('#source-lang button').nth(1).click(); await page.waitForTimeout(300);
 await page.locator('.topic-chip').nth(0).click(); await page.waitForTimeout(300);
 await page.click('#start'); await page.waitForTimeout(400);
-await t('japanese glosses appear as options', async()=>{
-  const txt = await page.textContent('#answer-area');
-  return /[\u3040-\u30ff\u4e00-\u9fff]/.test(txt) ? true : `no kana/kanji: ${txt.slice(0,80)}`;
+await t('japanese glosses are in play', async()=>{
+  // Which mode comes up is deliberately random once an item has history: the
+  // gloss is an option in the choose modes and the prompt in the type mode,
+  // so assert against the whole play area rather than one of the two.
+  const txt = await page.textContent('#play');
+  return /[\u3040-\u30ff\u4e00-\u9fff]/.test(txt) ? true : `no kana/kanji: ${txt.slice(0,120)}`;
 });
 await page.evaluate(()=>I18N.set('es'));
 await page.waitForTimeout(300);
