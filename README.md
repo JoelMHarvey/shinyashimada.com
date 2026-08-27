@@ -57,6 +57,7 @@ device-only storage.
 |---|---|---|
 | `DATABASE_URL` | Plant + tasting sync | Postgres connection string. A free Neon or Supabase database is plenty. The table is created on first use. |
 | `SITE_PASSCODE` | Protecting the data | A shared passphrase. Required for **all writes**, and for **reading** anything except croissant tastings — so the plant inventory is private while the croissant leaderboard is public. Leave it unset and the store is wide open; set it before putting anything real in. |
+| `TRELLO_KEY`, `TRELLO_TOKEN` | Trello sync (optional) | Turns overdue balcony jobs into Trello cards. See below. |
 
 Neither is required for the site to deploy. Without `DATABASE_URL` the store
 returns `503 no-database` and the plant page quietly runs device-only.
@@ -72,6 +73,39 @@ returns `503 no-database` and the plant page quietly runs device-only.
   rather than failing the request. Spanish falls back to the English wire and
   says so in the UI.
 - `GET|POST /api/store` — the synced collections. See `schema.sql`.
+
+## Trello sync (optional)
+
+Overdue balcony jobs become cards on a Trello list, and a card ticked off in
+Trello is logged back onto the plant. Both halves matter: without the second,
+Shin ticks a card, the site still thinks the plant is thirsty, and the card
+comes straight back tomorrow.
+
+A task is matched to its card by a hidden marker in the card description
+(`[balcony:<plantId>:<taskType>]`), so a daily run never reposts a job that
+already has an open card — one card per job, however late it gets.
+
+**Setup**
+
+1. On Trello's Power-Up admin page, create a Power-Up and generate an **API
+   key**; from the same page, generate a **token** for your account.
+2. The token needs **read and write** scope — cards are created, and completed
+   ones are archived. Set an expiry you are comfortable with; when it lapses,
+   the panel says so rather than failing silently.
+3. Put both in Netlify as `TRELLO_KEY` and `TRELLO_TOKEN`, then **redeploy** —
+   environment changes do not reach functions already running.
+4. On the site: Balcony → Data → *Trello sync…*, pick the board and list, choose
+   the card language, and switch on the morning sync.
+
+**`SITE_PASSCODE` is mandatory here.** `/api/trello` refuses to run without it
+and returns 503, even though the rest of the site works happily without one. A
+Trello token can see every board the account has, so leaving that endpoint open
+would expose far more than this site's own data.
+
+The scheduled function runs at 21:00 UTC — 06:00 in Tokyo, so the cards are
+waiting before anyone goes out to the balcony. It does nothing at all until the
+sync is switched on and a list chosen, and it is idempotent, so a repeated run
+costs nothing.
 
 ## Editing the content
 
@@ -101,7 +135,7 @@ so nothing queued is ever lost. `tests/browser-sync.mjs` covers both setups.
 ## Tests
 
 ```bash
-npm test              # pure logic: care scheduling, SRS, RSS parsing (102 assertions)
+npm test              # pure logic: care scheduling, SRS, RSS parsing, Trello sync (125 assertions)
 npm run serve &       # browser tests need the site served
 npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the three app flows
 ```

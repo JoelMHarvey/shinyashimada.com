@@ -8,12 +8,20 @@
   functions = "netlify/functions"
   command   = "npm install --omit=dev --no-audit --no-fund"
 
+[build.environment]
+  # Pinned: the functions use JSON import attributes, which need a modern Node.
+  NODE_VERSION = "22"
+
 [functions]
   node_bundler = "esbuild"
 
 [functions."store"]
   # The plant/tasting store talks to Postgres; give it room to cold-start.
   included_files = []
+
+# The daily balcony -> Trello sync declares its own schedule in the function
+# file (export const config = { schedule: '0 21 * * *' }), which is 06:00 in
+# Tokyo. It does nothing unless the sync is switched on in the site's UI.
 
 # Friendly API paths: /api/weather -> /.netlify/functions/weather
 [[redirects]]

@@ -160,8 +160,53 @@
       <span data-i18n="pl.data.import"></span>
       <input type="file" id="do-import" accept="application/json" hidden>
     </label>
+    <button class="btn btn--ghost btn--block" id="open-trello" data-i18n="tr.open"></button>
     <button class="btn btn--ghost btn--block" id="do-lock" data-i18n="pl.data.lock"></button>
     <p class="tiny muted mb-0" id="data-status"></p>
+  </div>
+</dialog>
+
+<!-- Trello sync ---------------------------------------------------------->
+<dialog class="modal" id="trello">
+  <div class="modal__head">
+    <h2 data-i18n="tr.title"></h2>
+    <button type="button" class="icon-button modal__close" data-close data-i18n-attr="aria-label:common.close">×</button>
+  </div>
+  <div class="modal__body">
+    <p class="small muted" data-i18n="tr.blurb"></p>
+    <div id="tr-status"></div>
+    <div id="tr-form" hidden>
+      <label class="field">
+        <span data-i18n="tr.board"></span>
+        <select id="tr-board"></select>
+      </label>
+      <label class="field">
+        <span data-i18n="tr.list"></span>
+        <select id="tr-list"></select>
+      </label>
+      <label class="field">
+        <span data-i18n="tr.lang"></span>
+        <select id="tr-lang">
+          <option value="en">English</option>
+          <option value="ja">日本語</option>
+          <option value="es">Español</option>
+        </select>
+      </label>
+      <label class="flex items-center gap-1 small" style="margin:.6rem 0 1rem">
+        <input type="checkbox" id="tr-enabled" style="width:auto">
+        <span data-i18n="tr.enabled"></span>
+      </label>
+      <div class="flex gap-1 wrap-flex">
+        <button type="button" class="btn btn--ghost btn--sm" id="tr-preview" data-i18n="tr.preview"></button>
+        <button type="button" class="btn btn--sm" id="tr-sync" data-i18n="tr.syncNow"></button>
+      </div>
+      <div id="tr-result" class="mt-2"></div>
+    </div>
+  </div>
+  <div class="modal__foot">
+    <span style="flex:1"></span>
+    <button type="button" class="btn btn--ghost" data-close data-i18n="common.close"></button>
+    <button type="button" class="btn" id="tr-save" data-i18n="common.save"></button>
   </div>
 </dialog>
 
@@ -170,5 +215,6 @@
 <script src="/assets/js/store.js"></script>
 <script src="/assets/js/care.js"></script>
 <script src="/assets/js/plants.js"></script>
+<script src="/assets/js/plants-trello.js"></script>
 </body>
 </html>
