@@ -74,16 +74,22 @@ for (const path of pages) {
   }
   await page.evaluate(() => window.I18N && window.I18N.set('en'));
 
-  // Sanity: the shell actually painted.
+  // Sanity: the shell actually painted. /forza/ is a deliberately
+  // standalone game page (own styling, no site shell), so it only gets
+  // the content-length check.
+  const NAV_LINKS = 7;
+  const standalone = path === '/forza/';
   const shell = await page.evaluate(() => ({
     nav: document.querySelectorAll('.site-nav a').length,
     brand: !!document.querySelector('.brand'),
     footer: !!document.querySelector('.site-footer'),
     text: document.body.innerText.replace(/\s+/g, ' ').trim().length
   }));
-  if (shell.nav !== 6) errors.push('nav links: ' + shell.nav + ' (expected 6)');
-  if (!shell.brand) errors.push('no brand rendered');
-  if (!shell.footer) errors.push('no footer rendered');
+  if (!standalone) {
+    if (shell.nav !== NAV_LINKS) errors.push('nav links: ' + shell.nav + ' (expected ' + NAV_LINKS + ')');
+    if (!shell.brand) errors.push('no brand rendered');
+    if (!shell.footer) errors.push('no footer rendered');
+  }
   if (shell.text < 120) errors.push('page text suspiciously short: ' + shell.text);
 
   const status = res ? res.status() : 0;
