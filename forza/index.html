@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Forza Italiano! — Shinya Shimada</title>
+<meta name="description" content="A1 and A2 Italian grammar drills — beat the clock, keep the streak. Part of shinyashimada.com.">
+</head>
+<body>
+<style>
+  :root {
+    --paper: #FAF6EE;
+    --card: #FFFFFF;
+    --ink: #1F1B16;
+    --ink-soft: #6B6257;
+    --line: #E8E0D2;
+    --red: #DF3B4B;
+    --red-deep: #C22B3B;
+    --pink: #E0447F;
+    --green: #2E9E5B;
+    --green-soft: #E3F4E9;
+    --red-soft: #FBE5E7;
+    --gold: #D9A03C;
+    --shadow: 0 2px 10px rgba(60, 40, 20, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1D1813;
+      --card: #292219;
+      --ink: #F2EADC;
+      --ink-soft: #A89B88;
+      --line: #3B3226;
+      --red: #F0525F;
+      --red-deep: #E23A4C;
+      --pink: #F0569B;
+      --green: #45BE76;
+      --green-soft: #24382C;
+      --red-soft: #46262A;
+      --gold: #E4B45C;
+      --shadow: 0 2px 12px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #FAF6EE; --card: #FFFFFF; --ink: #1F1B16; --ink-soft: #6B6257;
+    --line: #E8E0D2; --red: #DF3B4B; --red-deep: #C22B3B; --pink: #E0447F;
+    --green: #2E9E5B; --green-soft: #E3F4E9; --red-soft: #FBE5E7; --gold: #D9A03C;
+    --shadow: 0 2px 10px rgba(60, 40, 20, .08);
+  }
+  :root[data-theme="dark"] {
+    --paper: #1D1813; --card: #292219; --ink: #F2EADC; --ink-soft: #A89B88;
+    --line: #3B3226; --red: #F0525F; --red-deep: #E23A4C; --pink: #F0569B;
+    --green: #45BE76; --green-soft: #24382C; --red-soft: #46262A; --gold: #E4B45C;
+    --shadow: 0 2px 12px rgba(0, 0, 0, .35);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+  .screen { display: none; max-width: 480px; margin: 0 auto; padding: 20px 18px 40px; }
+  .screen.active { display: block; }
+
+  /* ---- highlighter label device (from the DIECI textbook) ---- */
+  .hl {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    padding: 3px 12px 5px;
+    border-radius: 4px 14px 6px 12px / 12px 5px 13px 6px;
+    transform: rotate(-1.2deg);
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+  .hl.pink { background: var(--pink); transform: rotate(.8deg); }
+  .hl.green { background: var(--green); transform: rotate(-.6deg); }
+
+  /* ---- home ---- */
+  .masthead { text-align: left; margin: 14px 0 4px; }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px;
+  }
+  h1 { font-size: 40px; line-height: 1.1; margin: 0 0 10px; letter-spacing: -.01em; text-wrap: balance; }
+  .sub { color: var(--ink-soft); font-size: 15px; line-height: 1.5; margin: 0 0 18px; max-width: 40ch; }
+  .statrow { display: flex; gap: 10px; margin: 18px 0 22px; }
+  .stat {
+    flex: 1; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow);
+  }
+  .stat .n { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-top: 2px; }
+
+  .levels { display: flex; gap: 8px; margin: 4px 0 14px; }
+  .lvl {
+    flex: 1; border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 12px; padding: 10px 0; font-size: 15px; font-weight: 800; cursor: pointer;
+    font-family: inherit; letter-spacing: .04em; transition: transform .08s ease;
+  }
+  .lvl:active { transform: scale(.96); }
+  .lvl.on { background: var(--green); border-color: var(--green); color: #fff; }
+  .lvl .tag { display: block; font-size: 10.5px; font-weight: 600; opacity: .8; letter-spacing: .02em; }
+  .sectionlabel { margin: 22px 0 12px; font-size: 15px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 999px; padding: 8px 14px; font-size: 13.5px; font-weight: 600;
+    cursor: pointer; transition: transform .08s ease;
+    font-family: inherit;
+  }
+  .chip:active { transform: scale(.95); }
+  .chip.on { background: var(--red); border-color: var(--red); color: #fff; }
+  .chip.on.weak { background: var(--pink); border-color: var(--pink); }
+  .chip .pct { font-weight: 800; font-size: 11px; opacity: .75; margin-left: 4px; font-variant-numeric: tabular-nums; }
+
+  .modes { display: flex; flex-direction: column; gap: 12px; margin-top: 26px; }
+  .btn {
+    border: 0; border-radius: 14px; padding: 18px 20px; font-size: 18px; font-weight: 800;
+    cursor: pointer; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;
+    transition: transform .08s ease; font-family: inherit; letter-spacing: .01em;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn .hint { font-size: 12.5px; font-weight: 600; opacity: .85; }
+  .btn.primary { background: var(--red); color: #fff; box-shadow: 0 4px 14px rgba(223, 59, 75, .35); }
+  .btn.secondary { background: var(--ink); color: var(--paper); }
+  .btn.pink { background: var(--pink); color: #fff; box-shadow: 0 4px 14px rgba(224, 68, 127, .3); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); font-weight: 700; font-size: 15px; padding: 14px 20px; }
+
+  /* ---- game ---- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
+  .quit { background: none; border: 0; color: var(--ink-soft); font-size: 15px; font-weight: 700; cursor: pointer; padding: 6px; font-family: inherit; }
+  .score { font-weight: 800; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .streak { font-weight: 800; font-size: 14px; color: var(--gold); min-width: 52px; text-align: right; }
+  .timerwrap { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 4px 0 20px; }
+  .timerbar { height: 100%; background: var(--green); border-radius: 99px; width: 100%; }
+  .timerbar.hurry { background: var(--red); }
+  .qmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .qcat { font-size: 12px; }
+  .qcount { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .qcard {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 26px 22px; box-shadow: var(--shadow); margin-bottom: 18px; min-height: 130px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .qtext { font-size: 22px; line-height: 1.45; font-weight: 600; text-wrap: balance; }
+  .qtext .blank { color: var(--red); font-weight: 800; letter-spacing: .05em; }
+  .qnote { margin-top: 10px; font-size: 13.5px; color: var(--ink-soft); }
+  .qtrans { margin-top: 10px; font-size: 14.5px; color: var(--ink-soft); font-style: italic; }
+  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .answers.stack { grid-template-columns: 1fr; }
+  .ans {
+    background: var(--card); border: 1.5px solid var(--line); border-radius: 13px;
+    padding: 16px 10px; font-size: 18px; font-weight: 700; cursor: pointer; color: var(--ink);
+    transition: transform .07s ease; font-family: inherit; line-height: 1.3;
+  }
+  .ans:active { transform: scale(.96); }
+  .ans.correct { background: var(--green); border-color: var(--green); color: #fff; }
+  .ans.wrong { background: var(--red); border-color: var(--red); color: #fff; animation: shake .35s; }
+  .ans.reveal { border-color: var(--green); color: var(--green); }
+  .ans:disabled { cursor: default; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-3px)} }
+  .verdict { text-align: center; margin-top: 16px; font-size: 20px; font-weight: 800; min-height: 30px; }
+  .verdict.good { color: var(--green); }
+  .verdict.bad { color: var(--red); }
+  .verdict .fix { display: block; font-size: 14px; font-weight: 600; color: var(--ink-soft); margin-top: 4px; }
+
+  /* ---- results ---- */
+  .bigscore { text-align: center; margin: 26px 0 6px; }
+  .bigscore .n { font-size: 64px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .bigscore .l { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-top: 6px; }
+  .newbest { text-align: center; margin: 10px 0 4px; }
+  .accuracy { text-align: center; color: var(--ink-soft); font-size: 15px; margin-bottom: 22px; }
+  .catbars { display: flex; flex-direction: column; gap: 10px; margin: 18px 0 8px; }
+  .catbar { display: grid; grid-template-columns: 130px 1fr 40px; align-items: center; gap: 10px; font-size: 13.5px; }
+  .catbar .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .catbar .track { height: 9px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .catbar .fill { height: 100%; border-radius: 99px; background: var(--green); }
+  .catbar .fill.mid { background: var(--gold); }
+  .catbar .fill.low { background: var(--red); }
+  .catbar .val { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; color: var(--ink-soft); }
+  .misses { margin: 22px 0 8px; }
+  .miss {
+    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--red);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; font-size: 14.5px; line-height: 1.5;
+  }
+  .miss .mq { font-weight: 600; }
+  .miss .ma { color: var(--green); font-weight: 800; }
+  .miss .mn { color: var(--ink-soft); font-size: 13px; display: block; margin-top: 3px; }
+  .allgood {
+    background: var(--green-soft); border-radius: 12px; padding: 16px; text-align: center;
+    font-weight: 700; color: var(--green); margin: 18px 0;
+  }
+  .resultbtns { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+  footer { text-align: center; color: var(--ink-soft); font-size: 12px; margin-top: 34px; }
+  @media (prefers-reduced-motion: reduce) {
+    .ans.wrong { animation: none; }
+    .btn, .ans, .chip { transition: none; }
+  }
+</style>
+
+<!-- ============ HOME ============ -->
+<div class="screen active" id="home">
+  <div class="masthead">
+    <a href="/" style="text-decoration:none;color:inherit"><div class="eyebrow">← shinyashimada.com · A1 · A2</div></a>
+    <h1><span class="hl">Forza</span> Italiano!</h1>
+    <p class="sub" id="subLine">Both <em>Zoom grammaticale</em> pages, turned into a fast tap game. Beat the clock, keep the streak.</p>
+  </div>
+
+  <div class="levels">
+    <button class="lvl" data-level="a1" id="lvlA1">A1<span class="tag">fondamenta</span></button>
+    <button class="lvl" data-level="a2" id="lvlA2">A2<span class="tag">avanti così</span></button>
+  </div>
+
+  <div class="statrow">
+    <div class="stat"><div class="n" id="bestScore">0</div><div class="l">Best score</div></div>
+    <div class="stat"><div class="n" id="totalAnswered">0</div><div class="l">Answered</div></div>
+    <div class="stat"><div class="n" id="lifetimeAcc">–</div><div class="l">Accuracy</div></div>
+  </div>
+
+  <div class="sectionlabel"><span class="hl pink">Argomenti</span></div>
+  <div class="chips" id="chips"></div>
+
+  <div class="modes">
+    <button class="btn primary" id="btnRound">Giro di 10 <span class="hint">10 questions · 18s each</span></button>
+    <button class="btn secondary" id="btnSprint">Sprint 60″ <span class="hint">as many as you can</span></button>
+    <button class="btn pink" id="btnMarathon">Maratona 50 <span class="hint">50 questions · 18s each</span></button>
+    <button class="btn ghost" id="btnWeak">Ripasso debole — drill my weakest topics</button>
+  </div>
+
+  <footer>Tap a topic to toggle it. Pink % = your accuracy so far.</footer>
+</div>
+
+<!-- ============ GAME ============ -->
+<div class="screen" id="game">
+  <div class="topbar">
+    <button class="quit" id="btnQuit">✕ Esci</button>
+    <div class="score" id="scoreView">0</div>
+    <div class="streak" id="streakView"></div>
+  </div>
+  <div class="timerwrap"><div class="timerbar" id="timerBar"></div></div>
+  <div class="qmeta">
+    <span class="qcat"><span class="hl" id="catLabel" style="font-size:12px">—</span></span>
+    <span class="qcount" id="qCount"></span>
+  </div>
+  <div class="qcard">
+    <div class="qtext" id="qText"></div>
+    <div class="qtrans" id="qTrans"></div>
+    <div class="qnote" id="qNote"></div>
+  </div>
+  <div class="answers" id="answers"></div>
+  <div class="verdict" id="verdict"></div>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<div class="screen" id="results">
+  <div class="bigscore">
+    <div class="n" id="finalScore">0</div>
+    <div class="l">Punti</div>
+  </div>
+  <div class="newbest" id="newBest" hidden><span class="hl green">Nuovo record! 🎉</span></div>
+  <div class="accuracy" id="finalAcc"></div>
+
+  <div class="sectionlabel"><span class="hl pink">Per argomento</span></div>
+  <div class="catbars" id="catBars"></div>
+
+  <div class="misses" id="missWrap">
+    <div class="sectionlabel"><span class="hl">Da rivedere</span></div>
+    <div id="missList"></div>
+  </div>
+  <div class="allgood" id="allGood" hidden>Tutto giusto — sei pronto per l'Italia! 🇮🇹</div>
+
+  <div class="resultbtns">
+    <button class="btn primary" id="btnAgain">Ancora! <span class="hint">same mode</span></button>
+    <button class="btn ghost" id="btnHome">← Menu</button>
+  </div>
+</div>
+
+<script>
+// ================= QUESTION BANKS =================
+// Format: [question (___ = blank), correct, [wrong options], note, English translation]
+const BANK_A1 = {
+  articoli: { label: "Articoli", qs: [
+    ["___ zaino", "uno", ["un","una","un'"], "uno before z- or s+consonant", "a backpack"],
+    ["___ studente", "uno", ["un","una","un'"], "uno before s+consonant", "a student"],
+    ["___ amica", "un'", ["un","uno","una"], "un' before feminine vowel", "a friend (female)"],
+    ["___ amico", "un", ["uno","un'","una"], "masculine vowel → un, no apostrophe", "a friend (male)"],
+    ["___ penna", "una", ["un","uno","un'"], null, "a pen"],
+    ["___ caffè", "un", ["uno","una","un'"], null, "a coffee"],
+    ["___ zaini", "gli", ["i","le","lo"], "gli = plural of lo", "the backpacks"],
+    ["___ studenti", "gli", ["i","le","la"], "gli before s+consonant", "the students"],
+    ["___ libri", "i", ["gli","le","il"], null, "the books"],
+    ["___ chiavi", "le", ["i","gli","la"], null, "the keys"],
+    ["___ amica", "l'", ["la","le","il"], "l' before vowel", "the friend (female)"],
+    ["___ studente", "lo", ["il","l'","gli"], "lo before s+consonant", "the student"],
+  ]},
+  plurali: { label: "Plurali", qs: [
+    ["un libro → due ___", "libri", ["libre","libros","libroi"], "-o → -i", "one book → two books"],
+    ["una penna → due ___", "penne", ["penni","pennas","penna"], "-a → -e", "one pen → two pens"],
+    ["un cane → due ___", "cani", ["cane","cana","canes"], "-e → -i", "one dog → two dogs"],
+    ["una chiave → due ___", "chiavi", ["chiave","chiavee","chiava"], "-e → -i (also feminine!)", "one key → two keys"],
+    ["una pizza → tre ___", "pizze", ["pizzi","pizzas","pizza"], null, "one pizza → three pizzas"],
+    ["un gelato → tre ___", "gelati", ["gelate","gelatos","gelato"], null, "one ice cream → three ice creams"],
+    ["una stazione → due ___", "stazioni", ["stazione","stazionee","staziona"], "-e → -i", "one station → two stations"],
+    ["un bicchiere → due ___", "bicchieri", ["bicchiere","bicchiera","bicchieres"], null, "one glass → two glasses"],
+    ["una notte → due ___", "notti", ["notte","notta","nottes"], null, "one night → two nights"],
+    ["un museo → due ___", "musei", ["musee","museos","museoi"], null, "one museum → two museums"],
+  ]},
+  aggettivi: { label: "Aggettivi", qs: [
+    ["la pizza ___ (piccolo)", "piccola", ["piccolo","piccoli","piccole"], "agree with feminine singular", "the small pizza"],
+    ["i gelati ___ (piccolo)", "piccoli", ["piccolo","piccola","piccole"], null, "the small ice creams"],
+    ["le case ___ (piccolo)", "piccole", ["piccoli","piccola","piccolo"], null, "the small houses"],
+    ["il treno ___ (grande)", "grande", ["grando","grandi","granda"], "-e adjectives: one singular form", "the big train"],
+    ["i musei ___ (grande)", "grandi", ["grande","grandes","granda"], null, "the big museums"],
+    ["le stazioni ___ (grande)", "grandi", ["grande","grandee","grandí"], "-e adjectives: same plural for m/f", "the big stations"],
+    ["la macchina ___ (rosso)", "rossa", ["rosso","rossi","rosse"], null, "the red car"],
+    ["i vini ___ (buono)", "buoni", ["buono","buona","buone"], null, "the good wines"],
+    ["le ragazze ___ (italiano)", "italiane", ["italiani","italiana","italiano"], null, "the Italian girls"],
+  ]},
+  possessivi: { label: "Possessivi", qs: [
+    ["___ libro", "il mio", ["la mia","i miei","mio"], "article + possessive", "my book"],
+    ["___ amiche", "le mie", ["i miei","le mia","la mia"], null, "my friends (female)"],
+    ["___ casa", "la tua", ["il tuo","le tue","la tue"], null, "your (tu) house"],
+    ["___ genitori", "i nostri", ["le nostre","il nostro","i nostro"], null, "our parents"],
+    ["___ macchina", "la loro", ["il loro","la lora","le loro"], "loro never changes", "their car"],
+    ["___ zaini", "i suoi", ["le sue","i sui","il suo"], null, "his/her backpacks"],
+    ["___ chiavi", "le vostre", ["i vostri","la vostra","le vostra"], null, "your (voi) keys"],
+    ["___ borsa", "la sua", ["il suo","le sue","la suoi"], "agrees with the THING, not the owner", "his/her bag"],
+  ]},
+  pronomi: { label: "Pronomi", qs: [
+    ["Vedi Marco? — Sì, ___ vedo.", "lo", ["gli","le","la"], "direct object, masculine", "Do you see Marco? — Yes, I see him."],
+    ["Vedi Anna? — Sì, ___ vedo.", "la", ["le","lo","gli"], "direct object, feminine", "Do you see Anna? — Yes, I see her."],
+    ["Vedi i ragazzi? — Sì, ___ vedo.", "li", ["gli","le","loro"], "direct plural masculine", "Do you see the boys? — Yes, I see them."],
+    ["Vedi le ragazze? — Sì, ___ vedo.", "le", ["li","la","gli"], null, "Do you see the girls? — Yes, I see them."],
+    ["Telefoni a Marco? — Sì, ___ telefono.", "gli", ["lo","le","li"], "indirect object → gli", "Are you calling Marco? — Yes, I'm calling him."],
+    ["Telefoni ad Anna? — Sì, ___ telefono.", "le", ["la","gli","li"], "indirect feminine → le", "Are you calling Anna? — Yes, I'm calling her."],
+    ["Mi senti? — Sì, ___ sento!", "ti", ["mi","vi","ci"], null, "Can you hear me? — Yes, I hear you!"],
+    ["Ci vedete? — Sì, ___ vediamo!", "vi", ["ci","li","ví"], null, "Can you (pl) see us? — Yes, we see you!"],
+  ]},
+  prep_semplici: { label: "Preposizioni", qs: [
+    ["Quando vai ___ Roma?", "a", ["in","da","per"], "cities → a", "When are you going to Rome?"],
+    ["John viene ___ New York.", "da", ["di","a","in"], "origin/movement from → da", "John comes from New York."],
+    ["Abito a Milano, ma sono ___ Roma.", "di", ["da","a","in"], "essere di + hometown", "I live in Milan, but I'm from Rome."],
+    ["Karl è nato ___ Germania.", "in", ["a","da","su"], "countries → in", "Karl was born in Germany."],
+    ["Oggi studio ___ Giulia.", "con", ["per","a","da"], null, "Today I'm studying with Giulia."],
+    ["Abbiamo un regalo ___ te.", "per", ["a","con","di"], null, "We have a present for you."],
+    ["Ho lasciato il cellulare ___ un tavolo.", "su", ["in","a","tra"], null, "I left my phone on a table."],
+    ["Il bar è ___ la farmacia e la banca.", "tra", ["su","in","da"], "between → tra/fra", "The bar is between the pharmacy and the bank."],
+  ]},
+  prep_articolate: { label: "Prep. articolate", qs: [
+    ["Vado ___ bar. (a + il)", "al", ["allo","nel","dal"], null, "I'm going to the bar."],
+    ["Il libro ___ studente. (di + lo)", "dello", ["del","dallo","degli"], null, "the student's book"],
+    ["Le chiavi ___ macchina. (di + la)", "della", ["dalla","del","delle"], null, "the car keys"],
+    ["___ borsa. (in + la)", "nella", ["nel","alla","sulla"], null, "in the bag"],
+    ["___ tavolo. (su + il)", "sul", ["sullo","nel","al"], null, "on the table"],
+    ["Vengo ___ zii. (da + gli)", "dagli", ["dai","degli","dalle"], null, "I'm coming from my aunt and uncle's."],
+    ["I nomi ___ amici. (di + gli)", "degli", ["dei","dagli","delle"], null, "the friends' names"],
+    ["Andiamo ___ stadio. (a + lo)", "allo", ["al","nello","dallo"], null, "We're going to the stadium."],
+    ["Il gatto è ___ acqua! (in + l')", "nell'", ["nella","nel","all'"], null, "The cat is in the water!"],
+    ["Torno ___ vacanze. (da + le)", "dalle", ["dagli","delle","dalla"], null, "I'm coming back from holiday."],
+  ]},
+  interrogativi: { label: "Interrogativi", qs: [
+    ["___ ore sono?", "Che", ["Quale","Quanto","Come"], null, "What time is it?"],
+    ["___ prendi da bere?", "Che cosa", ["Chi","Quale","Quanto"], null, "What will you have to drink?"],
+    ["___ ti chiami?", "Come", ["Che","Chi","Quale"], null, "What's your name?"],
+    ["___ abiti?", "Dove", ["Di dove","Da dove","Quando"], null, "Where do you live?"],
+    ["___ sei? — Sono di Londra.", "Di dove", ["Dove","Da che","Che"], "asking origin → di dove", "Where are you from? — I'm from London."],
+    ["___ studi italiano?", "Perché", ["Come","Che","Quando"], null, "Why do you study Italian?"],
+    ["___ albergo preferisci?", "Quale", ["Che cosa","Quanto","Chi"], null, "Which hotel do you prefer?"],
+    ["___ zucchero vuoi?", "Quanto", ["Quanti","Quanta","Quante"], "zucchero = masc. singular", "How much sugar do you want?"],
+    ["___ lingue parli?", "Quante", ["Quanti","Quanto","Quanta"], "lingue = fem. plural", "How many languages do you speak?"],
+    ["___ parte il treno?", "Quando", ["Dove","Come","Quale"], null, "When does the train leave?"],
+  ]},
+  passato: { label: "Passato prossimo", qs: [
+    ["Anita ___ uscita con le amiche.", "è", ["ha","sono","e"], "movement/change verbs → essere", "Anita went out with her friends."],
+    ["Ieri ___ mangiato una pizza.", "ho", ["sono","ha","è"], "mangiare → avere", "Yesterday I ate a pizza."],
+    ["Sono ___ a Barcellona. (io, f — andare)", "andata", ["andato","andati","andate"], "essere → agree with subject", "I went to Barcelona. (female speaker)"],
+    ["Alfredo e Silvia sono ___ al mare.", "andati", ["andato","andate","andata"], null, "Alfredo and Silvia went to the seaside."],
+    ["Ada e Giulia sono ___ a Roma.", "arrivate", ["arrivati","arrivato","arrivata"], "all feminine → -e", "Ada and Giulia arrived in Rome."],
+    ["Amedeo e Veronica sono ___ con il camper.", "partiti", ["partite","partito","partita"], "mixed group → masculine plural", "Amedeo and Veronica left with the camper."],
+    ["Il treno ___ arrivato tardi.", "è", ["ha","sono","siamo"], null, "The train arrived late."],
+    ["Fabrizio ___ avuto problemi con il camper.", "ha", ["è","ho","hanno"], null, "Fabrizio had problems with the camper."],
+    ["Non ___ fatto colazione. (io)", "ho", ["sono","ha","è"], "non goes BEFORE the auxiliary", "I didn't have breakfast."],
+    ["Which verb takes ESSERE?", "andare", ["mangiare","preparare","ascoltare"], "andare, venire, uscire, stare… → essere", "andare = to go"],
+    ["Which verb takes AVERE?", "mangiare", ["nascere","rimanere","tornare"], null, "mangiare = to eat"],
+    ["Gli studenti hanno ___ l'insegnante. (ascoltare)", "ascoltato", ["ascoltati","ascoltate","ascoltata"], "with avere: participle stays -o", "The students listened to the teacher."],
+  ]},
+  participi: { label: "Participi irregolari", qs: [
+    ["aprire → ho ___", "aperto", ["aprito","aperso","apruto"], null, "to open → I opened"],
+    ["bere → ho ___", "bevuto", ["berto","bevato","birro"], null, "to drink → I drank"],
+    ["chiedere → ho ___", "chiesto", ["chieduto","chiestó","chieso"], null, "to ask → I asked"],
+    ["chiudere → ho ___", "chiuso", ["chiudato","chiesto","chiuduto"], null, "to close → I closed"],
+    ["dire → ho ___", "detto", ["dicato","dirato","ditto"], null, "to say → I said"],
+    ["essere → sono ___", "stato", ["essuto","stito","sido"], "stato — same as stare!", "to be → I was"],
+    ["fare → ho ___", "fatto", ["farato","fattó","faciuto"], null, "to do/make → I did"],
+    ["leggere → ho ___", "letto", ["leggiuto","lesso","leggato"], null, "to read → I read"],
+    ["mettere → ho ___", "messo", ["mettuto","misto","metto"], null, "to put → I put"],
+    ["nascere → sono ___", "nato", ["nasciuto","nasco","nascito"], null, "to be born → I was born"],
+    ["perdere → ho ___", "perso", ["perdutó","perdato","perto"], null, "to lose → I lost"],
+    ["prendere → ho ___", "preso", ["prenduto","prendato","prenso"], null, "to take → I took"],
+    ["rimanere → sono ___", "rimasto", ["rimanuto","rimaso","rimanito"], null, "to stay → I stayed"],
+    ["scrivere → ho ___", "scritto", ["scrivuto","scrittó","scriso"], null, "to write → I wrote"],
+    ["vedere → ho ___", "visto", ["vedato","viduto","veso"], null, "to see → I saw"],
+    ["venire → sono ___", "venuto", ["venito","vento","veniso"], null, "to come → I came"],
+    ["mangiare → ho ___ (regular)", "mangiato", ["mangiuto","mangito","manso"], "-are → -ato", "to eat → I ate"],
+    ["avere → ho ___ (regular)", "avuto", ["avato","avito","auto"], "-ere → -uto", "to have → I had"],
+    ["dormire → ho ___ (regular)", "dormito", ["dormato","dormuto","dorso"], "-ire → -ito", "to sleep → I slept"],
+  ]},
+  presente: { label: "Presente regolare", qs: [
+    ["io ___ (abitare)", "abito", ["abita","abiti","abitano"], null, "I live"],
+    ["tu ___ (abitare)", "abiti", ["abito","abita","abitate"], null, "you live"],
+    ["noi ___ (abitare)", "abitiamo", ["abitamo","abitemo","abitano"], null, "we live"],
+    ["lui ___ (prendere)", "prende", ["prenda","prendi","prendo"], null, "he takes"],
+    ["noi ___ (prendere)", "prendiamo", ["prendemo","prendamo","prendono"], null, "we take"],
+    ["loro ___ (prendere)", "prendono", ["prendano","prendeno","prendiamo"], null, "they take"],
+    ["voi ___ (dormire)", "dormite", ["dormete","dormate","dormiscono"], null, "you (pl) sleep"],
+    ["loro ___ (dormire)", "dormono", ["dormiscono","dormano","dormeno"], "dormire: no -isc", "they sleep"],
+    ["io ___ (finire)", "finisco", ["fino","finio","finisce"], "-isc verb", "I finish"],
+    ["tu ___ (finire)", "finisci", ["fini","finischi","finisce"], null, "you finish"],
+    ["lei ___ (finire)", "finisce", ["finisci","fine","finisco"], null, "she finishes"],
+    ["noi ___ (finire)", "finiamo", ["finisciamo","finischiamo","finimo"], "noi/voi drop -isc!", "we finish"],
+    ["loro ___ (finire)", "finiscono", ["finono","finisceno","finiscano"], null, "they finish"],
+  ]},
+  irregolari: { label: "Presente irregolare", qs: [
+    ["io ___ (avere)", "ho", ["ha","ho'","avo"], null, "I have"],
+    ["noi ___ (avere)", "abbiamo", ["aviamo","habbiamo","avemo"], null, "we have"],
+    ["loro ___ (avere)", "hanno", ["anno","havono","hano"], null, "they have"],
+    ["tu ___ (essere)", "sei", ["sono","è","siete"], null, "you are"],
+    ["noi ___ (essere)", "siamo", ["semo","siemo","sono"], null, "we are"],
+    ["io ___ (fare)", "faccio", ["fo","faro","facio"], null, "I do / I make"],
+    ["loro ___ (fare)", "fanno", ["fano","facciono","fareno"], null, "they do / they make"],
+    ["io ___ (andare)", "vado", ["ando","vago","vo"], null, "I go"],
+    ["loro ___ (andare)", "vanno", ["andano","vano","vadono"], null, "they go"],
+    ["io ___ (venire)", "vengo", ["veno","venio","viengo"], null, "I come"],
+    ["lui ___ (venire)", "viene", ["vene","venie","vengo"], null, "he comes"],
+    ["io ___ (uscire)", "esco", ["uscio","usco","esci"], null, "I go out"],
+    ["loro ___ (uscire)", "escono", ["uscono","esceno","escano"], null, "they go out"],
+    ["io ___ (sapere)", "so", ["sapo","sai","sappio"], null, "I know"],
+    ["noi ___ (sapere)", "sappiamo", ["sapiamo","sapemo","sappiam"], null, "we know"],
+    ["voi ___ (dire)", "dite", ["dicete","direte","dicite"], null, "you (pl) say"],
+    ["loro ___ (dire)", "dicono", ["direno","diceno","dichino"], null, "they say"],
+    ["io ___ (bere)", "bevo", ["bero","bevio","beo"], null, "I drink"],
+  ]},
+  modali: { label: "Potere · volere · dovere", qs: [
+    ["io ___ (potere)", "posso", ["poto","puoio","poso"], null, "I can"],
+    ["tu ___ (potere)", "puoi", ["poi","possi","puo"], null, "you can"],
+    ["lui ___ (potere)", "può", ["puoi","pote","posso"], null, "he can"],
+    ["noi ___ (potere)", "possiamo", ["potiamo","podemo","possamo"], null, "we can"],
+    ["loro ___ (potere)", "possono", ["potono","possano","puonno"], null, "they can"],
+    ["io ___ (volere)", "voglio", ["volo","vuolio","volio"], null, "I want"],
+    ["tu ___ (volere)", "vuoi", ["voli","vuole","vogli"], null, "you want"],
+    ["noi ___ (volere)", "vogliamo", ["voliamo","vogliemo","volemo"], null, "we want"],
+    ["io ___ (dovere)", "devo", ["dovo","debo","deve"], null, "I must"],
+    ["tu ___ (dovere)", "devi", ["dove","dovi","deve"], null, "you must"],
+    ["noi ___ (dovere)", "dobbiamo", ["doviamo","dovemo","debbiamo"], null, "we must"],
+    ["loro ___ (dovere)", "devono", ["dovono","dovano","doveno"], null, "they must"],
+  ]},
+  riflessivi: { label: "Riflessivi", qs: [
+    ["io ___ sveglio alle 7.", "mi", ["si","ti","ci"], null, "I wake up at 7."],
+    ["tu ___ svegli tardi?", "ti", ["si","mi","vi"], null, "Do you wake up late?"],
+    ["lui ___ sveglia alle 6.", "si", ["se","lo","gli"], null, "He wakes up at 6."],
+    ["noi ___ svegliamo presto.", "ci", ["si","vi","noi"], null, "We wake up early."],
+    ["voi ___ svegliate alle 8?", "vi", ["ci","si","voi"], null, "Do you (pl) wake up at 8?"],
+    ["loro ___ svegliano tardi.", "si", ["li","gli","se"], null, "They wake up late."],
+    ["(io, svegliarsi) ___ alle 7.", "mi sveglio", ["sveglio mi","mi sveglia","si sveglio"], "pronoun BEFORE the verb", "I wake up at 7."],
+    ["(tu, svegliarsi) A che ora ___?", "ti svegli", ["ti sveglia","si svegli","svegli ti"], null, "What time do you wake up?"],
+  ]},
+  imperativo: { label: "Imperativo (tu)", qs: [
+    ["guardare → ___! ", "guarda", ["guardi","guarde","guardare"], "-are → -a", "to look → Look!"],
+    ["leggere → ___!", "leggi", ["legge","legga","leggere"], "-ere → -i", "to read → Read!"],
+    ["aprire → ___!", "apri", ["apra","apre","aprisci"], "-ire → -i", "to open → Open!"],
+    ["finire → ___!", "finisci", ["fini","finisce","finisca"], "-isc verbs keep -isci", "to finish → Finish!"],
+    ["avere → ___ pazienza!", "abbi", ["hai","ave","abbia"], null, "Have patience! / Be patient!"],
+    ["essere → ___ bravo!", "sii", ["sei","essi","sia"], null, "Be good!"],
+    ["dire → ___ la verità!", "di'", ["dici","dice","dì'"], null, "Tell the truth!"],
+    ["andare → ___ a casa!", "va'", ["vada","ande","andi"], "va' or vai — double form", "Go home!"],
+    ["stare → ___ attento!", "sta'", ["stia","stae","sti"], "sta' or stai", "Be careful!"],
+    ["dare → ___ una mano!", "da'", ["dia","dari","dae"], "da' or dai", "Give a hand!"],
+    ["fare → ___ presto!", "fa'", ["faccia","fare","fà"], "fa' or fai", "Hurry up!"],
+  ]},
+  avverbi: { label: "Avverbi", qs: [
+    ["Opposite of bene?", "male", ["poco","mai","raramente"], null, "bene = well → male = badly"],
+    ["Opposite of molto?", "poco", ["male","mai","niente"], null, "molto = a lot → poco = a little"],
+    ["More frequent: spesso or raramente?", "spesso", ["raramente"], "sempre > spesso > qualche volta > raramente > mai", "spesso = often · raramente = rarely"],
+    ["'Never' in Italian?", "mai", ["sempre","niente","nulla"], null, "mai = never"],
+    ["'Sometimes' in Italian?", "qualche volta", ["sempre","raramente","spesso"], null, "qualche volta = sometimes"],
+    ["'Always' in Italian?", "sempre", ["spesso","mai","molto"], null, "sempre = always"],
+    ["Order the frequency: sempre > ___ > qualche volta", "spesso", ["raramente","mai","poco"], null, "always > often > sometimes"],
+  ]},
+};
+
+const BANK_A2 = {
+  imperfetto: { label: "Imperfetto", qs: [
+    ["Da bambino ___ molto timido. (essere, io)", "ero", ["sono stato","era","fui"], "habits/descriptions in the past → imperfetto", "As a child I was very shy."],
+    ["Mentre ___ colazione, è arrivata Anna. (fare, io)", "facevo", ["ho fatto","faccio","facessi"], "background action → imperfetto", "While I was having breakfast, Anna arrived."],
+    ["io ___ (avere)", "avevo", ["avavo","ho avuto","avrei"], null, "I had / used to have"],
+    ["noi ___ (essere)", "eravamo", ["erammo","siamo stati","essevamo"], null, "we were"],
+    ["loro ___ al mare ogni estate. (andare)", "andavano", ["andarono","sono andati","andevano"], null, "They went to the seaside every summer."],
+    ["tu ___ (bere)", "bevevi", ["berevi","bevi","bevesti"], "bere → bev-", "you drank / used to drink"],
+    ["lei ___ sempre la verità. (dire)", "diceva", ["dicea","direbbe","diciava"], "dire → dic-", "She always told the truth."],
+    ["voi ___ (fare)", "facevate", ["farevate","facevete","faceste"], "fare → fac-", "you (pl) did / used to do"],
+    ["___ molta gente in piazza. (esserci)", "C'era", ["C'è stata","Ci fu","C'erano"], "gente = singular!", "There were a lot of people in the square."],
+    ["Quando ___ 10 anni, vivevo a Roma. (avere, io)", "avevo", ["ho avuto","ebbi","avrei"], "age in the past → imperfetto", "When I was 10, I lived in Rome."],
+  ]},
+  pp_vs_imp: { label: "Passato vs imperfetto", qs: [
+    ["Mentre ___ , ha squillato il telefono. (dormire, io)", "dormivo", ["ho dormito","dormii","dormo"], "interrupted action → imperfetto", "While I was sleeping, the phone rang."],
+    ["Ieri ___ una pizza fantastica. (mangiare, io)", "ho mangiato", ["mangiavo","mangerei","mangio"], "completed one-off event → passato prossimo", "Yesterday I ate a fantastic pizza."],
+    ["Da piccolo ___ a calcio ogni giorno. (giocare, io)", "giocavo", ["ho giocato","giocherò","giocai"], "repeated habit → imperfetto", "As a kid I played football every day."],
+    ["All'improvviso il telefono ___. (squillare)", "ha squillato", ["squillava","squilla","squillerebbe"], "sudden event → passato prossimo", "Suddenly the phone rang."],
+    ["Ieri sera ___ un film bellissimo. (vedere, noi)", "abbiamo visto", ["vedevamo","vediamo","abbiamo veduto"], null, "Last night we saw a beautiful film."],
+    ["Mentre ___ in centro, ho incontrato Luca. (camminare, io)", "camminavo", ["ho camminato","cammino","camminerei"], null, "While I was walking downtown, I met Luca."],
+    ["Prima ___ sempre il caffè, ora bevo il tè. (prendere, io)", "prendevo", ["ho preso","prendo","presi"], null, "I always used to have coffee; now I drink tea."],
+    ["Il tempo ___ bello, così siamo usciti. (essere)", "era", ["è stato","fu","sarebbe"], "description/backdrop → imperfetto", "The weather was nice, so we went out."],
+  ]},
+  futuro: { label: "Futuro", qs: [
+    ["Domani ___ a Roma. (andare, io)", "andrò", ["anderò","vado","andrei"], "andare → andr-", "Tomorrow I'll go to Rome."],
+    ["L'anno prossimo ___ trent'anni. (avere, io)", "avrò", ["averò","ho","avrei"], "avere → avr-", "Next year I'll be thirty."],
+    ["tu ___ (essere)", "sarai", ["sarei","esserai","serai"], "essere → sar-", "you will be"],
+    ["noi ___ (fare)", "faremo", ["fareremo","facciamo","faremmo"], null, "we will do"],
+    ["lei ___ alla festa. (venire)", "verrà", ["venirà","viene","verrebbe"], "venire → verr-", "She'll come to the party."],
+    ["Stasera ___ la pizza. (mangiare, io)", "mangerò", ["mangierò","mangio","mangiarò"], "-giare drops the i", "Tonight I'll eat pizza."],
+    ["io ___ il conto. (pagare)", "pagherò", ["pagerò","pago","pagarò"], "-gare adds h", "I'll pay the bill."],
+    ["loro non ___ venire. (potere)", "potranno", ["poteranno","possono","potrebbero"], "potere → potr-", "They won't be able to come."],
+    ["voi ___ (vedere)", "vedrete", ["vederete","vedete","vedreste"], "vedere → vedr-", "you (pl) will see"],
+    ["Un giorno ___ in Italia. (vivere, io)", "vivrò", ["viverò","vivo","vivrei"], "vivere → vivr-", "One day I'll live in Italy."],
+  ]},
+  condizionale: { label: "Condizionale", qs: [
+    ["___ un caffè, per favore. (volere, io)", "Vorrei", ["Voglio","Volerei","Vorrò"], "polite request → condizionale", "I'd like a coffee, please."],
+    ["Mi ___ visitare il Giappone. (piacere)", "piacerebbe", ["piace","piacerà","piacerei"], null, "I would like to visit Japan."],
+    ["___ aprire la finestra? (potere, tu)", "Potresti", ["Puoi","Poteresti","Potrai"], "polite ask → condizionale", "Could you open the window?"],
+    ["noi ___ partire presto. (dovere)", "dovremmo", ["dovremo","dobbiamo","doveremmo"], "-mmo = conditional, -mo = future!", "We should leave early."],
+    ["Al posto tuo, io non lo ___. (fare)", "farei", ["farò","faccio","facessi"], null, "In your place, I wouldn't do it."],
+    ["___ bello vederti presto. (essere)", "Sarebbe", ["Sarà","È","Sia"], null, "It would be nice to see you soon."],
+    ["loro ___ bisogno di aiuto. (avere)", "avrebbero", ["avranno","hanno","averebbero"], null, "They would need help."],
+    ["___ volentieri, ma non posso. (venire, io)", "Verrei", ["Verrò","Vengo","Venirei"], null, "I'd gladly come, but I can't."],
+  ]},
+  gerundio: { label: "Stare + gerundio", qs: [
+    ["Cosa stai ___? (fare)", "facendo", ["fando","facente","fatto"], "fare → facendo", "What are you doing?"],
+    ["Sto ___ un libro bellissimo. (leggere)", "leggendo", ["leggando","letto","leggente"], "-ere → -endo", "I'm reading a beautiful book."],
+    ["Stiamo ___ la cena. (preparare)", "preparando", ["preparendo","preparato","preparante"], "-are → -ando", "We're making dinner."],
+    ["Il bambino sta ___. (dormire)", "dormendo", ["dormando","dormito","dorminte"], "-ire → -endo", "The child is sleeping."],
+    ["State ___ troppo caffè! (bere)", "bevendo", ["berendo","bevuto","bevando"], "bere → bevendo", "You're drinking too much coffee!"],
+    ["Stanno ___ al mare. (andare)", "andando", ["andendo","andato","andanti"], null, "They're going to the seaside."],
+    ["Sta ___ ? Prendi l'ombrello! (piovere)", "piovendo", ["piovando","piovuto","piovente"], null, "Is it raining? Take the umbrella!"],
+    ["Ti sto ___ ! (dire la verità → dire)", "dicendo", ["dirando","detto","dicente"], "dire → dicendo", "I'm telling you!"],
+  ]},
+  comparativi: { label: "Comparativi", qs: [
+    ["Roma è più grande ___ Pisa.", "di", ["che","da","come"], "comparing two nouns → di", "Rome is bigger than Pisa."],
+    ["Studiare è più facile ___ lavorare.", "che", ["di","da","come"], "before verbs → che", "Studying is easier than working."],
+    ["Questo vino è ___ di quello. (buono)", "migliore", ["più buonissimo","ottimo","meglio"], "buono → migliore", "This wine is better than that one."],
+    ["Oggi sto ___ di ieri. (bene)", "meglio", ["migliore","più bene","benissimo"], "bene → meglio (adverb!)", "Today I feel better than yesterday."],
+    ["Questo caffè è ___ dell'altro. (cattivo)", "peggiore", ["più cattivissimo","peggio","pessimo"], "cattivo → peggiore", "This coffee is worse than the other."],
+    ["Maria è ___ alta della classe.", "la più", ["più","la molto","il più"], "relative superlative → article + più", "Maria is the tallest in the class."],
+    ["Il gelato è buonissimo = ___ buono.", "molto", ["più","poco","troppo"], "-issimo = molto + adjective", "The ice cream is really good."],
+    ["Luca è alto ___ suo padre.", "come", ["di","che","da"], "equality → come (or quanto)", "Luca is as tall as his father."],
+  ]},
+  ci_ne: { label: "Ci e ne", qs: [
+    ["Vai a Roma? — Sì, ___ vado domani.", "ci", ["ne","lo","vi"], "ci replaces a place", "Are you going to Rome? — Yes, I'm going (there) tomorrow."],
+    ["Quante pizze prendi? — ___ prendo due.", "Ne", ["Ci","Le","Li"], "ne = of them", "How many pizzas? — I'll have two (of them)."],
+    ["Parli mai del lavoro? — No, non ___ parlo mai.", "ne", ["ci","lo","gli"], "parlare di → ne", "Do you ever talk about work? — No, I never talk about it."],
+    ["Sei stato in Italia? — Sì, ___ sono stato due volte.", "ci", ["ne","vi","lo"], null, "Have you been to Italy? — Yes, twice."],
+    ["___ vuole un'ora per arrivare.", "Ci", ["Ne","Si","Vi"], "volerci: ci vuole / ci vogliono", "It takes an hour to get there."],
+    ["___ vogliono venti minuti a piedi.", "Ci", ["Ne","Si","Gli"], "plural → ci vogliono", "It takes twenty minutes on foot."],
+    ["Quanti anni hai? — ___ ho venti.", "Ne", ["Ci","Li","Gli"], null, "How old are you? — I'm twenty."],
+    ["Credi ai fantasmi? — No, non ___ credo.", "ci", ["ne","li","gli"], "credere a → ci", "Do you believe in ghosts? — No, I don't."],
+  ]},
+  relativi: { label: "Che e cui", qs: [
+    ["Il libro ___ sto leggendo è bello.", "che", ["cui","quale","chi"], "subject/object → che", "The book (that) I'm reading is good."],
+    ["L'amico con ___ parlo ogni giorno.", "cui", ["che","quale","chi"], "after a preposition → cui", "The friend I talk with every day."],
+    ["La città in ___ vivo è enorme.", "cui", ["che","dove che","quale"], null, "The city I live in is huge."],
+    ["La ragazza ___ è arrivata ieri è simpatica.", "che", ["cui","quale","chi"], null, "The girl who arrived yesterday is nice."],
+    ["Il film di ___ ti ho parlato è al cinema.", "cui", ["che","quale","questo"], null, "The film I told you about is in cinemas."],
+    ["Le persone ___ conosco qui sono poche.", "che", ["cui","quali","chi"], null, "The people I know here are few."],
+    ["Il motivo per ___ studio è semplice.", "cui", ["che","quale","perché"], null, "The reason (for which) I study is simple."],
+  ]},
+  verbi_prep: { label: "Verbo + preposizione", qs: [
+    ["Comincio ___ studiare alle 9.", "a", ["di","per","da"], "cominciare a", "I start studying at 9."],
+    ["Finisco ___ lavorare alle 6.", "di", ["a","per","da"], "finire di", "I finish working at 6."],
+    ["Provo ___ chiamarti stasera.", "a", ["di","per","con"], "provare a", "I'll try to call you tonight."],
+    ["Ho deciso ___ partire domani.", "di", ["a","per","da"], "decidere di", "I've decided to leave tomorrow."],
+    ["Continua ___ piovere!", "a", ["di","da","in"], "continuare a", "It keeps raining!"],
+    ["Spero ___ vederti presto.", "di", ["a","per","che"], "sperare di", "I hope to see you soon."],
+    ["Vado ___ correre ogni mattina.", "a", ["di","per","da"], "andare a + infinitive", "I go running every morning."],
+    ["Ho smesso ___ fumare un anno fa.", "di", ["a","per","con"], "smettere di", "I stopped smoking a year ago."],
+    ["Riesci ___ leggere quel cartello?", "a", ["di","per","in"], "riuscire a", "Can you manage to read that sign?"],
+  ]},
+  imperativo2: { label: "Imperativo negativo · Lei", qs: [
+    ["(tu) Non ___ via! (andare)", "andare", ["vai","va'","andate"], "negative tu = non + infinitive!", "Don't go away!"],
+    ["(tu) Non ___ rumore! (fare)", "fare", ["fai","fa'","faccia"], null, "Don't make noise!"],
+    ["(tu) Non ti ___ ! (preoccuparsi)", "preoccupare", ["preoccupi","preoccupa","preoccupando"], "non ti preoccupare (or non preoccuparti)", "Don't worry!"],
+    ["(Lei) ___ pure! (entrare)", "Entri", ["Entra","Entrare","Entrate"], "Lei imperative: -are → -i", "Do come in!"],
+    ["(Lei) Mi ___ ! (scusare)", "scusi", ["scusa","scusare","scusate"], null, "Excuse me! (formal)"],
+    ["(Lei) ___ dritto, poi a destra. (andare)", "Vada", ["Va'","Vai","Andare"], "andare → vada", "Go straight, then right. (formal)"],
+    ["(Lei) ___ un attimo, per favore. (aspettare)", "Aspetti", ["Aspetta","Aspettare","Aspettate"], null, "Wait a moment, please. (formal)"],
+    ["(Lei) ___ pure a sedere. (accomodarsi)", "Si accomodi", ["Ti accomodi","Accomodati","Si accomoda"], null, "Please take a seat. (formal)"],
+  ]},
+  espressioni: { label: "Avere e fare", qs: [
+    ["Ho ___ — mangio un panino.", "fame", ["fama","mangia","cibo"], "avere fame", "I'm hungry — I'll eat a sandwich."],
+    ["Ho ___ — bevo un'acqua.", "sete", ["seta","bevanda","secco"], "avere sete", "I'm thirsty — I'll drink some water."],
+    ["Fa ___ oggi — 35 gradi!", "caldo", ["calda","caldi","calore"], "weather → fa caldo/freddo", "It's hot today — 35 degrees!"],
+    ["Ho ___ di una vacanza.", "bisogno", ["bisogna","necessario","voglio"], "avere bisogno di", "I need a holiday."],
+    ["Non ho ___ di uscire stasera.", "voglia", ["volere","vuole","voglio"], "avere voglia di", "I don't feel like going out tonight."],
+    ["Abbiamo ___ — il treno parte tra poco!", "fretta", ["fretto","veloce","corsa"], "avere fretta", "We're in a hurry — the train leaves soon!"],
+    ["Il bambino ha ___ del buio.", "paura", ["pauroso","spavento","timido"], "avere paura di", "The child is afraid of the dark."],
+    ["Ho ___ tu abbia ragione. (pensare che...)", "l'impressione che", ["l'impressione di","la ragione che","il pensiero di"], null, "I have the impression you're right."],
+  ]},
+};
+
+const BANKS = { a1: BANK_A1, a2: BANK_A2 };
+const SUBLINES = {
+  a1: 'Both <em>Zoom grammaticale</em> pages, turned into a fast tap game. Beat the clock, keep the streak.',
+  a2: 'Past tenses, futuro, condizionale, ci/ne and friends — the A2 toolkit as a fast tap game.',
+};
+
+const PRAISE = ["Bravissimo!","Perfetto!","Grande!","Ottimo!","Eccellente!","Fantastico!","Così si fa!"];
+const OOPS = ["Mamma mia!","Ahi ahi…","Quasi!","Peccato!","Uffa!"];
+
+// ================= STATE & STORAGE =================
+const LS = "forzaItaliano.v1";
+let store = { best: { a1: 0, a2: 0 }, answered: 0, correct: 0, cats: {}, level: "a1" };
+try { const s = JSON.parse(localStorage.getItem(LS)); if (s && typeof s === "object") store = Object.assign(store, s); } catch (e) {}
+if (typeof store.best === "number") store.best = { a1: store.best, a2: 0 }; // pre-A2 saves
+if (!store.level || !BANKS[store.level]) store.level = "a1";
+function save() { try { localStorage.setItem(LS, JSON.stringify(store)); } catch (e) {} }
+
+const $ = id => document.getElementById(id);
+let level = store.level;
+let BANK = BANKS[level];
+let catKeys = Object.keys(BANK);
+const selectedByLevel = { a1: new Set(Object.keys(BANKS.a1)), a2: new Set(Object.keys(BANKS.a2)) };
+let selected = selectedByLevel[level];
+let mode = "round"; // round | sprint
+let game = null;
+let tickHandle = null;
+
+function setLevel(l) {
+  level = l;
+  BANK = BANKS[l];
+  catKeys = Object.keys(BANK);
+  selected = selectedByLevel[l];
+  store.level = l;
+  save();
+  renderHome();
+}
+
+// ================= HOME =================
+function catAccuracy(k) {
+  const c = store.cats[k];
+  if (!c || c.n < 3) return null;
+  return Math.round(100 * c.ok / c.n);
+}
+function renderHome() {
+  $("lvlA1").classList.toggle("on", level === "a1");
+  $("lvlA2").classList.toggle("on", level === "a2");
+  // vibecheck-ignore-next-line: innerhtml-assignment — static strings from the page's own SUBLINES map
+  $("subLine").innerHTML = SUBLINES[level];
+  $("bestScore").textContent = store.best[level] || 0;
+  $("totalAnswered").textContent = store.answered;
+  $("lifetimeAcc").textContent = store.answered ? Math.round(100 * store.correct / store.answered) + "%" : "–";
+  const wrap = $("chips");
+  wrap.innerHTML = "";
+  catKeys.forEach(k => {
+    const b = document.createElement("button");
+    const acc = catAccuracy(k);
+    b.className = "chip" + (selected.has(k) ? " on" : "") + (acc !== null && acc < 70 ? " weak" : "");
+    // vibecheck-ignore-next-line: innerhtml-assignment — quiz text from the page's own BANK data
+    b.innerHTML = BANK[k].label + (acc !== null ? `<span class="pct">${acc}%</span>` : "");
+    b.onclick = () => {
+      if (selected.has(k)) { if (selected.size > 1) selected.delete(k); }
+      else selected.add(k);
+      renderHome();
+    };
+    wrap.appendChild(b);
+  });
+}
+
+// ================= GAME ENGINE =================
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+function buildDeck(keys) {
+  const deck = [];
+  keys.forEach(k => BANK[k].qs.forEach(q => deck.push({ cat: k, q: q[0], a: q[1], wrong: q[2], note: q[3], en: q[4] })));
+  return shuffle(deck);
+}
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  $(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+function startGame(m, keys) {
+  mode = m;
+  const useKeys = keys && keys.length ? keys : [...selected];
+  game = {
+    deck: buildDeck(useKeys), i: 0, score: 0, streak: 0, best: 0,
+    hits: 0, tries: 0, misses: [], perCat: {},
+    limit: m === "sprint" ? Infinity : (m === "marathon" ? 50 : 10),
+    endAt: m === "sprint" ? Date.now() + 60000 : null,
+    qStart: 0, locked: false, keys: useKeys,
+  };
+  show("game");
+  nextQ();
+  if (m === "sprint") runSprintTimer();
+}
+
+function runSprintTimer() {
+  clearInterval(tickHandle);
+  tickHandle = setInterval(() => {
+    if (!game || game.endAt === null) return clearInterval(tickHandle);
+    const left = game.endAt - Date.now();
+    const bar = $("timerBar");
+    bar.style.width = Math.max(0, 100 * left / 60000) + "%";
+    bar.classList.toggle("hurry", left < 12000);
+    if (left <= 0) { clearInterval(tickHandle); finish(); }
+  }, 100);
+}
+
+function runQuestionTimer() {
+  clearInterval(tickHandle);
+  const DUR = 18000;
+  game.qStart = Date.now();
+  tickHandle = setInterval(() => {
+    if (!game || game.locked) return;
+    const left = DUR - (Date.now() - game.qStart);
+    const bar = $("timerBar");
+    bar.style.width = Math.max(0, 100 * left / DUR) + "%";
+    bar.classList.toggle("hurry", left < 5000);
+    if (left <= 0) { clearInterval(tickHandle); answer(null); }
+  }, 80);
+}
+
+function nextQ() {
+  if (!game) return;
+  if (game.i >= game.limit || game.i >= game.deck.length) return finish();
+  game.locked = false;
+  const item = game.deck[game.i];
+  $("catLabel").textContent = BANK[item.cat].label;
+  // vibecheck-ignore-next-line: innerhtml-assignment — quiz text from the page's own BANK data
+  $("qText").innerHTML = item.q.replace(/___/g, '<span class="blank">____</span>');
+  $("qTrans").textContent = item.en ? "“" + item.en + "”" : "";
+  $("qNote").textContent = "";
+  $("verdict").textContent = "";
+  $("verdict").className = "verdict";
+  $("qCount").textContent = mode !== "sprint" ? `${game.i + 1} / ${game.limit}` : `#${game.i + 1}`;
+  const opts = shuffle([item.a, ...item.wrong]);
+  const wrap = $("answers");
+  wrap.innerHTML = "";
+  wrap.className = "answers" + (opts.some(o => o.length > 14) ? " stack" : "");
+  opts.forEach(o => {
+    const b = document.createElement("button");
+    b.className = "ans";
+    b.textContent = o;
+    b.onclick = () => answer(o, b);
+    wrap.appendChild(b);
+  });
+  updateHud();
+  if (mode !== "sprint") runQuestionTimer();
+}
+
+function updateHud() {
+  $("scoreView").textContent = game.score;
+  $("streakView").textContent = game.streak >= 2 ? "🔥×" + game.streak : "";
+}
+
+function answer(choice, btn) {
+  if (!game || game.locked) return;
+  game.locked = true;
+  if (mode !== "sprint") clearInterval(tickHandle);
+  const item = game.deck[game.i];
+  const right = choice === item.a;
+  game.tries++;
+  store.answered++;
+  const pc = game.perCat[item.cat] = game.perCat[item.cat] || { ok: 0, n: 0 };
+  const sc = store.cats[item.cat] = store.cats[item.cat] || { ok: 0, n: 0 };
+  pc.n++; sc.n++;
+
+  document.querySelectorAll(".ans").forEach(b => {
+    b.disabled = true;
+    if (b.textContent === item.a) b.classList.add(right ? "correct" : "reveal");
+  });
+
+  const v = $("verdict");
+  if (right) {
+    game.hits++; game.streak++; store.correct++; pc.ok++; sc.ok++;
+    if (game.streak > game.best) game.best = game.streak;
+    let pts = 100 + Math.min(game.streak - 1, 5) * 20;
+    if (mode !== "sprint") {
+      const left = Math.max(0, 18000 - (Date.now() - game.qStart));
+      pts += Math.round(left / 1000) * 5;
+    }
+    game.score += pts;
+    if (btn) btn.classList.add("correct");
+    v.textContent = PRAISE[Math.floor(Math.random() * PRAISE.length)] + " +" + pts;
+    v.classList.add("good");
+  } else {
+    game.streak = 0;
+    game.misses.push(item);
+    if (btn) btn.classList.add("wrong");
+    // vibecheck-ignore-next-line: innerhtml-assignment — quiz text from the page's own BANK data
+    v.innerHTML = (choice === null ? "Tempo scaduto! ⏰" : OOPS[Math.floor(Math.random() * OOPS.length)]) +
+      `<span class="fix">→ <strong>${item.a}</strong>${item.note ? " · " + item.note : ""}</span>`;
+    v.classList.add("bad");
+  }
+  save();
+  updateHud();
+  game.i++;
+  setTimeout(() => { if (game) { nextQ(); if (mode === "sprint") runSprintTimer(); } }, right ? 850 : 2100);
+}
+
+function finish() {
+  clearInterval(tickHandle);
+  if (!game) return;
+  const g = game;
+  $("finalScore").textContent = g.score;
+  const acc = g.tries ? Math.round(100 * g.hits / g.tries) : 0;
+  $("finalAcc").textContent = `${g.hits} / ${g.tries} correct · ${acc}% · best streak 🔥×${g.best}`;
+  const isBest = g.score > (store.best[level] || 0);
+  if (isBest) { store.best[level] = g.score; save(); }
+  $("newBest").hidden = !isBest;
+
+  const bars = $("catBars");
+  bars.innerHTML = "";
+  Object.keys(g.perCat).forEach(k => {
+    const c = g.perCat[k];
+    const p = Math.round(100 * c.ok / c.n);
+    const row = document.createElement("div");
+    row.className = "catbar";
+    // vibecheck-ignore-next-line: innerhtml-assignment — quiz text from the page's own BANK data
+    row.innerHTML = `<span class="name">${BANK[k].label}</span>
+      <span class="track"><span class="fill ${p >= 80 ? "" : p >= 50 ? "mid" : "low"}" style="width:${p}%"></span></span>
+      <span class="val">${p}%</span>`;
+    bars.appendChild(row);
+  });
+
+  const missList = $("missList");
+  missList.innerHTML = "";
+  $("missWrap").style.display = g.misses.length ? "" : "none";
+  $("allGood").hidden = g.misses.length > 0;
+  g.misses.forEach(m => {
+    const d = document.createElement("div");
+    d.className = "miss";
+    // vibecheck-ignore-next-line: innerhtml-assignment — quiz text from the page's own BANK data
+    d.innerHTML = `<span class="mq">${m.q.replace(/___/g, "____")}</span> → <span class="ma">${m.a}</span>` +
+      (m.en ? `<span class="mn">“${m.en}”</span>` : "") +
+      (m.note ? `<span class="mn">${m.note}</span>` : "");
+    missList.appendChild(d);
+  });
+
+  game = null;
+  show("results");
+}
+
+// ================= WIRING =================
+$("lvlA1").onclick = () => setLevel("a1");
+$("lvlA2").onclick = () => setLevel("a2");
+$("btnRound").onclick = () => startGame("round");
+$("btnSprint").onclick = () => startGame("sprint");
+$("btnMarathon").onclick = () => startGame("marathon");
+$("btnWeak").onclick = () => {
+  const ranked = catKeys
+    .map(k => ({ k, acc: catAccuracy(k) }))
+    .filter(x => x.acc !== null)
+    .sort((a, b) => a.acc - b.acc)
+    .slice(0, 3)
+    .map(x => x.k);
+  startGame("round", ranked.length ? ranked : null);
+};
+$("btnQuit").onclick = () => { clearInterval(tickHandle); game = null; renderHome(); show("home"); };
+$("btnAgain").onclick = () => startGame(mode);
+$("btnHome").onclick = () => { renderHome(); show("home"); };
+
+renderHome();
+</script>
+
+</body></html>

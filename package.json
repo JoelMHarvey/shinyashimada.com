@@ -11,7 +11,7 @@
     "dev": "netlify dev",
     "serve": "npx http-server -p 8888 -c-1 .",
     "test": "node tests/lockfile.test.mjs && node tests/care.test.mjs && node tests/srs.test.mjs && node tests/news.test.mjs && node tests/trello-sync.test.mjs && node tests/camera.test.mjs",
-    "test:browser": "node tests/browser-smoke.mjs / /plants/ /tokyo/ /croissants/ /italian/ /research/ /404.html && node tests/browser-mobile.mjs && node tests/browser-sync.mjs && node tests/browser-trello.mjs && node tests/browser-camera.mjs && node tests/browser-status.mjs && node tests/browser-plants.mjs && node tests/browser-croissants.mjs && node tests/browser-italian.mjs"
+    "test:browser": "node tests/browser-smoke.mjs / /plants/ /tokyo/ /croissants/ /italian/ /forza/ /research/ /404.html && node tests/browser-mobile.mjs && node tests/browser-sync.mjs && node tests/browser-trello.mjs && node tests/browser-camera.mjs && node tests/browser-status.mjs && node tests/browser-plants.mjs && node tests/browser-croissants.mjs && node tests/browser-italian.mjs"
   },
   "dependencies": {
     "pg": "^8.13.1"

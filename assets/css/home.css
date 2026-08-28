@@ -79,6 +79,8 @@
 .card-croissants { --accent: var(--terracotta); --accent-wash: var(--terracotta-wash); }
 .card-italian    { --accent: var(--gold);       --accent-wash: var(--gold-wash); }
 .card-research   { --accent: var(--plum);       --accent-wash: color-mix(in srgb, var(--plum) 12%, transparent); }
+.card-forza      { --accent: #b5404e;           --accent-wash: color-mix(in srgb, #b5404e 12%, transparent); }
+html[data-theme="dark"] .card-forza { --accent: #e8737f; }
 
 .home-note {
   margin-top: 3.5rem; padding: 1.6rem 1.8rem;
