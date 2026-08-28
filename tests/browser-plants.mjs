@@ -84,6 +84,53 @@ await page.waitForTimeout(700);
 await t('plant survives a reload', async () =>
   (await page.locator('.plant-card').count()) === 1 ? true : 'lost after reload');
 
+// Photo upload: attach a generated image; expect editor preview, card
+// thumbnail, detail photo, and a synced record that fits the 64 KB row.
+await page.click('.plant-card');
+await page.waitForTimeout(300);
+await page.click('#detail-edit');
+await page.waitForTimeout(300);
+const pngB64 = await page.evaluate(() => {
+  const c = document.createElement('canvas'); c.width = 800; c.height = 600;
+  const g = c.getContext('2d');
+  g.fillStyle = '#2f855a'; g.fillRect(0, 0, 800, 600);
+  g.fillStyle = '#e8b04b'; g.beginPath(); g.arc(400, 300, 180, 0, 7); g.fill();
+  return c.toDataURL('image/png').split(',')[1];
+});
+await page.setInputFiles('#f-photo', {
+  name: 'plant.png', mimeType: 'image/png', buffer: Buffer.from(pngB64, 'base64')
+});
+await page.waitForTimeout(700);
+await t('photo preview appears in editor', async () => {
+  const src = await page.evaluate(() => document.getElementById('f-photo-preview').src || '');
+  return src.startsWith('data:image/jpeg') ? true : 'no jpeg preview: ' + src.slice(0, 30);
+});
+await page.click('#editor-form button[type="submit"]');
+await page.waitForTimeout(500);
+await t('card shows the photo thumbnail', async () =>
+  (await page.locator('.plant-card__photo').count()) === 1 ? true : 'no card photo');
+await t('stored photo fits the record budget', async () => {
+  const len = await page.evaluate(() => {
+    const rows = JSON.parse(localStorage.getItem('ss.cache.plants') || '[]');
+    const withPhoto = rows.find(r => r.photo);
+    return withPhoto ? withPhoto.photo.length : -1;
+  });
+  return len > 0 && len <= 50000 ? true : 'photo length ' + len;
+});
+await page.click('.plant-card');
+await page.waitForTimeout(400);
+await t('detail shows the photo', async () =>
+  (await page.locator('.detail__photo').count()) === 1 ? true : 'no detail photo');
+await t('photo can be removed again', async () => {
+  await page.click('#detail-edit');
+  await page.waitForTimeout(300);
+  await page.click('#f-photo-remove');
+  await page.waitForTimeout(200);
+  await page.click('#editor-form button[type="submit"]');
+  await page.waitForTimeout(500);
+  return (await page.locator('.plant-card__photo').count()) === 0 ? true : 'photo still on card';
+});
+
 // Weather nudge: heat advisory should shorten the monstera summer interval
 await t('heat advisory shortens watering interval', async () => {
   const gap = await page.evaluate(() => {
