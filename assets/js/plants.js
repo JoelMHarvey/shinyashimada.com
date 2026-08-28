@@ -119,6 +119,16 @@
       es: 'Deja el riego en blanco para seguir la guía de la especie, que cambia con la estación.'
     },
 
+    'pl.f.photo':       { en: 'Photo', ja: '写真', es: 'Foto' },
+    'pl.f.photoAdd':    { en: 'Add photo', ja: '写真を追加', es: 'Añadir foto' },
+    'pl.f.photoChange': { en: 'Change photo', ja: '写真を変更', es: 'Cambiar foto' },
+    'pl.f.photoRemove': { en: 'Remove', ja: '削除', es: 'Quitar' },
+    'pl.photoErr': {
+      en: 'Could not read that photo — try a different one.',
+      ja: '写真を読み込めませんでした。別の写真をお試しください。',
+      es: 'No se pudo leer esa foto; prueba con otra.'
+    },
+
     'pl.new':    { en: 'Add a plant', ja: '植物を追加', es: 'Añadir una planta' },
     'pl.editing':{ en: 'Edit plant', ja: '植物を編集', es: 'Editar planta' },
     'pl.confirmDelete': { en: 'Remove this plant and its whole history?', ja: 'この植物と履歴をすべて削除しますか？', es: '¿Eliminar esta planta y todo su historial?' },
@@ -423,7 +433,9 @@
       btn.innerHTML =
         (u ? '<span class="plant-card__flag" data-state="' + u.state + '"></span>' : '') +
         '<span class="plant-card__top">' +
-          '<span class="plant-card__emoji">' + emojiOf(p) + '</span>' +
+          (p.photo
+            ? '<img class="plant-card__photo" src="' + p.photo + '" alt="" loading="lazy">'
+            : '<span class="plant-card__emoji">' + emojiOf(p) + '</span>') +
           '<span><span class="plant-card__name">' + esc(displayName(p)) + '</span><br>' +
           '<span class="plant-card__species">' + esc(speciesLabel(p)) + '</span></span>' +
         '</span>' +
@@ -506,6 +518,7 @@
     }).join('');
 
     body.innerHTML =
+      (p.photo ? '<img class="detail__photo" src="' + p.photo + '" alt="">' : '') +
       '<div class="detail__head">' +
         '<span class="detail__emoji">' + emojiOf(p) + '</span>' +
         '<span class="detail__title"><h2 style="font-size:1.35rem">' + esc(displayName(p)) + '</h2>' +
@@ -555,9 +568,60 @@
     sel.innerHTML = html;
   }
 
+  /* ---------------------------------------------------------- photos --- */
+
+  /* Records live in a 64 KB JSONB row and sync whole, so photos are stored
+     as small JPEG data URLs squeezed to fit: downscale, then walk the
+     quality down until the string is under budget. Plenty for a thumbnail
+     of a plant; originals stay on the phone. */
+  var PHOTO_BUDGET = 50000; // data-URL characters (~37 KB of JPEG)
+  var editorPhoto;          // undefined = untouched · null = removed · string = new
+
+  function compressPhoto(file, done, fail) {
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      var dims = [640, 480, 360];
+      var quals = [0.72, 0.6, 0.5, 0.4];
+      for (var d = 0; d < dims.length; d++) {
+        var scale = Math.min(1, dims[d] / Math.max(img.width, img.height));
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(img.width * scale));
+        canvas.height = Math.max(1, Math.round(img.height * scale));
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        for (var q = 0; q < quals.length; q++) {
+          var out = canvas.toDataURL('image/jpeg', quals[q]);
+          if (out.length <= PHOTO_BUDGET) return done(out);
+        }
+      }
+      fail();
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); fail(); };
+    img.src = url;
+  }
+
+  function currentEditorPhoto() {
+    if (editorPhoto !== undefined) return editorPhoto;
+    var p = editingId ? store.get(editingId) : null;
+    return (p && p.photo) || null;
+  }
+
+  function renderPhotoField() {
+    var photo = currentEditorPhoto();
+    var img = $('f-photo-preview');
+    img.hidden = !photo;
+    if (photo) img.src = photo;
+    else img.removeAttribute('src');
+    $('f-photo-label').textContent = I18N.t(photo ? 'pl.f.photoChange' : 'pl.f.photoAdd');
+    $('f-photo-remove').hidden = !photo;
+  }
+
   function openEditor(id) {
     editingId = id || null;
     var p = id ? store.get(id) : null;
+    editorPhoto = undefined;
+    renderPhotoField();
 
     buildSpeciesOptions();
     $('editor-title').textContent = I18N.t(id ? 'pl.editing' : 'pl.new');
@@ -599,7 +663,8 @@
       potSize: $('f-pot').value ? Number($('f-pot').value) : null,
       acquired: $('f-acquired').value || null,
       waterEvery: $('f-water').value ? Number($('f-water').value) : null,
-      notes: $('f-notes').value.trim() || null
+      notes: $('f-notes').value.trim() || null,
+      photo: editorPhoto !== undefined ? editorPhoto : ((existing && existing.photo) || null)
     });
 
     store.put(record);
@@ -710,6 +775,23 @@
     });
 
     $('f-species').addEventListener('change', syncCustomVisibility);
+
+    $('f-photo').addEventListener('change', function () {
+      var file = this.files && this.files[0];
+      this.value = '';
+      if (!file) return;
+      compressPhoto(file, function (dataUrl) {
+        editorPhoto = dataUrl;
+        renderPhotoField();
+      }, function () {
+        Shell.toast(I18N.t('pl.photoErr'), 'error');
+      });
+    });
+
+    $('f-photo-remove').addEventListener('click', function () {
+      editorPhoto = null;
+      renderPhotoField();
+    });
 
     $('editor-form').addEventListener('submit', function (e) {
       if (!saveEditor()) e.preventDefault();
