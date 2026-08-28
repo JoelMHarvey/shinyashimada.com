@@ -43,12 +43,8 @@
     Referrer-Policy        = "strict-origin-when-cross-origin"
     Permissions-Policy     = "geolocation=(), camera=(), microphone=()"
 
-[[headers]]
-  for = "/assets/*"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
-
-[[headers]]
-  for = "/data/*"
-  [headers.values]
-    Cache-Control = "public, max-age=600"
+# Assets and data deliberately carry no max-age: pages reference them
+# unversioned, so a timed cache lets a fresh page run an hour-stale script
+# after a deploy (seen as raw i18n keys in the plant editor). Netlify's
+# default — ETag revalidation on every request — keeps them cached but
+# never stale: unchanged files answer with a cheap 304.
