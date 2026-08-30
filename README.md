@@ -123,6 +123,15 @@ you can stop. Two rules keep it honest:
 about are marked, counted and filterable, so they can be confirmed by eye
 rather than quietly trusted.
 
+**Descriptions.** A blurb comes from the catalogues like any other field —
+Google Books usually has one where Open Library does not — and shows as three
+clamped lines on the card and in full in the detail view. The catalogues do not
+cover everything, so *No description* is a filter with a live count, next to
+*Needs checking*: what *Fill in the gaps* could not answer is a visible,
+finishable list rather than something you find one book at a time. Both
+buttons disappear when their count reaches zero. Nothing writes a synopsis
+that no catalogue supplied.
+
 **Covers** come from the catalogues as URLs, which cost nothing to store. A
 photo taken instead is downscaled and compressed until the record fits the
 store's 64 KB budget, exactly as the balcony does for plants.

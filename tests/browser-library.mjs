@@ -167,6 +167,31 @@ await page.fill('#f-notes', 'Shin bought this in Jimbocho.');
 await page.click('#editor-form button[type=submit]');
 await page.waitForTimeout(500);
 
+/* --- the description gap ------------------------------------------------ */
+// Two books on the shelf now: the first has a blurb, this one does not.
+
+await t('the no-description filter appears with a count', async () => {
+  if (await page.isHidden('#f-nodesc')) return 'filter hidden while a book has no description';
+  const label = (await page.textContent('#f-nodesc')).replace(/\s+/g, ' ').trim();
+  return label.includes('(1)') ? true : `label read "${label}"`;
+});
+
+await page.click('#f-nodesc');
+await page.waitForTimeout(400);
+await t('filtering to it narrows the shelf', async () =>
+  (await page.locator('.book').count()) === 1 ? true : `${await page.locator('.book').count()} shown`);
+await t('the one shown is the book without a blurb', async () =>
+  (await page.textContent('.book')).includes('Norwegian Wood') ? true : await page.textContent('.book'));
+await page.click('#f-nodesc');
+await page.waitForTimeout(400);
+
+await t('a card carries a snippet of the blurb it does have', async () => {
+  const n = await page.locator('.book .book__desc').count();
+  if (n !== 1) return `${n} snippets for 1 described book`;
+  return (await page.textContent('.book .book__desc')).includes('Toru recalls')
+    ? true : await page.textContent('.book .book__desc');
+});
+
 await page.locator('.book').first().click();
 await page.waitForTimeout(300);
 // Sorted by recently added, so the sparse one is first.
@@ -184,6 +209,13 @@ await t('enrichment left our notes alone', async () =>
   (await page.textContent('#detail-body')).includes('Jimbocho') ? true : 'notes lost');
 await t('enrichment named what it added', async () =>
   /Added .*from the catalogues/.test(await page.textContent('.toast-host')) ? true : 'no report');
+
+// Nothing left without a blurb, so the filter has nothing to offer and goes.
+// Read the property rather than visibility: the detail panel is still open
+// over the toolbar, and what is under test is the state, not the occlusion.
+await t('the no-description filter goes away once the gap is closed', async () =>
+  await page.locator('#f-nodesc').evaluate((el) => el.hidden)
+    ? true : 'filter still offered with nothing to filter');
 
 /* --- rating ------------------------------------------------------------- */
 
