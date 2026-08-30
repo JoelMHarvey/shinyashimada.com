@@ -7,7 +7,14 @@
    failing the request, so one dead source never blanks the page.
 
    Query: ?lang=en|ja|es
+
+   joelmharvey.com's Tokyo page reads this too, from its own origin, so the
+   responses carry CORS headers for the allowlist in lib/cors.mjs. Keeping one
+   feed list here rather than one per site is the point: a language asked for
+   is a language returned, on both sites, from the same code.
    ========================================================================== */
+
+import { corsHeaders, preflight } from '../lib/cors.mjs';
 
 const FEEDS = {
   en: [
@@ -184,26 +191,37 @@ function merge(groups) {
   return out.slice(0, TOTAL);
 }
 
-function json(body, status = 200) {
+function json(body, status = 200, extra = {}) {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'Cache-Control': status === 200
         ? 'public, max-age=300, s-maxage=600, stale-while-revalidate=3600'
-        : 'no-store'
+        : 'no-store',
+      ...extra
     }
   });
 }
 
 export default async function handler(req) {
+  /* A preflight is answered before any feed is touched: the browser sends it
+     with no query of its own and will not follow up until it succeeds. */
+  const pre = preflight(req);
+  if (pre) return pre;
+
+  /* Per request, not per cache entry: the memo below holds bodies, and the
+     allowed origin differs between callers. `Vary: Origin` comes with them. */
+  const cors = corsHeaders(req);
+  const reply = (body, status = 200) => json(body, status, cors);
+
   const url = new URL(req.url);
   const requested = (url.searchParams.get('lang') || 'en').toLowerCase();
   const lang = FEEDS[requested] ? requested : 'en';
 
   const hit = memo.get(lang);
   if (hit && Date.now() - hit.at < CACHE_MS) {
-    return json({ ...hit.body, cached: true });
+    return reply({ ...hit.body, cached: true });
   }
 
   const results = await Promise.all(FEEDS[lang].map(fetchFeed));
@@ -219,8 +237,8 @@ export default async function handler(req) {
   }
 
   if (!items.length) {
-    if (hit) return json({ ...hit.body, cached: true, stale: true });
-    return json({ ok: false, error: 'No headlines available right now.', code: 'no-items' }, 502);
+    if (hit) return reply({ ...hit.body, cached: true, stale: true });
+    return reply({ ok: false, error: 'No headlines available right now.', code: 'no-items' }, 502);
   }
 
   const body = {
@@ -233,5 +251,5 @@ export default async function handler(req) {
   };
 
   memo.set(lang, { at: Date.now(), body });
-  return json(body);
+  return reply(body);
 }
