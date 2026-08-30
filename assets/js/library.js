@@ -148,6 +148,12 @@
     'lib.importFail':  { en: 'Could not read the inventory file.', ja: '蔵書リストを読み込めませんでした。', es: 'No se pudo leer el archivo del inventario.' },
 
     /* --- checking --- */
+    'lib.desc.filter':  { en: 'No description', ja: '内容なし', es: 'Sin descripción' },
+    'lib.desc.hint': {
+      en: 'Books with no description yet. Fill gaps writes one where a catalogue has it; the rest are yours to add.',
+      ja: 'まだ内容紹介のない本です。カタログにあるものは「不足を補う」で入りますが、残りは手入力になります。',
+      es: 'Libros que aún no tienen descripción. «Rellenar huecos» añade la que exista en un catálogo; el resto los escribes tú.'
+    },
     'lib.check.chip':   { en: 'Check', ja: '要確認', es: 'Revisar' },
     'lib.check.filter': { en: 'Needs checking', ja: '要確認のみ', es: 'Por revisar' },
     'lib.check.low':    { en: 'Read off the shelf photo with low confidence — worth confirming.', ja: '棚の写真からの読み取り精度が低い項目です。確認をおすすめします。', es: 'Leído de la foto del estante con poca confianza — conviene confirmarlo.' },
@@ -186,7 +192,8 @@
 
   var store = Store.open('books');
 
-  var filters = { q: '', owner: 'all', status: 'all', shelf: 'all', sort: 'added', check: false };
+  var filters = { q: '', owner: 'all', status: 'all', shelf: 'all', sort: 'added',
+                  check: false, nodesc: false };
   var editingId = null;
   var detailId = null;
   var editorCover;          // undefined = untouched · null = removed · string = new
@@ -216,6 +223,13 @@
     return b.confidence === 'low' || b.confidence === 'medium';
   }
 
+  /* A catalogue has a blurb for a book or it does not, and for a shelf this
+     size that gap is most of the work. Filterable, so it can be worked
+     through rather than discovered one book at a time. */
+  function needsDescription(b) {
+    return isBlank(b.description);
+  }
+
   function statusOf(b) {
     return STATUSES.indexOf(b.status) === -1 ? 'unread' : b.status;
   }
@@ -233,6 +247,7 @@
     if (filters.status !== 'all' && statusOf(b) !== filters.status) return false;
     if (filters.shelf !== 'all' && (b.location || '') !== filters.shelf) return false;
     if (filters.check && !needsCheck(b)) return false;
+    if (filters.nodesc && !needsDescription(b)) return false;
     if (!filters.q) return true;
     var hay = [
       b.title, b.subtitle, authorLine(b), b.publisher, b.notes,
@@ -319,6 +334,7 @@
           (b.publishedYear ? '<span class="tiny muted">' + esc(b.publishedYear) + '</span>' : '') +
         '</div>' +
         (b.rating ? '<div class="stars stars--sm">' + stars(b.rating, false) + '</div>' : '') +
+        (b.description ? '<p class="book__desc">' + esc(b.description) + '</p>' : '') +
       '</div>' +
     '</article>';
   }
@@ -330,6 +346,13 @@
     var toCheck = books().filter(needsCheck).length;
     $('f-check').hidden = toCheck === 0;
     $('check-count').textContent = toCheck ? ' (' + I18N.formatNumber(toCheck) + ')' : '';
+
+    /* The button disappears when the count reaches zero, which is the only
+       "all done" signal this page has any business giving. */
+    var toDescribe = books().filter(needsDescription).length;
+    $('f-nodesc').hidden = toDescribe === 0;
+    $('nodesc-count').textContent = toDescribe ? ' (' + I18N.formatNumber(toDescribe) + ')' : '';
+    if (toDescribe === 0 && filters.nodesc) { filters.nodesc = false; syncFilterControls(); }
 
     var shown = sorted(books().filter(matches));
     var grid = $('grid');
@@ -371,6 +394,7 @@
     $('f-status').value = filters.status;
     $('f-sort').value = filters.sort;
     $('f-check').setAttribute('aria-pressed', String(filters.check));
+    $('f-nodesc').setAttribute('aria-pressed', String(filters.nodesc));
   }
 
   /* The shelves come from the books themselves, so an inventory with a
@@ -963,6 +987,12 @@
 
     $('f-check').addEventListener('click', function () {
       filters.check = !filters.check;
+      syncFilterControls();
+      render();
+    });
+
+    $('f-nodesc').addEventListener('click', function () {
+      filters.nodesc = !filters.nodesc;
       syncFilterControls();
       render();
     });

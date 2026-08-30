@@ -61,6 +61,15 @@
 .book__author { font-size: .8rem; color: var(--ink-faint); margin: 0; }
 .book__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-top: .15rem; }
 
+/* Three lines of the blurb, so a card stays a card. Clamped rather than
+   truncated in JS: the full text is in the DOM for find-in-page, and the cut
+   lands on a line rather than mid-word. */
+.book__desc {
+  font-size: .78rem; line-height: 1.45; color: var(--ink-faint); margin: .1rem 0 0;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
 /* --- stars ------------------------------------------------------------- */
 
 .stars { display: inline-flex; gap: .1rem; align-items: center; }
