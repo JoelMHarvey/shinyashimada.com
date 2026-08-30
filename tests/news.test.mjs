@@ -81,8 +81,44 @@ const es = await run('es');
 console.log('--- ES (broken feed -> should fall back to EN) ---');
 console.log('fallbackFrom:', es.fallbackFrom, '| items:', es.items.length);
 
+/* --- cross-origin ---------------------------------------------------------
+   joelmharvey.com's Tokyo page calls this endpoint from its own origin, so
+   the browser will discard the answer unless the response says who may read
+   it. These check the response headers rather than the body. */
+
+async function withOrigin(method, origin, lang = 'en') {
+  return handler(new Request(`https://x/api/news?lang=${lang}`, {
+    method,
+    headers: origin ? { origin } : {}
+  }));
+}
+
+const pre = await withOrigin('OPTIONS', 'https://joelmharvey.com');
+const allowed = await withOrigin('GET', 'https://joelmharvey.com', 'ja');
+const stranger = await withOrigin('GET', 'https://not-ours.example', 'ja');
+
+console.log('--- CORS ---');
+console.log('preflight:', pre.status, pre.headers.get('access-control-allow-origin'));
+console.log('allowed  :', allowed.headers.get('access-control-allow-origin'), '| vary:', allowed.headers.get('vary'));
+console.log('stranger :', stranger.headers.get('access-control-allow-origin'));
+
 // Assertions
 const fail = [];
+if (pre.status !== 204) fail.push(`preflight answered ${pre.status}, not 204`);
+if (pre.headers.get('access-control-allow-origin') !== 'https://joelmharvey.com')
+  fail.push('preflight did not grant joelmharvey.com');
+if (allowed.headers.get('access-control-allow-origin') !== 'https://joelmharvey.com')
+  fail.push('GET did not grant joelmharvey.com');
+if (allowed.headers.get('vary') !== 'Origin')
+  fail.push('missing Vary: Origin — a CDN could serve one site the other\'s grant');
+if (stranger.headers.get('access-control-allow-origin'))
+  fail.push('an unlisted origin was granted access');
+// The cached path builds its response separately; it must be headed too.
+const cachedHit = await withOrigin('GET', 'https://joelmharvey.com', 'ja');
+if (JSON.parse(await cachedHit.clone().text()).cached !== true)
+  fail.push('second call did not come from the memo, so the cached path is untested');
+if (cachedHit.headers.get('access-control-allow-origin') !== 'https://joelmharvey.com')
+  fail.push('a cached response lost its CORS headers');
 if (en.items.length !== 3) fail.push(`EN expected 3 deduped items, got ${en.items.length}`);
 if (en.items[0].title !== 'Atom & entry') fail.push('EN not sorted newest-first');
 if (!en.items.some(i => i.title === 'Tokyo hits 35C as heat & humidity persist')) fail.push('entity decode failed');

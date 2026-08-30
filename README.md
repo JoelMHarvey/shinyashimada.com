@@ -74,7 +74,8 @@ returns `503 no-database` and the plant page quietly runs device-only.
   Kyodo (en); NHK and Asahi (ja); NHK World (es). Feeds are fetched in
   parallel, deduped by URL and normalised title, and a dead feed is skipped
   rather than failing the request. Spanish falls back to the English wire and
-  says so in the UI.
+  says so in the UI. joelmharvey.com's `/tokyo/` reads this endpoint too — one
+  feed list, so a language asked for is the language returned on both sites.
 - `GET|POST /api/store` — the synced collections (`plants`, `tastings`,
   `books`). See `schema.sql`.
 - `GET /api/books?isbn=…` or `?q=…` — book metadata. Asks Open Library and
@@ -83,9 +84,12 @@ returns `503 no-database` and the plant page quietly runs device-only.
   complete. No API key; passcode-gated so it is not left as an open lookup
   proxy. Cached an hour.
 
-`/api/store` and `/api/books` answer cross-origin requests from an allowlist
-(`netlify/lib/cors.mjs`), which is how joelmharvey.com shows the same library.
-An allowlist rather than `*`, because these endpoints take a passcode header.
+`/api/store`, `/api/books` and `/api/news` answer cross-origin requests from an
+allowlist (`netlify/lib/cors.mjs`): the first two are how joelmharvey.com shows
+the same library, the third is how its Tokyo page gets headlines in the
+language it asked for. An allowlist rather than `*`, because the first two take
+a passcode header and one policy in one file is easier to keep honest than
+two.
 
 ## The shared library
 
