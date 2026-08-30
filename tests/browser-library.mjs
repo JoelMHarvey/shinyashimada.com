@@ -91,7 +91,7 @@ await t('cover preview appears', async () => await page.isVisible('#f-cover-prev
 // Ours to say, not the catalogue's.
 await page.selectOption('#f-owner-edit', 'shin');
 await page.selectOption('#f-status-edit', 'reading');
-await page.fill('#f-shelf', 'Bedroom, top shelf');
+await page.fill('#f-shelf-edit', 'Bedroom, top shelf');
 await page.click('#editor-form button[type=submit]');
 await page.waitForTimeout(500);
 

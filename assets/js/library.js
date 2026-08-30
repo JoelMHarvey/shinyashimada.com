@@ -397,10 +397,13 @@
     var st = store.status();
     var pill = $('sync-pill');
     pill.setAttribute('data-mode', st.mode);
-    $('sync-text').textContent =
-      st.mode === 'cloud' ? I18N.t('lib.sync.cloud')
+    var label = st.mode === 'cloud' ? I18N.t('lib.sync.cloud')
       : st.mode === 'local' ? I18N.t('lib.sync.local')
       : I18N.t('common.loading');
+    // A backlog is the one thing worth saying out loud: it means these books
+    // exist only in this browser.
+    if (st.pending) label += ' · ' + I18N.t('lib.sync.pending', { n: I18N.formatNumber(st.pending) });
+    $('sync-text').textContent = label;
   }
 
   /* ====================================================================== */
@@ -914,7 +917,10 @@
     $('app').classList.remove('hidden');
     render();
     renderSyncPill();
-    store.pull().then(function () { render(); renderSyncPill(); });
+    /* sync(), not pull(): anything written while the store was in local-only
+       mode is still sitting in the pending queue, and a read alone would
+       leave it there for ever. Pushing first is what gets it off the device. */
+    store.sync().then(function () { render(); renderSyncPill(); });
   }
 
   function showLock(message) {
@@ -1028,7 +1034,8 @@
     var code = $('lock-input').value;
     if (!code) return;
     Store.auth.set(code);
-    store.pull().then(function () {
+    /* The passcode is the thing that was missing, so send the backlog now. */
+    store.sync().then(function () {
       var st = store.status();
       if (st.lastError && st.lastError.status === 401) {
         Store.auth.clear();
@@ -1046,7 +1053,12 @@
 
   I18N.extend({
     'lib.sync.cloud': { en: 'Synced', ja: '同期済み', es: 'Sincronizado' },
-    'lib.sync.local': { en: 'This device only', ja: 'この端末のみ', es: 'Solo este dispositivo' }
+    'lib.sync.local': { en: 'This device only', ja: 'この端末のみ', es: 'Solo este dispositivo' },
+    'lib.sync.pending': {
+      en: '{n} not saved to the shared library yet',
+      ja: '{n} 件が共有ライブラリに未保存',
+      es: '{n} sin guardar todavía en la biblioteca compartida'
+    }
   });
 
   Shell.init('library');
