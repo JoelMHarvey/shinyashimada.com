@@ -21,6 +21,10 @@
 
   var L = Shell.local;
 
+  /* The store caps a single write, so a large backlog goes up in batches
+     rather than one oversized request that would be refused whole. */
+  var PUSH_BATCH = 400;
+
   /* -------------------------------------------------------------- auth -- */
 
   /* Bumped whenever the stored passcode changes, so a collection that was
@@ -253,18 +257,34 @@
         }
 
         var pending = dirty.slice();
-        var payload = pending
-          .map(function (id) { return api.get(id); })
-          .filter(Boolean);
-        if (!payload.length) { dirty = []; persist(); return Promise.resolve(false); }
+        var sent = [];
 
         state.syncing = true;
         emit();
 
-        return request('POST', { collection: name, records: payload })
+        /* One batch at a time, remembering what landed: if the fourth request
+           fails, the first three are still saved and only the rest stay
+           dirty. */
+        function sendFrom(i) {
+          if (i >= pending.length) return Promise.resolve(true);
+          var ids = pending.slice(i, i + PUSH_BATCH);
+          var payload = ids
+            .map(function (id) { return api.get(id); })
+            .filter(Boolean);
+          if (!payload.length) {
+            sent = sent.concat(ids);
+            return sendFrom(i + PUSH_BATCH);
+          }
+          return request('POST', { collection: name, records: payload }).then(function () {
+            sent = sent.concat(ids);
+            return sendFrom(i + PUSH_BATCH);
+          });
+        }
+
+        return sendFrom(0)
           .then(function () {
             // Drop only the ids we actually sent; anything edited meanwhile stays dirty.
-            dirty = dirty.filter(function (id) { return pending.indexOf(id) === -1; });
+            dirty = dirty.filter(function (id) { return sent.indexOf(id) === -1; });
             state.mode = 'cloud';
             state.lastError = null;
             state.unauthorisedAt = null;
@@ -272,6 +292,11 @@
             return true;
           })
           .catch(function (err) {
+            // Whatever did land is not sent twice.
+            if (sent.length) {
+              dirty = dirty.filter(function (id) { return sent.indexOf(id) === -1; });
+              persist();
+            }
             state.lastError = err;
             if (err.status === 401) state.unauthorisedAt = authEpoch;
             if (err.status === 401 || err.status === 503 || err.code === 'no-database') state.mode = 'local';

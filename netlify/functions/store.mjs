@@ -23,6 +23,7 @@
 import pg from 'pg';
 
 import { corsHeaders, preflight } from '../lib/cors.mjs';
+import { prepareRecords, writeRecords } from '../lib/records.mjs';
 
 const { Pool } = pg;
 
@@ -31,7 +32,6 @@ const PUBLIC_READ = new Set(['tastings']);
 
 /** Guard rails so a bad client cannot exhaust the database. */
 const MAX_RECORDS_PER_WRITE = 500;
-const MAX_RECORD_BYTES = 64 * 1024;
 const COLLECTION_RE = /^[a-z][a-z0-9_-]{0,40}$/;
 
 let pool = null;
@@ -209,38 +209,18 @@ export default async function handler(req) {
       return reply({ error: `At most ${MAX_RECORDS_PER_WRITE} records per request.`, code: 'too-many' }, 413);
     }
 
+    /* Shaped and checked before a connection is opened, so a bad record is
+       rejected without a transaction to roll back. */
+    const prepared = prepareRecords(collection, records);
+    if (prepared.error) {
+      return reply({ error: prepared.error, code: prepared.code }, prepared.status);
+    }
+    if (!prepared.rows.length) return reply({ ok: true, written: 0 });
+
     const client = await db.connect();
     try {
       await client.query('BEGIN');
-      let written = 0;
-
-      for (const raw of records) {
-        if (!raw || typeof raw !== 'object' || typeof raw.id !== 'string' || !raw.id) continue;
-
-        const serialised = JSON.stringify(raw);
-        if (serialised.length > MAX_RECORD_BYTES) {
-          await client.query('ROLLBACK');
-          return reply({ error: 'A record exceeds the 64KB limit.', code: 'record-too-large' }, 413);
-        }
-
-        const updatedAt = raw.updatedAt && !Number.isNaN(Date.parse(raw.updatedAt))
-          ? new Date(raw.updatedAt).toISOString()
-          : new Date().toISOString();
-
-        await client.query(
-          `INSERT INTO store_records (id, collection, data, updated_at, deleted)
-           VALUES ($1, $2, $3::jsonb, $4, $5)
-           ON CONFLICT (id) DO UPDATE
-             SET data       = EXCLUDED.data,
-                 updated_at = EXCLUDED.updated_at,
-                 deleted    = EXCLUDED.deleted,
-                 collection = EXCLUDED.collection
-           WHERE store_records.updated_at <= EXCLUDED.updated_at`,
-          [raw.id, collection, serialised, updatedAt, !!raw.deleted]
-        );
-        written++;
-      }
-
+      const written = await writeRecords(client, prepared.rows);
       await client.query('COMMIT');
       return reply({ ok: true, written });
     } catch (err) {
