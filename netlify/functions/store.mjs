@@ -5,6 +5,11 @@
    GET  /api/store?collection=plants     -> { records: [...] }
    POST /api/store  { collection, records: [...] }
 
+   Collections in use: `plants`, `tastings`, `books`.
+
+   joelmharvey.com shows the same book library from its own origin, so the
+   responses carry CORS headers for an allowlist of sites (see lib/cors.mjs).
+
    Records are stored whole in a JSONB column; `id`, `updated_at` and
    `deleted` are mirrored into real columns so merges and filters stay cheap.
    Writes are last-write-wins on updated_at.
@@ -16,6 +21,8 @@
    ========================================================================== */
 
 import pg from 'pg';
+
+import { corsHeaders, preflight } from '../lib/cors.mjs';
 
 const { Pool } = pg;
 
@@ -108,6 +115,16 @@ function rowToRecord(row) {
 }
 
 export default async function handler(req) {
+  /* Answered before anything else: a preflight carries no passcode and must
+     not be measured against one. */
+  const pre = preflight(req);
+  if (pre) return pre;
+
+  /* Every reply below needs the same cross-origin headers, so bind them once
+     rather than threading `req` through each call. */
+  const cors = corsHeaders(req);
+  const reply = (body, status = 200, extra = {}) => json(body, status, { ...cors, ...extra });
+
   const url = new URL(req.url);
   const authRequired = !!process.env.SITE_PASSCODE;
   const db = getPool();
@@ -122,11 +139,11 @@ export default async function handler(req) {
         console.error('[store] health check failed', err);
       }
     }
-    return json({ ok: true, database, authRequired });
+    return reply({ ok: true, database, authRequired });
   }
 
   if (!db) {
-    return json(
+    return reply(
       {
         error: 'Cloud sync is not configured. Set DATABASE_URL in the Netlify site environment.',
         code: 'no-database'
@@ -139,7 +156,7 @@ export default async function handler(req) {
     await ensureSchema(db);
   } catch (err) {
     console.error('[store] schema init failed', err);
-    return json({ error: 'Database is unavailable.', code: 'schema-failed' }, 503);
+    return reply({ error: 'Database is unavailable.', code: 'schema-failed' }, 503);
   }
 
   /* ------------------------------------------------------------- read -- */
@@ -147,10 +164,10 @@ export default async function handler(req) {
   if (req.method === 'GET') {
     const collection = url.searchParams.get('collection');
     if (!collection || !COLLECTION_RE.test(collection)) {
-      return json({ error: 'A valid `collection` is required.', code: 'bad-collection' }, 400);
+      return reply({ error: 'A valid `collection` is required.', code: 'bad-collection' }, 400);
     }
     if (!PUBLIC_READ.has(collection) && !isAuthed(req)) {
-      return json({ error: 'Passcode required.', code: 'unauthorized' }, 401);
+      return reply({ error: 'Passcode required.', code: 'unauthorized' }, 401);
     }
 
     const since = url.searchParams.get('since');
@@ -163,33 +180,33 @@ export default async function handler(req) {
     sql += ' ORDER BY updated_at DESC LIMIT 5000';
 
     const { rows } = await db.query(sql, params);
-    return json({ records: rows.map(rowToRecord), serverTime: new Date().toISOString() });
+    return reply({ records: rows.map(rowToRecord), serverTime: new Date().toISOString() });
   }
 
   /* ------------------------------------------------------------ write -- */
 
   if (req.method === 'POST') {
     if (!isAuthed(req)) {
-      return json({ error: 'Passcode required.', code: 'unauthorized' }, 401);
+      return reply({ error: 'Passcode required.', code: 'unauthorized' }, 401);
     }
 
     let body;
     try {
       body = await req.json();
     } catch {
-      return json({ error: 'Body must be JSON.', code: 'bad-json' }, 400);
+      return reply({ error: 'Body must be JSON.', code: 'bad-json' }, 400);
     }
 
     const collection = body?.collection;
     const records = body?.records;
     if (!collection || !COLLECTION_RE.test(collection)) {
-      return json({ error: 'A valid `collection` is required.', code: 'bad-collection' }, 400);
+      return reply({ error: 'A valid `collection` is required.', code: 'bad-collection' }, 400);
     }
     if (!Array.isArray(records) || records.length === 0) {
-      return json({ error: '`records` must be a non-empty array.', code: 'bad-records' }, 400);
+      return reply({ error: '`records` must be a non-empty array.', code: 'bad-records' }, 400);
     }
     if (records.length > MAX_RECORDS_PER_WRITE) {
-      return json({ error: `At most ${MAX_RECORDS_PER_WRITE} records per request.`, code: 'too-many' }, 413);
+      return reply({ error: `At most ${MAX_RECORDS_PER_WRITE} records per request.`, code: 'too-many' }, 413);
     }
 
     const client = await db.connect();
@@ -203,7 +220,7 @@ export default async function handler(req) {
         const serialised = JSON.stringify(raw);
         if (serialised.length > MAX_RECORD_BYTES) {
           await client.query('ROLLBACK');
-          return json({ error: 'A record exceeds the 64KB limit.', code: 'record-too-large' }, 413);
+          return reply({ error: 'A record exceeds the 64KB limit.', code: 'record-too-large' }, 413);
         }
 
         const updatedAt = raw.updatedAt && !Number.isNaN(Date.parse(raw.updatedAt))
@@ -225,15 +242,15 @@ export default async function handler(req) {
       }
 
       await client.query('COMMIT');
-      return json({ ok: true, written });
+      return reply({ ok: true, written });
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
       console.error('[store] write failed', err);
-      return json({ error: 'Could not save.', code: 'write-failed' }, 500);
+      return reply({ error: 'Could not save.', code: 'write-failed' }, 500);
     } finally {
       client.release();
     }
   }
 
-  return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET, POST' });
+  return reply({ error: 'Method not allowed.' }, 405, { Allow: 'GET, POST, OPTIONS' });
 }

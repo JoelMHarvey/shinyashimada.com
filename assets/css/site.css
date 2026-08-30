@@ -430,8 +430,40 @@ table.data th.sortable:hover { color: var(--ink); }
 .nowrap { white-space: nowrap; }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .hidden { display: none !important; }
+
+/* The browser's own [hidden] rule is a bare attribute selector, so any class
+   that sets `display` outranks it — `.btn`, `.field` and friends all do. That
+   made `el.hidden = true` a no-op on exactly the elements the pages toggle
+   (a delete button on a new record, the lent-to field, the camera's stop
+   button). Restore the intent with matching weight. */
+[hidden] { display: none !important; }
 .mt-0 { margin-top: 0; } .mb-0 { margin-bottom: 0; }
 .mt-1 { margin-top: .6rem; } .mt-2 { margin-top: 1.2rem; } .mt-3 { margin-top: 2rem; }
 .mb-1 { margin-bottom: .6rem; } .mb-2 { margin-bottom: 1.2rem; } .mb-3 { margin-bottom: 2rem; }
 .flex { display: flex; } .items-center { align-items: center; } .gap-1 { gap: .5rem; } .gap-2 { gap: 1rem; }
 .wrap-flex { flex-wrap: wrap; }
+
+/* Passcode lock and sync pill --------------------------------------------
+   Shared by every page that keeps a synced, passcode-gated collection —
+   the balcony and the library both wear these. */
+
+.lock-panel {
+  max-width: 440px; margin: 4rem auto; text-align: center;
+  padding: 2.4rem 2rem;
+}
+.lock-panel__icon { font-size: 2.4rem; margin-bottom: .8rem; }
+.lock-panel form { margin-top: 1.4rem; text-align: left; }
+.lock-panel .btn { margin-top: .3rem; }
+.lock-panel__alt { margin-top: 1.2rem; font-size: .85rem; }
+
+/* Sync status pill */
+.sync-pill {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-size: .76rem; padding: .22rem .6rem; border-radius: 999px;
+  background: var(--paper-sunk); color: var(--ink-faint); border: 1px solid var(--line);
+}
+.sync-pill__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-faint); flex: none; }
+.sync-pill[data-mode="cloud"] { color: var(--green); }
+.sync-pill[data-mode="cloud"] .sync-pill__dot { background: var(--green); }
+.sync-pill[data-mode="local"] { color: var(--gold); }
+.sync-pill[data-mode="local"] .sync-pill__dot { background: var(--gold); }

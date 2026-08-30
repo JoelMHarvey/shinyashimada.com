@@ -164,6 +164,7 @@
 
     'nav.home':        { en: 'Home',            ja: 'ホーム',           es: 'Inicio' },
     'nav.plants':      { en: 'Balcony',         ja: 'ベランダ',         es: 'Balcón' },
+    'nav.library':     { en: 'Library',         ja: '書庫',             es: 'Biblioteca' },
     'nav.tokyo':       { en: 'Tokyo Today',     ja: '東京の今日',       es: 'Tokio Hoy' },
     'nav.croissants':  { en: 'Croissants',      ja: 'クロワッサン',     es: 'Croissants' },
     'nav.italian':     { en: 'Italian',         ja: 'イタリア語',       es: 'Italiano' },

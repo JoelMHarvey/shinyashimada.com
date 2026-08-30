@@ -157,6 +157,36 @@
         return rec;
       },
 
+      /**
+       * Insert or update many records in one go. `put` pushes after every
+       * write, which is right for a single edit and badly wrong for an
+       * import: 300 books would mean 300 requests. This writes them all
+       * locally, then pushes once.
+       */
+      putMany: function (list) {
+        var stamp = now();
+        (list || []).forEach(function (obj) {
+          var rec = Object.assign({}, obj);
+          if (!rec.id) rec.id = Shell.uid();
+          rec.updatedAt = stamp;
+          rec.deleted = false;
+
+          var idx = -1;
+          for (var i = 0; i < records.length; i++) if (records[i].id === rec.id) { idx = i; break; }
+          if (idx === -1) {
+            rec.createdAt = rec.createdAt || stamp;
+            records.push(rec);
+          } else {
+            rec.createdAt = records[idx].createdAt || stamp;
+            records[idx] = rec;
+          }
+          markDirty(rec.id);
+        });
+        persist();
+        emit();
+        return api.push();
+      },
+
       /** Tombstone a record so the deletion propagates to other devices. */
       remove: function (id) {
         for (var i = 0; i < records.length; i++) {

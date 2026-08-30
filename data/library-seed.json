@@ -1,0 +1,4380 @@
+{
+ "source": "Shelf photo inventory, imported 2026-08-30",
+ "note": "Titles, authors, shelf locations and categories as catalogued from the shelves. No publisher, year, page count, ISBN or cover is included: none was in the source, and inventing them would be worse than leaving them blank. Use 'Fill in the gaps' in the library to fetch those from Open Library and Google Books.",
+ "books": [
+  {
+   "inventoryId": 1,
+   "title": "Bagombo Snuff Box",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "short stories"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 2,
+   "title": "Justine, Philosophy in the Bedroom, & Other Writings",
+   "authors": [
+    "Marquis de Sade"
+   ],
+   "language": "English",
+   "subjects": [
+    "Literature",
+    "philosophy"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 3,
+   "title": "The One Hundred & Twenty Days of Sodom",
+   "authors": [
+    "Marquis de Sade"
+   ],
+   "language": "English",
+   "subjects": [
+    "Literature"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 4,
+   "title": "Tess of the d'Urbervilles; Far from the Madding Crowd; The Mayor of Casterbridge",
+   "authors": [
+    "Thomas Hardy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 5,
+   "title": "Notes from Underground and The Double",
+   "authors": [
+    "Fyodor Dostoevsky"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 6,
+   "title": "The Original Folk & Fairy Tales of the Brothers Grimm",
+   "authors": [
+    "Jacob Grimm & Wilhelm Grimm"
+   ],
+   "language": "English",
+   "subjects": [
+    "Folklore",
+    "fairy tales"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 7,
+   "title": "Stranger in a Strange Land",
+   "authors": [
+    "Robert A. Heinlein"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 8,
+   "title": "The Mysterious Flame of Queen Loana",
+   "authors": [
+    "Umberto Eco"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 9,
+   "title": "Heart of Darkness",
+   "authors": [
+    "Joseph Conrad"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 10,
+   "title": "The Iliad",
+   "authors": [
+    "Homer"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 11,
+   "title": "Far from the Madding Crowd",
+   "authors": [
+    "Thomas Hardy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 12,
+   "title": "Pride and Prejudice",
+   "authors": [
+    "Jane Austen"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 13,
+   "title": "Selection (Canongate edition)",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 14,
+   "title": "Hedda Gabler and Other Plays",
+   "authors": [
+    "Henrik Ibsen"
+   ],
+   "language": "English",
+   "subjects": [
+    "Drama"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 15,
+   "title": "The Koran",
+   "language": "English",
+   "subjects": [
+    "Religion"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 16,
+   "title": "Hamlet",
+   "authors": [
+    "William Shakespeare"
+   ],
+   "language": "English",
+   "subjects": [
+    "Drama"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 17,
+   "title": "To the Lighthouse",
+   "authors": [
+    "Virginia Woolf"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 18,
+   "title": "Yoga Anatomy, Second Edition",
+   "authors": [
+    "Kaminof & Matthews"
+   ],
+   "language": "English",
+   "subjects": [
+    "Health",
+    "yoga"
+   ],
+   "location": "Bookcase 1 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 19,
+   "title": "Italian language study materials (multiple)",
+   "authors": [
+    "Various"
+   ],
+   "language": "Italian",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 2",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 20,
+   "title": "Spanish language study materials (multiple)",
+   "authors": [
+    "Various"
+   ],
+   "language": "Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 2",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 21,
+   "title": "Salamanca de la lengua española",
+   "authors": [
+    "Various"
+   ],
+   "language": "Spanish",
+   "subjects": [
+    "Language reference"
+   ],
+   "location": "Bookcase 1 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 22,
+   "title": "Spagnolo – I dizionari più venduti Garzanti",
+   "authors": [
+    "Various"
+   ],
+   "language": "Italian/Spanish",
+   "subjects": [
+    "Dictionary"
+   ],
+   "location": "Bookcase 1 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 23,
+   "title": "The Feynman Lectures on Physics, Volume 1",
+   "authors": [
+    "Feynman, Leighton & Sands"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 24,
+   "title": "The Feynman Lectures on Physics, Volume 2",
+   "authors": [
+    "Feynman, Leighton & Sands"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 25,
+   "title": "The Feynman Lectures on Physics, Volume 3",
+   "authors": [
+    "Feynman, Leighton & Sands"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 26,
+   "title": "Mathematics for GCSE: Modular Curriculum Edition",
+   "authors": [
+    "Garnier et al."
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 27,
+   "title": "Practical Algebra: A Self-Teaching Guide",
+   "authors": [
+    "Selby & Slavin"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 28,
+   "title": "Collider: The Search for the World's Smallest Particles",
+   "authors": [
+    "Paul Halpern"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 29,
+   "title": "Facts and Mysteries in Elementary Particle Physics",
+   "authors": [
+    "Veltman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 30,
+   "title": "Isaac Newton",
+   "authors": [
+    "James Gleick"
+   ],
+   "language": "English",
+   "subjects": [
+    "Biography",
+    "science"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 31,
+   "title": "The Core Course for A Level Mathematics",
+   "authors": [
+    "Bostock & Chandler"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 32,
+   "title": "Meta Maths",
+   "authors": [
+    "Gregory Chaitin"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 33,
+   "title": "Surely You're Joking, Mr. Feynman!",
+   "authors": [
+    "Richard Feynman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Memoir",
+    "science"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 34,
+   "title": "The Joy of Pi",
+   "authors": [
+    "David Blatner"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 35,
+   "title": "The Complete Calvin and Hobbes – Book One",
+   "authors": [
+    "Bill Watterson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Comics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 36,
+   "title": "The Complete Calvin and Hobbes – Book Two",
+   "authors": [
+    "Bill Watterson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Comics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 37,
+   "title": "The Complete Calvin and Hobbes – Book Three",
+   "authors": [
+    "Bill Watterson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Comics"
+   ],
+   "location": "Bookcase 1 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 38,
+   "title": "The Complete Human Body",
+   "authors": [
+    "Alice Roberts"
+   ],
+   "language": "English",
+   "subjects": [
+    "Anatomy",
+    "science"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 39,
+   "title": "Cranky Uncle vs. Climate Change",
+   "authors": [
+    "John Cook"
+   ],
+   "language": "English",
+   "subjects": [
+    "Climate",
+    "science"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 40,
+   "title": "Shackleton",
+   "authors": [
+    "Ranu[l]ph Fiennes"
+   ],
+   "language": "English",
+   "subjects": [
+    "Biography",
+    "exploration"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 41,
+   "title": "Playing with Planets",
+   "authors": [
+    "Jay Wexman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 42,
+   "title": "E=mc²",
+   "authors": [
+    "David Bodanis"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics",
+    "popular science"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 43,
+   "title": "Homework for Grown-ups",
+   "authors": [
+    "E. Foley & B. Coates"
+   ],
+   "language": "English",
+   "subjects": [
+    "General knowledge"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 44,
+   "title": "Moab Is My Washpot",
+   "authors": [
+    "Stephen Fry"
+   ],
+   "language": "English",
+   "subjects": [
+    "Memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 45,
+   "title": "Things That Nobody Knows",
+   "authors": [
+    "William Hartston"
+   ],
+   "language": "English",
+   "subjects": [
+    "General knowledge"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 46,
+   "title": "The Hotel New Hampshire",
+   "authors": [
+    "John Irving"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 47,
+   "title": "Century",
+   "language": "English",
+   "subjects": [
+    "Reference",
+    "history"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 48,
+   "title": "Unix in a Nutshell, Third Edition",
+   "authors": [
+    "O'Reilly"
+   ],
+   "language": "English",
+   "subjects": [
+    "Computing"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 49,
+   "title": "The Book of Cool, Volume One",
+   "language": "English",
+   "subjects": [
+    "General interest"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 50,
+   "title": "Teach Yourself Trigonometry",
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 51,
+   "title": "Origins of Chinese Martial Arts",
+   "language": "English",
+   "subjects": [
+    "Martial arts",
+    "history"
+   ],
+   "location": "Bookcase 1 – Shelf 4",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 52,
+   "title": "Gramática de Uso del Español",
+   "authors": [
+    "Paco Arnaiz"
+   ],
+   "language": "Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 53,
+   "title": "Conversaciones de un Hombre en Pijama",
+   "language": "Spanish",
+   "subjects": [
+    "Language",
+    "reading"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 54,
+   "title": "Manual de Japonés Básico",
+   "language": "Spanish/Japanese",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 55,
+   "title": "Japonés C1",
+   "language": "Spanish/Japanese",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 56,
+   "title": "Vocabulario B2",
+   "language": "Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 57,
+   "title": "Escritura B1",
+   "language": "Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 58,
+   "title": "Los Tiempos de Pasado",
+   "language": "Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 59,
+   "title": "はじめてのワーキング",
+   "language": "Japanese",
+   "subjects": [
+    "Language",
+    "work"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 60,
+   "title": "スペイン語レッスン中級",
+   "language": "Japanese/Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 61,
+   "title": "スペイン語作文の方法",
+   "language": "Japanese/Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 62,
+   "title": "スペイン語作文",
+   "language": "Japanese/Spanish",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 63,
+   "title": "カリグラフィー・ブック",
+   "language": "Japanese",
+   "subjects": [
+    "Calligraphy"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 64,
+   "title": "Futura: The Typeface",
+   "language": "English",
+   "subjects": [
+    "Design",
+    "typography"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 65,
+   "title": "Collins COBUILD English Usage, 4th Edition",
+   "language": "English",
+   "subjects": [
+    "Language reference"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 66,
+   "title": "伝わるデザインの基本",
+   "language": "Japanese",
+   "subjects": [
+    "Design"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 67,
+   "title": "ITパスポート",
+   "language": "Japanese",
+   "subjects": [
+    "IT",
+    "exam study"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 68,
+   "title": "ミカポースーパーボキャブラリー 134",
+   "language": "Japanese",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 69,
+   "title": "The Japanese Saké Bible",
+   "authors": [
+    "Erina Akamatsu"
+   ],
+   "language": "English",
+   "subjects": [
+    "Food & drink",
+    "Japan"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 70,
+   "title": "The 5 Minute Linguist",
+   "language": "English",
+   "subjects": [
+    "Linguistics"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 71,
+   "title": "カンバン仕事術",
+   "language": "Japanese",
+   "subjects": [
+    "Productivity",
+    "Kanban"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 72,
+   "title": "新家庭でできるおいしい燻製",
+   "language": "Japanese",
+   "subjects": [
+    "Cooking"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 73,
+   "title": "Hedro",
+   "language": "Japanese",
+   "subjects": [
+    "Film",
+    "media"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 74,
+   "title": "これぞ究極ちゃん DVD BOX",
+   "language": "Japanese",
+   "subjects": [
+    "Media"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 75,
+   "title": "ハケンの品格",
+   "language": "Japanese",
+   "subjects": [
+    "Media",
+    "TV"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 76,
+   "title": "ものの本質",
+   "language": "Japanese",
+   "subjects": [
+    "Non-fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 5",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 77,
+   "title": "Japanese Proverbs",
+   "language": "English/Japanese",
+   "subjects": [
+    "Language",
+    "proverbs"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 78,
+   "title": "Remembering the Kanji",
+   "language": "English/Japanese",
+   "subjects": [
+    "Japanese study"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 79,
+   "title": "新日本語能力試験 語彙",
+   "language": "Japanese",
+   "subjects": [
+    "JLPT study"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 80,
+   "title": "初級日本語 げんき II",
+   "language": "Japanese/English",
+   "subjects": [
+    "Japanese study"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 81,
+   "title": "新日本語能力試験 文法",
+   "language": "Japanese",
+   "subjects": [
+    "JLPT study"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 82,
+   "title": "大修館日本語",
+   "language": "Japanese",
+   "subjects": [
+    "Japanese reference"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 83,
+   "title": "新日本語中級",
+   "language": "Japanese",
+   "subjects": [
+    "Japanese study"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 84,
+   "title": "Traditional Karate",
+   "language": "English",
+   "subjects": [
+    "Martial arts"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 85,
+   "title": "Karate-Do: My Way of Life",
+   "language": "English",
+   "subjects": [
+    "Martial arts"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 86,
+   "title": "Grapping the Head Figure",
+   "language": "English",
+   "subjects": [
+    "Art",
+    "drawing"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 87,
+   "title": "Perspective",
+   "language": "English",
+   "subjects": [
+    "Art",
+    "drawing"
+   ],
+   "location": "Bookcase 1 – Shelf 6",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 88,
+   "title": "What Should We Be Worried About?",
+   "authors": [
+    "John Brockman (ed.)"
+   ],
+   "language": "English",
+   "subjects": [
+    "Ideas",
+    "science"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 89,
+   "title": "This Explains Everything",
+   "authors": [
+    "John Brockman (ed.)"
+   ],
+   "language": "English",
+   "subjects": [
+    "Ideas",
+    "science"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 90,
+   "title": "This Will Make You Smarter",
+   "authors": [
+    "John Brockman (ed.)"
+   ],
+   "language": "English",
+   "subjects": [
+    "Ideas",
+    "science"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 91,
+   "title": "Harry Potter and the Philosopher's Stone",
+   "authors": [
+    "J. K. Rowling"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "fantasy"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 92,
+   "title": "A Short History of Nearly Everything",
+   "authors": [
+    "Bill Bryson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Popular science"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 93,
+   "title": "The Brief Wondrous Life of Oscar Wao",
+   "authors": [
+    "Junot Díaz"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 94,
+   "title": "How to Draw Anything",
+   "language": "English",
+   "subjects": [
+    "Art",
+    "drawing"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 95,
+   "title": "American Gods",
+   "authors": [
+    "Neil Gaiman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "fantasy"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 96,
+   "title": "The Audacity of Hope",
+   "authors": [
+    "Barack Obama"
+   ],
+   "language": "English",
+   "subjects": [
+    "Politics",
+    "memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 97,
+   "title": "A Hedonist's Guide to Life",
+   "language": "English",
+   "subjects": [
+    "Lifestyle"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 98,
+   "title": "Stardust",
+   "authors": [
+    "Neil Gaiman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "fantasy"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 99,
+   "title": "An Intelligent Person's Guide to Atheism",
+   "authors": [
+    "Daniel Harbour"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy",
+    "religion"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 100,
+   "title": "The Language Instinct",
+   "authors": [
+    "Steven Pinker"
+   ],
+   "language": "English",
+   "subjects": [
+    "Linguistics"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 101,
+   "title": "Python Pocket Reference",
+   "language": "English",
+   "subjects": [
+    "Computing"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 102,
+   "title": "So Long, and Thanks for All the Fish",
+   "authors": [
+    "Douglas Adams"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science fiction",
+    "humour"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 103,
+   "title": "Stock Market Essentials",
+   "authors": [
+    "H. F. Rockett"
+   ],
+   "language": "English",
+   "subjects": [
+    "Finance"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 104,
+   "title": "The Annotated Alice",
+   "authors": [
+    "Martin A. Gardner"
+   ],
+   "language": "English",
+   "subjects": [
+    "Literature"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 105,
+   "title": "Life Lessons from Stevenson",
+   "authors": [
+    "Robert L. Stevenson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Literature",
+    "quotations"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 106,
+   "title": "101 Things To Do Before You Die",
+   "language": "English",
+   "subjects": [
+    "General interest"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 107,
+   "title": "Longitude",
+   "authors": [
+    "Dava Sobel"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science",
+    "history"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 108,
+   "title": "Siddhartha",
+   "authors": [
+    "Hermann Hesse"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "philosophy"
+   ],
+   "location": "Bookcase 1 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 109,
+   "title": "The Visual MBA",
+   "authors": [
+    "Alan Fletcher"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business",
+    "visual thinking"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 110,
+   "title": "Cormac McCarthy",
+   "authors": [
+    "Stella Artois"
+   ],
+   "language": "English",
+   "subjects": [
+    "Uncertain"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 111,
+   "title": "Meridian 81",
+   "language": "English",
+   "subjects": [
+    "Uncertain"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 112,
+   "title": "The PhDictionary",
+   "authors": [
+    "Herb Childress"
+   ],
+   "language": "English",
+   "subjects": [
+    "Reference",
+    "design"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 113,
+   "title": "Traders, Guns & Money",
+   "authors": [
+    "Satyajit Das"
+   ],
+   "language": "English",
+   "subjects": [
+    "Finance"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 114,
+   "title": "Mostly Harmless",
+   "authors": [
+    "Douglas Adams"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science fiction",
+    "humour"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 115,
+   "title": "Tree Guide",
+   "authors": [
+    "C. Collins"
+   ],
+   "language": "English",
+   "subjects": [
+    "Nature",
+    "reference"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 116,
+   "title": "The Order of Time",
+   "authors": [
+    "Carlo Rovelli"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 117,
+   "title": "The Hours",
+   "authors": [
+    "Michael Cunningham"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 118,
+   "title": "The Man's Book",
+   "authors": [
+    "Thomas Finn"
+   ],
+   "language": "English",
+   "subjects": [
+    "General interest"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 119,
+   "title": "A Brief History of the Future: The Origins of the Internet",
+   "authors": [
+    "John Naughton"
+   ],
+   "language": "English",
+   "subjects": [
+    "Technology",
+    "history"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 120,
+   "title": "Truth: A Brief History of Total Bullsh*t",
+   "authors": [
+    "Tom Phillips"
+   ],
+   "language": "English",
+   "subjects": [
+    "History",
+    "culture"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 121,
+   "title": "A Million Little Pieces",
+   "authors": [
+    "James Frey"
+   ],
+   "language": "English",
+   "subjects": [
+    "Memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 122,
+   "title": "Quantum Theory Cannot Hurt You",
+   "authors": [
+    "Marcus Chown"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 123,
+   "title": "We Need to Talk About Kelvin",
+   "authors": [
+    "Marcus Chown"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 124,
+   "title": "The Wisdom of the World's Religions",
+   "authors": [
+    "Harry Oldmeadow"
+   ],
+   "language": "English",
+   "subjects": [
+    "Religion",
+    "philosophy"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 125,
+   "title": "The Middle East",
+   "authors": [
+    "Bernard Lewis"
+   ],
+   "language": "English",
+   "subjects": [
+    "History"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 126,
+   "title": "The Grand Design",
+   "authors": [
+    "Stephen Hawking & Leonard Mlodinow"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics",
+    "cosmology"
+   ],
+   "location": "Bookcase 1 – Shelf 8",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 127,
+   "title": "Thinking Systems",
+   "authors": [
+    "Edward de Bono"
+   ],
+   "language": "English",
+   "subjects": [
+    "Thinking",
+    "creativity"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 128,
+   "title": "Basic Adult All-in-One Course, Level 1",
+   "authors": [
+    "Alfred's"
+   ],
+   "language": "English",
+   "subjects": [
+    "Music",
+    "piano"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 129,
+   "title": "Japanese Cooking",
+   "authors": [
+    "Emi Kazuko"
+   ],
+   "language": "English",
+   "subjects": [
+    "Cooking",
+    "Japanese"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 130,
+   "title": "Ivan Ramen: Love, Obsession, and Recipes",
+   "authors": [
+    "Ivan Orkin"
+   ],
+   "language": "English",
+   "subjects": [
+    "Cooking",
+    "memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 131,
+   "title": "Grow Food for Free",
+   "authors": [
+    "Huw Richards"
+   ],
+   "language": "English",
+   "subjects": [
+    "Gardening"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 132,
+   "title": "Complete Baking",
+   "authors": [
+    "DK"
+   ],
+   "language": "English",
+   "subjects": [
+    "Cooking",
+    "baking"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 133,
+   "title": "Mastering the Art of French Cooking",
+   "authors": [
+    "Julia Child & Simone Beck"
+   ],
+   "language": "English",
+   "subjects": [
+    "Cooking"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 134,
+   "title": "Complete Vegetarian",
+   "language": "English",
+   "subjects": [
+    "Cooking"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 135,
+   "title": "The Blue Bottle Craft of Coffee",
+   "authors": [
+    "Freeman, Freeman & Duggan"
+   ],
+   "language": "English",
+   "subjects": [
+    "Coffee"
+   ],
+   "location": "Bookcase 1 – Shelf 9",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 136,
+   "title": "And What to Do About It",
+   "authors": [
+    "Grant Halvorson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "self-development"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 137,
+   "title": "1,000 Places to See Before You Die",
+   "authors": [
+    "Patricia Schultz"
+   ],
+   "language": "English",
+   "subjects": [
+    "Travel"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 138,
+   "title": "Heidegger and a Hippo Walk Through Those Pearly Gates",
+   "authors": [
+    "Thomas Cathcart & Daniel Klein"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy",
+    "humour"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 139,
+   "title": "Messiah's Handbook",
+   "authors": [
+    "Richard Bach"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy",
+    "spirituality"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 140,
+   "title": "Selling Sex to Men",
+   "language": "English",
+   "subjects": [
+    "Social science"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 141,
+   "title": "Zen Soup",
+   "authors": [
+    "Laurence G. Boldt"
+   ],
+   "language": "English",
+   "subjects": [
+    "Zen",
+    "spirituality"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 142,
+   "title": "Teach Yourself Buddhism",
+   "language": "English",
+   "subjects": [
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 143,
+   "title": "The Dalai Lama: Awakening the Mind, Lightening the Heart",
+   "authors": [
+    "Dalai Lama"
+   ],
+   "language": "English",
+   "subjects": [
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 144,
+   "title": "Illusions",
+   "authors": [
+    "Richard Bach"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "spirituality"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 145,
+   "title": "Mahasatipatthana Sutta",
+   "language": "English",
+   "subjects": [
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 146,
+   "title": "The Empty Mirror",
+   "authors": [
+    "Janwillem van de Wetering"
+   ],
+   "language": "English",
+   "subjects": [
+    "Zen",
+    "memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 147,
+   "title": "The Zen Teaching of Huang Po",
+   "language": "English",
+   "subjects": [
+    "Zen",
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 148,
+   "title": "A Buddhist Bible",
+   "language": "English",
+   "subjects": [
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 149,
+   "title": "Zen Flesh, Zen Bones",
+   "authors": [
+    "Paul Reps & Nyogen Senzaki"
+   ],
+   "language": "English",
+   "subjects": [
+    "Zen",
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 150,
+   "title": "Zen Questions",
+   "language": "English",
+   "subjects": [
+    "Zen",
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 151,
+   "title": "The Three Pillars of Zen",
+   "authors": [
+    "Philip Kapleau"
+   ],
+   "language": "English",
+   "subjects": [
+    "Zen",
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 152,
+   "title": "The Dhammapada",
+   "authors": [
+    "Eknath Easwaran"
+   ],
+   "language": "English",
+   "subjects": [
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 153,
+   "title": "The Bhagavad Gita",
+   "authors": [
+    "Eknath Easwaran"
+   ],
+   "language": "English",
+   "subjects": [
+    "Religion",
+    "Hinduism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 154,
+   "title": "Krishnamurti's Notebook",
+   "authors": [
+    "J. Krishnamurti"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy",
+    "spirituality"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 155,
+   "title": "Cosmos",
+   "authors": [
+    "Carl Sagan"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science",
+    "cosmology"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 156,
+   "title": "The Tipping Point",
+   "authors": [
+    "Malcolm Gladwell"
+   ],
+   "language": "English",
+   "subjects": [
+    "Social science"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 157,
+   "title": "All Things Bright and Beautiful",
+   "authors": [
+    "John Gall"
+   ],
+   "language": "English",
+   "subjects": [
+    "Humour",
+    "general"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 158,
+   "title": "The Tibetan Book of the Dead",
+   "authors": [
+    "Graham Coleman (ed.)"
+   ],
+   "language": "English",
+   "subjects": [
+    "Buddhism"
+   ],
+   "location": "Bookcase 1 – Shelf 10",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 159,
+   "title": "Magicians of the Gods",
+   "authors": [
+    "Graham Hancock"
+   ],
+   "language": "English",
+   "subjects": [
+    "Alternative history"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 160,
+   "title": "Music Composition for Dummies",
+   "authors": [
+    "Jarrett Day"
+   ],
+   "language": "English",
+   "subjects": [
+    "Music"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 161,
+   "title": "Norse Mythology",
+   "authors": [
+    "Neil Gaiman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mythology"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 162,
+   "title": "30-Second Theories",
+   "authors": [
+    "Paul Parsons"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science",
+    "ideas"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 163,
+   "title": "The Road to Reality",
+   "authors": [
+    "Roger Penrose"
+   ],
+   "language": "English",
+   "subjects": [
+    "Physics",
+    "mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 164,
+   "title": "The Story of a Number",
+   "authors": [
+    "Marcus du Sautoy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 165,
+   "title": "The Naked Ape Trilogy",
+   "authors": [
+    "Desmond Morris"
+   ],
+   "language": "English",
+   "subjects": [
+    "Human behaviour"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 166,
+   "title": "The Wisest One in the Room",
+   "authors": [
+    "Thomas Gilovich & Lee Ross"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 167,
+   "title": "21 Lessons for the 21st Century",
+   "authors": [
+    "Yuval Noah Harari"
+   ],
+   "language": "English",
+   "subjects": [
+    "History",
+    "society"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 168,
+   "title": "Losing My Virginity",
+   "authors": [
+    "Richard Branson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Memoir",
+    "business"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 169,
+   "title": "Buying a Small Business",
+   "language": "English",
+   "subjects": [
+    "Business"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 170,
+   "title": "The Phoenix Project?",
+   "authors": [
+    "Grant Halvorson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Uncertain"
+   ],
+   "location": "Bookcase 1 – Shelf 11",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 171,
+   "title": "Coach Yourself to Writing Success",
+   "language": "English",
+   "subjects": [
+    "Writing"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 172,
+   "title": "Shite's Florilegial Miscellany",
+   "language": "English",
+   "subjects": [
+    "Humour",
+    "reference"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 173,
+   "title": "Grammar Rules",
+   "authors": [
+    "Craig Shrives"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "grammar"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 174,
+   "title": "Story",
+   "authors": [
+    "Robert McKee"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "screenwriting"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 175,
+   "title": "Cracking the Short Story Market",
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "publishing"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 176,
+   "title": "On Writing",
+   "authors": [
+    "Stephen King"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 177,
+   "title": "Writer's Manual",
+   "authors": [
+    "Penguin"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "reference"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 178,
+   "title": "Boy",
+   "authors": [
+    "Roald Dahl"
+   ],
+   "language": "English",
+   "subjects": [
+    "Memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 179,
+   "title": "Teach Yourself: Write Your Life Story",
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "memoir"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 180,
+   "title": "On Writing Well",
+   "authors": [
+    "William Zinsser"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 181,
+   "title": "Writing to Learn",
+   "authors": [
+    "William Zinsser"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 182,
+   "title": "On Writers and Writing",
+   "authors": [
+    "Margaret Atwood"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "criticism"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 183,
+   "title": "The Meaning of Tingo",
+   "authors": [
+    "Adam Jacot de Boinod"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language",
+    "humour"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 184,
+   "title": "Plotto",
+   "authors": [
+    "William Wallace Cook"
+   ],
+   "language": "English",
+   "subjects": [
+    "Writing",
+    "plotting"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 185,
+   "title": "The Complete Idiot's Guide to Creative Writing",
+   "language": "English",
+   "subjects": [
+    "Writing"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 186,
+   "title": "The Resurrectionist",
+   "authors": [
+    "Hudspeth"
+   ],
+   "language": "English",
+   "subjects": [
+    "Art",
+    "fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 187,
+   "title": "Comprehensive Writing Course",
+   "language": "English",
+   "subjects": [
+    "Writing"
+   ],
+   "location": "Bookcase 1 – Shelf 12",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 188,
+   "title": "DSM-5: Diagnostic and Statistical Manual of Mental Disorders, Fifth Edition",
+   "authors": [
+    "American Psychiatric Association"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "psychiatry"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 189,
+   "title": "Creative Writing, Second Edition",
+   "language": "English",
+   "subjects": [
+    "Writing"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 190,
+   "title": "Exploring Psychological Worlds: Thinking, Feeling, Doing – Book 1",
+   "language": "English",
+   "subjects": [
+    "Psychology"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 191,
+   "title": "Exploring Psychological Worlds: Thinking, Feeling, Doing – Book 2",
+   "language": "English",
+   "subjects": [
+    "Psychology"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 192,
+   "title": "Understanding Mental Health and Counselling",
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "counselling"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 193,
+   "title": "Art of Problem Solving Volume 1: The Basics",
+   "language": "English",
+   "subjects": [
+    "Mathematics",
+    "problem solving"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 194,
+   "title": "Art of Problem Solving Volume 1: Solutions Manual",
+   "language": "English",
+   "subjects": [
+    "Mathematics",
+    "problem solving"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 195,
+   "title": "Art of Problem Solving Volume 2: And Beyond",
+   "language": "English",
+   "subjects": [
+    "Mathematics",
+    "problem solving"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 196,
+   "title": "Snakes in Suits",
+   "authors": [
+    "Paul Babiak & Robert D. Hare"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "business"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 197,
+   "title": "Mastering Counselling Theory",
+   "authors": [
+    "Ray Colledge"
+   ],
+   "language": "English",
+   "subjects": [
+    "Counselling"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 198,
+   "title": "The Master and His Emissary",
+   "authors": [
+    "Iain McGilchrist"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "neuroscience"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 199,
+   "title": "The Pocket Guide to the Polyvagal Theory",
+   "authors": [
+    "Porges"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "neuroscience"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 200,
+   "title": "A General Theory of Love",
+   "authors": [
+    "Thomas Lewis, Fari Amini & Richard Lannon"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 201,
+   "title": "Teach Yourself: Understand Counselling",
+   "language": "English",
+   "subjects": [
+    "Counselling"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 202,
+   "title": "Little Bets",
+   "authors": [
+    "Peter Sims"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business",
+    "creativity"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 203,
+   "title": "A Guide for the Perplexed",
+   "language": "English",
+   "subjects": [
+    "Philosophy",
+    "psychology"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 204,
+   "title": "The Voice of the Earth",
+   "authors": [
+    "Theodore Roszak"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "ecology"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 205,
+   "title": "The Cult of Information",
+   "authors": [
+    "Theodore Roszak"
+   ],
+   "language": "English",
+   "subjects": [
+    "Technology",
+    "society"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 206,
+   "title": "The Making of a Counter Culture",
+   "authors": [
+    "Theodore Roszak"
+   ],
+   "language": "English",
+   "subjects": [
+    "Society",
+    "culture"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 207,
+   "title": "Think",
+   "authors": [
+    "Simon Blackburn"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 208,
+   "title": "Single-Session Therapy (SST)",
+   "authors": [
+    "Windy Dryden"
+   ],
+   "language": "English",
+   "subjects": [
+    "Counselling",
+    "psychotherapy"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 209,
+   "title": "The Portable Therapist",
+   "authors": [
+    "Susanna McMahon"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "self-help"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 210,
+   "title": "Psychotherapy: A Very Short Introduction",
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "psychotherapy"
+   ],
+   "location": "Bookcase 1 – Shelf 13",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 211,
+   "title": "Orlando",
+   "authors": [
+    "Virginia Woolf"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 212,
+   "title": "The War Poems",
+   "authors": [
+    "Siegfried Sassoon"
+   ],
+   "language": "English",
+   "subjects": [
+    "Poetry"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 213,
+   "title": "The Symposium: A New Translation",
+   "authors": [
+    "Plato"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy",
+    "classics"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 214,
+   "title": "For Esmé – with Love and Squalor",
+   "authors": [
+    "J. D. Salinger"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "short stories"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 215,
+   "title": "Jane Eyre",
+   "authors": [
+    "Charlotte Brontë"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 216,
+   "title": "Ulysses: The 1922 Text",
+   "authors": [
+    "James Joyce"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 217,
+   "title": "The Name of the Rose",
+   "authors": [
+    "Umberto Eco"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 218,
+   "title": "Nineteen Eighty-Four",
+   "authors": [
+    "George Orwell"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 219,
+   "title": "The Diary of Adam and Eve",
+   "authors": [
+    "Mark Twain"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "humour"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 220,
+   "title": "The Analects",
+   "authors": [
+    "Confucius"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 221,
+   "title": "The Prince",
+   "authors": [
+    "Niccolò Machiavelli"
+   ],
+   "language": "English",
+   "subjects": [
+    "Political philosophy"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 222,
+   "title": "Melville",
+   "authors": [
+    "Moby Dick"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 223,
+   "title": "The Door Into Summer",
+   "authors": [
+    "Robert A. Heinlein"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 224,
+   "title": "Slapstick",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 225,
+   "title": "Breakfast of Champions",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 226,
+   "title": "God Bless You, Mr Rosewater",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 227,
+   "title": "Collected Poems 1934–1953",
+   "authors": [
+    "Dylan Thomas"
+   ],
+   "language": "English",
+   "subjects": [
+    "Poetry"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 228,
+   "title": "Hocus Pocus",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 229,
+   "title": "Jailbird",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 230,
+   "title": "The Lord of the Rings",
+   "authors": [
+    "J. R. R. Tolkien"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fantasy"
+   ],
+   "location": "Bookcase 1 – Shelf 14",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 231,
+   "title": "The 80 Minute MBA",
+   "authors": [
+    "Richard Reeves & John Knell"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 232,
+   "title": "How to Lead",
+   "authors": [
+    "Jo Owen"
+   ],
+   "language": "English",
+   "subjects": [
+    "Leadership"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 233,
+   "title": "2022: The Year in Review",
+   "language": "English",
+   "subjects": [
+    "Business",
+    "current affairs"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 234,
+   "title": "Corporate Governance: Leadership + Recovery",
+   "language": "English",
+   "subjects": [
+    "Business"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 235,
+   "title": "Introducing Stephen Hawking",
+   "authors": [
+    "Stephen Hawking"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science",
+    "biography"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 236,
+   "title": "The Ode Less Travelled",
+   "authors": [
+    "Stephen Fry"
+   ],
+   "language": "English",
+   "subjects": [
+    "Poetry",
+    "writing"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 237,
+   "title": "The Book of General Ignorance",
+   "language": "English",
+   "subjects": [
+    "General knowledge"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 238,
+   "title": "101 Experiments in the Philosophy of Everyday Life",
+   "authors": [
+    "Roger-Pol Droit"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 239,
+   "title": "A History of the World in 100 Objects",
+   "language": "English",
+   "subjects": [
+    "History"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 240,
+   "title": "Gaysia: Adventures in the Queer East",
+   "authors": [
+    "Benjamin Law"
+   ],
+   "language": "English",
+   "subjects": [
+    "Travel",
+    "society"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 241,
+   "title": "Are You Fully Charged?",
+   "authors": [
+    "Tom Rath"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "self-development"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 242,
+   "title": "A Billion Wicked Thoughts",
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "sexuality"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 243,
+   "title": "The Abide Guide",
+   "language": "English",
+   "subjects": [
+    "Humour",
+    "philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 244,
+   "title": "Chaos",
+   "authors": [
+    "James Gleick"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 245,
+   "title": "Schott's Original Miscellany",
+   "authors": [
+    "Ben Schott"
+   ],
+   "language": "English",
+   "subjects": [
+    "Reference",
+    "miscellany"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 246,
+   "title": "The Golden Ratio",
+   "authors": [
+    "Mario Livio"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 247,
+   "title": "Being Mortal",
+   "authors": [
+    "Atul Gawande"
+   ],
+   "language": "English",
+   "subjects": [
+    "Medicine",
+    "mortality"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 248,
+   "title": "Trainspotting",
+   "authors": [
+    "Irvine Welsh"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 249,
+   "title": "Black Box Thinking",
+   "authors": [
+    "Matthew Syed"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "performance"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 250,
+   "title": "How We Learn",
+   "authors": [
+    "Benedict Carey"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "learning"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 251,
+   "title": "The Melancholy Death of Oyster Boy & Other Stories",
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "poetry"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 252,
+   "title": "Do They Think You're Stupid?",
+   "authors": [
+    "Juan Magín"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "thinking"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 253,
+   "title": "Shakespeare",
+   "authors": [
+    "Bill Bryson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Biography",
+    "literature"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 254,
+   "title": "Breakfast with Socrates",
+   "authors": [
+    "Robert Winston"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 255,
+   "title": "Mastermind: How to Think Like Sherlock Holmes",
+   "authors": [
+    "Maria Konnikova"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "thinking"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 256,
+   "title": "Mrs Dalloway",
+   "authors": [
+    "Virginia Woolf"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 257,
+   "title": "The Penguin Mind",
+   "language": "English",
+   "subjects": [
+    "General interest"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 258,
+   "title": "The Quickening",
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "low",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 259,
+   "title": "Wit",
+   "authors": [
+    "Des MacHale"
+   ],
+   "language": "English",
+   "subjects": [
+    "Humour",
+    "quotations"
+   ],
+   "location": "Bookcase 2 – Shelf 1",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 260,
+   "title": "The Fall of the Roman Republic",
+   "authors": [
+    "Plutarch"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics",
+    "history"
+   ],
+   "location": "Bookcase 2 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 261,
+   "title": "The Odyssey",
+   "authors": [
+    "Homer"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics"
+   ],
+   "location": "Bookcase 2 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 262,
+   "title": "The Age of Alexander",
+   "authors": [
+    "Plutarch"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics",
+    "history"
+   ],
+   "location": "Bookcase 2 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 263,
+   "title": "History of the Peloponnesian War",
+   "authors": [
+    "Thucydides"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics",
+    "history"
+   ],
+   "location": "Bookcase 2 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 264,
+   "title": "The Early History of Rome",
+   "authors": [
+    "Livy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics",
+    "history"
+   ],
+   "location": "Bookcase 2 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 265,
+   "title": "The Last Days of Socrates",
+   "authors": [
+    "Plato"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy",
+    "classics"
+   ],
+   "location": "Bookcase 2 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 266,
+   "title": "The Persian Expedition",
+   "authors": [
+    "Xenophon"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics",
+    "history"
+   ],
+   "location": "Bookcase 2 – Shelf 2",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 267,
+   "title": "Maths in Minutes",
+   "authors": [
+    "Paul Glendinning"
+   ],
+   "language": "English",
+   "subjects": [
+    "Mathematics"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 268,
+   "title": "Philips' Star Finder",
+   "language": "English",
+   "subjects": [
+    "Astronomy"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 269,
+   "title": "Learning System User Manual",
+   "authors": [
+    "Berlitz"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language learning"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 270,
+   "title": "God Bless You, Dr. Kevorkian",
+   "authors": [
+    "Kurt Vonnegut"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "essays"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 271,
+   "title": "21 Speeches That Shaped Our World",
+   "authors": [
+    "Chris Abbott"
+   ],
+   "language": "English",
+   "subjects": [
+    "History",
+    "speeches"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 272,
+   "title": "Going Solo",
+   "authors": [
+    "Roald Dahl"
+   ],
+   "language": "English",
+   "subjects": [
+    "Memoir"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 273,
+   "title": "Dirk Gently's Holistic Detective Agency",
+   "authors": [
+    "Douglas Adams"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "science fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 274,
+   "title": "What Do Existentialists Believe?",
+   "authors": [
+    "Richard Appignanesi"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 275,
+   "title": "Philosophy in 30 Days",
+   "authors": [
+    "Dominique Janicaud"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 276,
+   "title": "What Do Muslims Believe?",
+   "authors": [
+    "Ziauddin Sardar"
+   ],
+   "language": "English",
+   "subjects": [
+    "Religion"
+   ],
+   "location": "Bookcase 2 – Shelf 3",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 277,
+   "title": "National Geographic magazine collection (large run, assorted issues)",
+   "authors": [
+    "National Geographic Society"
+   ],
+   "language": "English",
+   "subjects": [
+    "Magazine",
+    "geography"
+   ],
+   "location": "Bookcase 2 – Shelves 4–5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 278,
+   "title": "On the Genealogy of Morals / Ecce Homo",
+   "authors": [
+    "Friedrich Nietzsche"
+   ],
+   "language": "English",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 279,
+   "title": "War and Peace, Vol. I",
+   "authors": [
+    "Leo Tolstoy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 280,
+   "title": "War and Peace, Vol. II",
+   "authors": [
+    "Leo Tolstoy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 281,
+   "title": "War and Peace, Vol. III",
+   "authors": [
+    "Leo Tolstoy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 282,
+   "title": "Naked Lunch",
+   "authors": [
+    "William Burroughs"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 283,
+   "title": "Selected Poems of Byron",
+   "authors": [
+    "Lord Byron"
+   ],
+   "language": "English",
+   "subjects": [
+    "Poetry"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 284,
+   "title": "Fifteen Poets: From Chaucer to Arnold",
+   "language": "English",
+   "subjects": [
+    "Poetry",
+    "anthology"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 285,
+   "title": "The Alchemist",
+   "authors": [
+    "Paulo Coelho"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 286,
+   "title": "How to Grow Old",
+   "authors": [
+    "Cicero"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classics",
+    "philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 287,
+   "title": "The Witches",
+   "authors": [
+    "Roald Dahl"
+   ],
+   "language": "English",
+   "subjects": [
+    "Children's fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 288,
+   "title": "Charlie and the Chocolate Factory",
+   "authors": [
+    "Roald Dahl"
+   ],
+   "language": "English",
+   "subjects": [
+    "Children's fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 289,
+   "title": "Danny, the Champion of the World",
+   "authors": [
+    "Roald Dahl"
+   ],
+   "language": "English",
+   "subjects": [
+    "Children's fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 290,
+   "title": "The Twits and other stories (boxed collection volumes visible)",
+   "authors": [
+    "Roald Dahl"
+   ],
+   "language": "English",
+   "subjects": [
+    "Children's fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 291,
+   "title": "Matilda",
+   "authors": [
+    "Roald Dahl"
+   ],
+   "language": "English",
+   "subjects": [
+    "Children's fiction"
+   ],
+   "location": "Bookcase 2 – Shelf 5",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 292,
+   "title": "Fooled by Randomness",
+   "authors": [
+    "Nassim Nicholas Taleb"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business",
+    "decision-making"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 293,
+   "title": "The Black Swan",
+   "authors": [
+    "Nassim Nicholas Taleb"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business",
+    "decision-making"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 294,
+   "title": "Fear Barrier",
+   "authors": [
+    "Tom McGee"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business",
+    "self-development"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 295,
+   "title": "Lao Tzu Tao Te Ching",
+   "authors": [
+    "Usui Mika / 臼井美加"
+   ],
+   "language": "English/Japanese",
+   "subjects": [
+    "Philosophy"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 296,
+   "title": "One Path",
+   "authors": [
+    "Steven Masters"
+   ],
+   "language": "English",
+   "subjects": [
+    "Self-development"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 297,
+   "title": "The First 20 Hours: How to Learn Anything... Fast!",
+   "authors": [
+    "Josh Kaufman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Learning",
+    "self-development"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 298,
+   "title": "The Art of the Interview",
+   "authors": [
+    "Lawrence Grobel"
+   ],
+   "language": "English",
+   "subjects": [
+    "Communication",
+    "writing"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 299,
+   "title": "The Ragged-Trousered Philanthropists",
+   "authors": [
+    "Robert J. Tressell"
+   ],
+   "language": "English",
+   "subjects": [
+    "Classic fiction",
+    "politics"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 300,
+   "title": "A Crack in Creation",
+   "authors": [
+    "Jennifer Doudna & Samuel Sternberg"
+   ],
+   "language": "English",
+   "subjects": [
+    "Science",
+    "genetics"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 301,
+   "title": "Homo Deus: A Brief History of Tomorrow",
+   "authors": [
+    "Yuval Noah Harari"
+   ],
+   "language": "English",
+   "subjects": [
+    "History",
+    "futurism"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 302,
+   "title": "Think Like an Artist",
+   "authors": [
+    "Will Gompertz"
+   ],
+   "language": "English",
+   "subjects": [
+    "Art",
+    "creativity"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 303,
+   "title": "What the Dog Saw",
+   "authors": [
+    "Malcolm Gladwell"
+   ],
+   "language": "English",
+   "subjects": [
+    "Essays",
+    "psychology"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 304,
+   "title": "Business Stripped Bare",
+   "authors": [
+    "Richard Branson"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 305,
+   "title": "The English",
+   "authors": [
+    "Jeremy Paxman"
+   ],
+   "language": "English",
+   "subjects": [
+    "Culture",
+    "society"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 306,
+   "title": "The Upside of Turbulence",
+   "authors": [
+    "Donald Sull"
+   ],
+   "language": "English",
+   "subjects": [
+    "Business"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 307,
+   "title": "The AB Guide to Music Theory, Part I",
+   "authors": [
+    "Eric Taylor"
+   ],
+   "language": "English",
+   "subjects": [
+    "Music theory"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 308,
+   "title": "Men Without Women",
+   "authors": [
+    "Haruki Murakami"
+   ],
+   "language": "English",
+   "subjects": [
+    "Fiction",
+    "short stories"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 309,
+   "title": "Getting to Yes",
+   "authors": [
+    "Roger Fisher, William Ury & Bruce Patton"
+   ],
+   "language": "English",
+   "subjects": [
+    "Negotiation",
+    "business"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 310,
+   "title": "The God Delusion",
+   "authors": [
+    "Richard Dawkins"
+   ],
+   "language": "English",
+   "subjects": [
+    "Religion",
+    "science"
+   ],
+   "location": "Bookcase 2 – Shelf 6",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 311,
+   "title": "Mapping the Mind",
+   "authors": [
+    "Rita Carter"
+   ],
+   "language": "English",
+   "subjects": [
+    "Psychology",
+    "neuroscience"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 312,
+   "title": "The Complete Guide to IELTS: Student's Book",
+   "authors": [
+    "Bruce Rogers & Nick Kenny"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language learning",
+    "IELTS"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 313,
+   "title": "English Grammar in Use",
+   "authors": [
+    "Raymond Murphy"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language learning",
+    "English"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 314,
+   "title": "Advanced Grammar in Use",
+   "authors": [
+    "Martin Hewings"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language learning",
+    "English"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 315,
+   "title": "A Course in Language Teaching",
+   "authors": [
+    "Penny Ur"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language teaching"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 316,
+   "title": "How to Teach Grammar",
+   "authors": [
+    "Scott Thornbury"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language teaching"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 317,
+   "title": "The Practice of English Language Teaching",
+   "authors": [
+    "Jeremy Harmer"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language teaching"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "medium",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 318,
+   "title": "Curriculum Development in Language Teaching",
+   "authors": [
+    "Jack C. Richards"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language teaching"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  },
+  {
+   "inventoryId": 319,
+   "title": "English Pronunciation in Use: Intermediate",
+   "authors": [
+    "Mark Hancock"
+   ],
+   "language": "English",
+   "subjects": [
+    "Language learning",
+    "English"
+   ],
+   "location": "Bookcase 2 – Shelf 7",
+   "confidence": "high",
+   "owner": "joel"
+  }
+ ]
+}

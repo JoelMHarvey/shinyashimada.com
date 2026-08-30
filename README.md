@@ -3,10 +3,11 @@
 A rebuild of the old WordPress site as a static, trilingual site on Netlify,
 with a small serverless backend for the things that need to remember state.
 
-Five sections:
+Six sections:
 
 | Section | What it is |
 |---|---|
+| **The Library** (`/library/`) | The books Shin and Joel own between them — whose each one is, which shelf it sits on, whether anyone has read it. An ISBN or a title is enough to add one: the rest comes from Open Library and Google Books. Shared with joelmharvey.com. |
 | **The Balcony** (`/plants/`) | Plant inventory with per-species care schedules — watering that shifts with the Tokyo season and the live forecast, plus pruning and repotting windows. Synced between devices. |
 | **Tokyo Today** (`/tokyo/`) | Current conditions, a 24-hour temperature chart and a seven-day outlook, read as *balcony* weather, alongside headlines in the language you are reading in. |
 | **Croissant Hunt** (`/croissants/`) | A six-criterion tasting log for Tokyo pain au chocolat that produces a leaderboard. Nothing is pre-rated. |
@@ -56,9 +57,10 @@ device-only storage.
 | Variable | Needed for | Notes |
 |---|---|---|
 | `DATABASE_URL` | Plant + tasting sync | Postgres connection string. A free Neon or Supabase database is plenty. The table is created on first use. |
-| `SITE_PASSCODE` | Protecting the data | A shared passphrase. Required for **all writes**, and for **reading** anything except croissant tastings — so the plant inventory is private while the croissant leaderboard is public. Leave it unset and the store is wide open; set it before putting anything real in. |
+| `SITE_PASSCODE` | Protecting the data | A shared passphrase. Required for **all writes**, for **reading** anything except croissant tastings (so the plant inventory and the library are private while the croissant leaderboard is public), and for the book lookups. Leave it unset and the store is wide open; set it before putting anything real in. |
 | `TRELLO_KEY`, `TRELLO_TOKEN` | Trello sync (optional) | Turns overdue balcony jobs into Trello cards. See below. |
 | `CAMERA_STREAM_URL`, `CAMERA_LABEL`, `CAMERA_MODE` | Live balcony camera (optional) | The relay's public URL. Served only to passcode holders — see `homelab/`. |
+| `ALLOWED_ORIGINS` | Sharing the library (optional) | Comma-separated origins allowed to call the API cross-origin. Defaults to joelmharvey.com and this site; setting it replaces that list entirely. |
 
 Neither is required for the site to deploy. Without `DATABASE_URL` the store
 returns `503 no-database` and the plant page quietly runs device-only.
@@ -73,7 +75,53 @@ returns `503 no-database` and the plant page quietly runs device-only.
   parallel, deduped by URL and normalised title, and a dead feed is skipped
   rather than failing the request. Spanish falls back to the English wire and
   says so in the UI.
-- `GET|POST /api/store` — the synced collections. See `schema.sql`.
+- `GET|POST /api/store` — the synced collections (`plants`, `tastings`,
+  `books`). See `schema.sql`.
+- `GET /api/books?isbn=…` or `?q=…` — book metadata. Asks Open Library and
+  Google Books at once and folds the two answers into one record, so a title
+  one knows the cover for and the other knows the blurb for comes back
+  complete. No API key; passcode-gated so it is not left as an open lookup
+  proxy. Cached an hour.
+
+`/api/store` and `/api/books` answer cross-origin requests from an allowlist
+(`netlify/lib/cors.mjs`), which is how joelmharvey.com shows the same library.
+An allowlist rather than `*`, because these endpoints take a passcode header.
+
+## The shared library
+
+One shelf, two front doors. The records live in the `books` collection of this
+site's Postgres; `/library/` here and `/library/` on joelmharvey.com are two
+views of the same rows, and either can add, edit or delete.
+
+**Getting the inventory in.** `data/library-seed.json` holds 319 books
+catalogued from photographs of the shelves — title, author, category, shelf,
+and how confident the reading was. When the library is empty the page offers to
+import it; importing twice is harmless, because rows already on the shelf by
+title and author are skipped.
+
+Nothing else was in that source, so nothing else is claimed: no publisher,
+year, page count, ISBN or cover was invented to fill the columns out.
+
+**Filling the gaps.** *Fill in the gaps* asks the catalogues about every book
+missing a publisher, year, cover or blurb, one at a time with a progress bar
+you can stop. Two rules keep it honest:
+
+- It only ever writes into **blank** fields. Anything already recorded — and
+  everything that is ours to say: notes, rating, whose it is, status, shelf —
+  is never overwritten.
+- Without an ISBN a lookup is only a guess at a title, and some rows are
+  misreadings from the shelf photos ("Hedro", "Stella Artois"). A title-only
+  answer is dropped unless it recognisably matches the book that was asked
+  about, so a bad row stays blank rather than acquiring a confident wrong
+  identity.
+
+**Needs checking.** The 57 rows the shelf-photo pass was less than certain
+about are marked, counted and filterable, so they can be confirmed by eye
+rather than quietly trusted.
+
+**Covers** come from the catalogues as URLs, which cost nothing to store. A
+photo taken instead is downscaled and compressed until the record fits the
+store's 64 KB budget, exactly as the balcony does for plants.
 
 ## Trello sync (optional)
 
@@ -163,9 +211,9 @@ so nothing queued is ever lost. `tests/browser-sync.mjs` covers both setups.
 ## Tests
 
 ```bash
-npm test              # pure logic: care scheduling, SRS, RSS parsing, Trello sync, camera (140 assertions)
+npm test              # pure logic: care scheduling, SRS, RSS parsing, Trello sync, camera, book metadata + CORS (216 assertions)
 npm run serve &       # browser tests need the site served
-npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the three app flows
+npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the app flows
 ```
 
 `npm test` needs nothing but Node. The browser suite needs Playwright
@@ -182,6 +230,14 @@ link a package into `node_modules` by hand, regenerate the lockfile with
 test tell you whether it is safe to commit.
 
 ## Things worth knowing
+
+- **The book catalogues were never reachable from the machine this was built
+  on.** Open Library is blocked by that sandbox's egress proxy and Google Books
+  was over its daily quota there, so `/api/books` has only ever been exercised
+  against recorded responses and stubs. The parsing, the merge, the passcode
+  gate, the CORS allowlist and every UI path are covered by tests; the live
+  round trip to the two catalogues is the one thing that wants checking on the
+  deployed site.
 
 - **The bakery shortlist is a starting point, not a verified guide.** It lists
   real Tokyo bakeries known for viennoiserie, but opening days change and not
@@ -200,12 +256,13 @@ test tell you whether it is safe to commit.
 ```
 shinyashimada.com/
 ├── index.html, 404.html
-├── plants/ tokyo/ croissants/ italian/ research/
+├── plants/ library/ tokyo/ croissants/ italian/ research/
 ├── assets/
 │   ├── css/    site.css (design system) + one file per page
 │   └── js/     i18n · shell · store · care · srs · charts · weather + page scripts
-├── data/       species.json · croissants.json · italian.json
-├── netlify/functions/   weather.mjs · news.mjs · store.mjs
+├── data/       species.json · croissants.json · italian.json · library-seed.json
+├── netlify/functions/   weather.mjs · news.mjs · store.mjs · books.mjs · …
+├── netlify/lib/         db · records · books · cors · trello · balcony
 ├── tests/
 ├── schema.sql
 └── netlify.toml
@@ -213,4 +270,6 @@ shinyashimada.com/
 
 `assets/js/care.js` (watering and pruning schedules) and `assets/js/srs.js`
 (spaced repetition and answer checking) are pure modules with no DOM
-dependency, which is why they are the parts under unit test.
+dependency, which is why they are the parts under unit test. The same holds
+for `netlify/lib/books.mjs`: all the catalogue parsing lives there, so it can
+be tested against recorded responses with no network.
