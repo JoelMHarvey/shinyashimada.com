@@ -77,7 +77,7 @@ for (const path of pages) {
   // Sanity: the shell actually painted. /forza/ is a deliberately
   // standalone game page (own styling, no site shell), so it only gets
   // the content-length check.
-  const NAV_LINKS = 7;
+  const NAV_LINKS = 8;
   const standalone = path === '/forza/';
   const shell = await page.evaluate(() => ({
     nav: document.querySelectorAll('.site-nav a').length,

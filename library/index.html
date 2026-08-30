@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en" data-title-key="lib.title">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Library — Shinya Shimada</title>
+<meta name="description" content="The books the two of us own, catalogued in one place.">
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css">
+<link rel="stylesheet" href="/assets/css/library.css">
+<script>(function(){try{var t=localStorage.getItem('ss.theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();</script>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="nav.skip">Skip to content</a>
+<header data-shell="header"></header>
+
+<main id="main">
+
+  <!-- Locked state -------------------------------------------------------->
+  <section id="lock" class="wrap hidden">
+    <div class="card card--pad lock-panel">
+      <div class="lock-panel__icon">📚</div>
+      <h1 style="font-size:1.5rem" data-i18n="lib.lock.title"></h1>
+      <p class="muted small" data-i18n="lib.lock.body"></p>
+      <form id="lock-form">
+        <label class="field">
+          <span data-i18n="lib.lock.passcode"></span>
+          <input type="password" id="lock-input" autocomplete="current-password" required>
+        </label>
+        <button class="btn btn--block" type="submit" data-i18n="lib.lock.unlock"></button>
+      </form>
+      <p class="lock-panel__alt">
+        <a href="#" id="lock-offline" data-i18n="lib.lock.offline"></a>
+      </p>
+    </div>
+  </section>
+
+  <!-- App ----------------------------------------------------------------->
+  <section id="app" class="wrap-wide hidden">
+
+    <div class="page-head">
+      <p class="eyebrow" data-i18n="lib.eyebrow"></p>
+      <h1 data-i18n="lib.heading"></h1>
+      <p class="lede" data-i18n="lib.lede"></p>
+      <div class="flex items-center gap-1 wrap-flex mt-1">
+        <span class="sync-pill" id="sync-pill" data-mode="unknown">
+          <span class="sync-pill__dot"></span><span id="sync-text"></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="shelf-stats" id="stats"></div>
+
+    <div class="toolbar library-toolbar">
+      <label class="field field--search">
+        <span class="visually-hidden" data-i18n="common.search"></span>
+        <input type="search" id="q" data-i18n-attr="placeholder:lib.search">
+      </label>
+
+      <label class="field field--inline">
+        <span data-i18n="lib.filter.owner"></span>
+        <select id="f-owner">
+          <option value="all" data-i18n="common.all"></option>
+          <option value="joel" data-i18n="lib.owner.joel"></option>
+          <option value="shin" data-i18n="lib.owner.shin"></option>
+          <option value="both" data-i18n="lib.owner.both"></option>
+        </select>
+      </label>
+
+      <label class="field field--inline">
+        <span data-i18n="lib.filter.status"></span>
+        <select id="f-status">
+          <option value="all" data-i18n="common.all"></option>
+          <option value="unread" data-i18n="lib.status.unread"></option>
+          <option value="reading" data-i18n="lib.status.reading"></option>
+          <option value="read" data-i18n="lib.status.read"></option>
+          <option value="lent" data-i18n="lib.status.lent"></option>
+        </select>
+      </label>
+
+      <label class="field field--inline" hidden>
+        <span data-i18n="lib.filter.shelf"></span>
+        <select id="f-shelf"></select>
+      </label>
+
+      <label class="field field--inline">
+        <span data-i18n="lib.sort"></span>
+        <select id="f-sort">
+          <option value="added" data-i18n="lib.sort.added"></option>
+          <option value="title" data-i18n="lib.sort.title"></option>
+          <option value="author" data-i18n="lib.sort.author"></option>
+          <option value="year" data-i18n="lib.sort.year"></option>
+          <option value="rating" data-i18n="lib.sort.rating"></option>
+        </select>
+      </label>
+
+      <button type="button" class="btn btn--ghost btn--sm toggle" id="f-check" aria-pressed="false" hidden>
+        <span data-i18n="lib.check.filter"></span><span id="check-count"></span>
+      </button>
+
+      <div class="toolbar__spacer"></div>
+      <button type="button" class="btn btn--ghost btn--sm" id="bulk-go" data-i18n="lib.bulk.start"
+              data-i18n-attr="title:lib.bulk.hint"></button>
+      <button type="button" class="btn btn--ghost btn--sm" id="export" data-i18n="lib.export"></button>
+      <button type="button" class="btn" id="add-book" data-i18n="lib.add"></button>
+    </div>
+
+    <div class="bulk" id="bulk" hidden>
+      <div class="bulk__track"><div class="bulk__bar" id="bulk-bar"></div></div>
+      <p class="tiny muted" id="bulk-text"></p>
+    </div>
+
+    <div class="book-grid" id="grid"></div>
+    <div class="empty-state hidden" id="empty"></div>
+
+  </section>
+</main>
+
+<footer data-shell="footer"></footer>
+
+<!-- Detail ---------------------------------------------------------------->
+<dialog class="modal" id="detail">
+  <div class="modal__head">
+    <h2 id="detail-title"></h2>
+    <button type="button" class="icon-button modal__close" data-close data-i18n-attr="aria-label:common.close">✕</button>
+  </div>
+  <div class="modal__body" id="detail-body"></div>
+  <div class="modal__foot">
+    <button type="button" class="btn btn--ghost btn--sm" id="detail-enrich" data-i18n="lib.d.enrich"></button>
+    <div class="toolbar__spacer"></div>
+    <button type="button" class="btn btn--ghost" data-close data-i18n="common.close"></button>
+    <button type="button" class="btn" id="detail-edit" data-i18n="common.edit"></button>
+  </div>
+</dialog>
+
+<!-- Editor ---------------------------------------------------------------->
+<dialog class="modal modal--wide" id="editor">
+  <form method="dialog" id="editor-form">
+    <div class="modal__head">
+      <h2></h2>
+      <button type="button" class="icon-button modal__close" data-close data-i18n-attr="aria-label:common.close">✕</button>
+    </div>
+
+    <div class="modal__body">
+
+      <!-- Look it up ---------------------------------------------------- -->
+      <div class="lookup">
+        <label class="field">
+          <span data-i18n="lib.f.lookup"></span>
+          <div class="lookup__row">
+            <input type="text" id="lookup-input" inputmode="search" autocomplete="off">
+            <button type="button" class="btn btn--sm" id="lookup-go" data-i18n="lib.f.lookupGo"></button>
+          </div>
+        </label>
+        <p class="tiny muted" data-i18n="lib.f.lookupHint"></p>
+        <div id="lookup-results" class="lookup__results"></div>
+      </div>
+
+      <hr class="rule">
+
+      <!-- The book ------------------------------------------------------ -->
+      <label class="field">
+        <span data-i18n="lib.f.title"></span>
+        <input type="text" id="f-title" required>
+      </label>
+
+      <label class="field">
+        <span data-i18n="lib.f.subtitle"></span>
+        <input type="text" id="f-subtitle">
+      </label>
+
+      <label class="field">
+        <span data-i18n="lib.f.authors"></span>
+        <input type="text" id="f-authors">
+        <small class="tiny muted" data-i18n="lib.f.authorsHint"></small>
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span data-i18n="lib.f.publisher"></span>
+          <input type="text" id="f-publisher">
+        </label>
+        <label class="field">
+          <span data-i18n="lib.f.year"></span>
+          <input type="number" id="f-year" min="0" max="2999" step="1">
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="field">
+          <span data-i18n="lib.f.pages"></span>
+          <input type="number" id="f-pages" min="0" step="1">
+        </label>
+        <label class="field">
+          <span data-i18n="lib.f.language"></span>
+          <input type="text" id="f-language">
+        </label>
+      </div>
+
+      <label class="field">
+        <span data-i18n="lib.f.isbn"></span>
+        <input type="text" id="f-isbn" inputmode="numeric" autocomplete="off">
+      </label>
+
+      <label class="field">
+        <span data-i18n="lib.f.subjects"></span>
+        <input type="text" id="f-subjects">
+        <small class="tiny muted" data-i18n="lib.f.authorsHint"></small>
+      </label>
+
+      <label class="field">
+        <span data-i18n="lib.f.description"></span>
+        <textarea id="f-description" rows="4"></textarea>
+      </label>
+
+      <!-- Cover --------------------------------------------------------- -->
+      <div class="field">
+        <span data-i18n="lib.f.cover"></span>
+        <div class="cover-field">
+          <img id="f-cover-preview" class="cover-field__preview" alt="" hidden>
+          <div class="cover-field__actions">
+            <label class="btn btn--ghost btn--sm">
+              <span id="f-cover-label"></span>
+              <input type="file" id="f-cover" accept="image/*" hidden>
+            </label>
+            <button type="button" class="btn btn--ghost btn--sm" id="f-cover-remove" hidden
+                    data-i18n="lib.f.coverRemove"></button>
+          </div>
+        </div>
+        <input type="hidden" id="f-coverurl">
+      </div>
+
+      <hr class="rule">
+
+      <!-- Ours ---------------------------------------------------------- -->
+      <div class="field-row">
+        <label class="field">
+          <span data-i18n="lib.f.owner"></span>
+          <select id="f-owner-edit">
+            <option value="joel" data-i18n="lib.owner.joel"></option>
+            <option value="shin" data-i18n="lib.owner.shin"></option>
+            <option value="both" data-i18n="lib.owner.both"></option>
+          </select>
+        </label>
+        <label class="field">
+          <span data-i18n="lib.f.status"></span>
+          <select id="f-status-edit">
+            <option value="unread" data-i18n="lib.status.unread"></option>
+            <option value="reading" data-i18n="lib.status.reading"></option>
+            <option value="read" data-i18n="lib.status.read"></option>
+            <option value="lent" data-i18n="lib.status.lent"></option>
+          </select>
+        </label>
+      </div>
+
+      <label class="field" id="lentto-field" hidden>
+        <span data-i18n="lib.f.lentTo"></span>
+        <input type="text" id="f-lentto">
+      </label>
+
+      <label class="field">
+        <span data-i18n="lib.f.shelf"></span>
+        <input type="text" id="f-shelf-edit">
+      </label>
+
+      <div class="field">
+        <span data-i18n="lib.f.rating"></span>
+        <div class="stars stars--input" id="rating-stars"></div>
+        <input type="hidden" id="f-rating" value="0">
+      </div>
+
+      <label class="field">
+        <span data-i18n="lib.f.notes"></span>
+        <textarea id="f-notes" rows="3"></textarea>
+      </label>
+    </div>
+
+    <div class="modal__foot">
+      <button type="button" class="btn btn--danger btn--sm" id="editor-delete" data-i18n="common.delete"></button>
+      <div class="toolbar__spacer"></div>
+      <button type="button" class="btn btn--ghost" data-close data-i18n="common.cancel"></button>
+      <button type="submit" class="btn" data-i18n="common.save"></button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/assets/js/i18n.js"></script>
+<script src="/assets/js/shell.js"></script>
+<script src="/assets/js/store.js"></script>
+<script src="/assets/js/library.js"></script>
+</body>
+</html>

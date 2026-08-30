@@ -1,0 +1,166 @@
+/* The shared book library ------------------------------------------------ */
+
+/* Shelf summary */
+.shelf-stats {
+  display: grid; gap: .7rem; margin-bottom: 1.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+}
+
+/* Toolbar: search takes the slack, the selects stay their natural width. */
+.library-toolbar { align-items: flex-end; gap: .7rem .9rem; margin-bottom: 1.4rem; }
+.field--search { flex: 1 1 220px; min-width: 180px; }
+.field--inline { flex: 0 0 auto; }
+.field--inline select { min-width: 8.5rem; }
+
+/* --- the grid ---------------------------------------------------------- */
+
+.book-grid {
+  display: grid; gap: 1.1rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+
+.book {
+  display: flex; flex-direction: column; gap: .65rem;
+  background: var(--paper-raised); border: 1px solid var(--line);
+  border-radius: var(--r-md); padding: .8rem; cursor: pointer;
+  transition: border-color .15s, transform .15s, box-shadow .15s;
+}
+.book:hover, .book:focus-visible {
+  border-color: var(--green); transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .09);
+}
+.book:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+/* A book cover is roughly 2:3. Reserving that box keeps the grid from
+   reflowing as remote cover images arrive one by one. */
+.book__cover {
+  width: 100%; aspect-ratio: 2 / 3; object-fit: cover;
+  border-radius: var(--r-sm); background: var(--paper-sunk);
+  display: block;
+}
+/* A cover URL that 404s would otherwise leave a broken-image glyph. */
+.book__cover.is-broken { visibility: hidden; }
+
+.book__cover--blank {
+  display: flex; align-items: center; justify-content: center;
+  padding: .8rem; text-align: center; overflow: hidden;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: .84rem; line-height: 1.3; font-weight: 600;
+}
+/* A long title is clamped by line rather than by character count, so it
+   never breaks mid-word the way a JS substring would. */
+.book__cover--blank span {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6;
+  overflow: hidden;
+}
+
+.book__body { display: flex; flex-direction: column; gap: .3rem; }
+.book__title {
+  font-size: .92rem; line-height: 1.3; margin: 0; font-weight: 600;
+}
+.book__author { font-size: .8rem; color: var(--ink-faint); margin: 0; }
+.book__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-top: .15rem; }
+
+/* --- stars ------------------------------------------------------------- */
+
+.stars { display: inline-flex; gap: .1rem; align-items: center; }
+.stars .star { color: var(--line-strong); font-size: 1.05rem; line-height: 1; }
+.stars .star[data-on="true"] { color: var(--gold); }
+.stars--sm .star { font-size: .85rem; }
+
+.stars--input .star {
+  background: none; border: 0; padding: .1rem .05rem; cursor: pointer;
+  font-size: 1.5rem;
+}
+.stars--input .star:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
+
+/* --- detail ------------------------------------------------------------ */
+
+.detail-grid {
+  display: grid; gap: 1.2rem;
+  grid-template-columns: minmax(0, 150px) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 520px) {
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail__cover { max-width: 180px; }
+}
+.detail__cover {
+  width: 100%; aspect-ratio: 2 / 3; object-fit: cover;
+  border-radius: var(--r-sm); background: var(--paper-sunk);
+}
+.detail__subtitle { font-size: 1rem; color: var(--ink-soft); margin: 0 0 .3rem; }
+.detail__authors { margin: 0 0 .7rem; font-weight: 500; }
+.detail__desc { margin-top: 1.1rem; line-height: 1.65; }
+.detail__notes {
+  margin-top: 1.1rem; padding: .8rem 1rem; border-radius: var(--r-sm);
+  background: var(--paper-sunk); border: 1px solid var(--line);
+}
+.detail__notes p { margin: .3rem 0 0; white-space: pre-wrap; }
+
+.kv-list { display: grid; gap: .3rem; margin: .9rem 0 0; }
+.kv { display: flex; gap: .6rem; font-size: .86rem; }
+.kv dt { color: var(--ink-faint); flex: 0 0 8.5rem; }
+.kv dd { margin: 0; }
+
+/* --- editor ------------------------------------------------------------ */
+
+.modal--wide { max-width: 640px; }
+
+.lookup__row { display: flex; gap: .5rem; align-items: stretch; }
+.lookup__row input { flex: 1; }
+.lookup__results { display: grid; gap: .5rem; margin-top: .7rem; }
+.lookup__results:empty { margin-top: 0; }
+
+.hit {
+  display: flex; gap: .7rem; align-items: center;
+  padding: .5rem .6rem; border: 1px solid var(--line);
+  border-radius: var(--r-sm); background: var(--paper-sunk);
+}
+.hit__cover {
+  width: 34px; height: 51px; object-fit: cover; flex: none;
+  border-radius: 3px; background: var(--paper-raised);
+}
+.hit__body { display: flex; flex-direction: column; gap: .1rem; min-width: 0; flex: 1; }
+.hit__body strong { font-size: .88rem; line-height: 1.25; }
+.hit__body span { line-height: 1.3; }
+
+.rule { border: 0; border-top: 1px solid var(--line); margin: 1.3rem 0; }
+
+.cover-field { display: flex; gap: .9rem; align-items: flex-start; }
+.cover-field__preview {
+  width: 90px; aspect-ratio: 2 / 3; object-fit: cover;
+  border-radius: var(--r-sm); border: 1px solid var(--line);
+}
+.cover-field__actions { display: flex; flex-direction: column; gap: .4rem; align-items: flex-start; }
+.cover-field label.btn { cursor: pointer; }
+
+/* Blank-spine tint ---------------------------------------------------------
+   Stated last on purpose: `.detail__cover` also sets a background and carries
+   the same specificity, so whichever comes later wins. The tint should. */
+.book__cover--blank {
+  background: hsl(var(--spine-hue, 120) 32% 88%);
+  color: hsl(var(--spine-hue, 120) 45% 26%);
+}
+html[data-theme="dark"] .book__cover--blank {
+  background: hsl(var(--spine-hue, 120) 22% 26%);
+  color: hsl(var(--spine-hue, 120) 40% 84%);
+}
+
+/* Bulk gap-filling progress ----------------------------------------------- */
+
+.bulk { margin: -.6rem 0 1.4rem; }
+.bulk__track {
+  height: 5px; border-radius: 999px; background: var(--paper-sunk);
+  overflow: hidden; border: 1px solid var(--line);
+}
+.bulk__bar {
+  height: 100%; width: 0; background: var(--green);
+  transition: width .25s ease;
+}
+.bulk p { margin: .4rem 0 0; }
+
+/* A filter button that stays lit while its filter is on. */
+.btn.toggle[aria-pressed="true"] {
+  background: var(--green); color: #fff; border-color: var(--green);
+}

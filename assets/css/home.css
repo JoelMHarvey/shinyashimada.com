@@ -78,6 +78,8 @@
 .card-tokyo      { --accent: var(--sky);        --accent-wash: var(--sky-wash); }
 .card-croissants { --accent: var(--terracotta); --accent-wash: var(--terracotta-wash); }
 .card-italian    { --accent: var(--gold);       --accent-wash: var(--gold-wash); }
+.card-library    { --accent: #6a7f9c;           --accent-wash: color-mix(in srgb, #6a7f9c 12%, transparent); }
+html[data-theme="dark"] .card-library { --accent: #9db3d0; }
 .card-research   { --accent: var(--plum);       --accent-wash: color-mix(in srgb, var(--plum) 12%, transparent); }
 .card-forza      { --accent: #b5404e;           --accent-wash: color-mix(in srgb, #b5404e 12%, transparent); }
 html[data-theme="dark"] .card-forza { --accent: #e8737f; }
