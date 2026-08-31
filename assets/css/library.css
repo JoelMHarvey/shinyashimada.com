@@ -61,6 +61,15 @@
 .book__author { font-size: .8rem; color: var(--ink-faint); margin: 0; }
 .book__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-top: .15rem; }
 
+/* A back issue has no cover in any catalogue, so the placeholder gives it the
+   one thing the shelf photo does show: the yellow border and the date. */
+.book__cover--issue {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  background: #ffd200; border: 6px solid #ffd200; box-shadow: inset 0 0 0 3px #1a1a1a;
+  color: #1a1a1a; font-weight: 700; font-size: .82rem; letter-spacing: .01em; padding: .5rem;
+}
+.chip--issue { background: #ffd200; color: #1a1a1a; border-color: #e0b800; font-weight: 600; }
+
 /* Three lines of the blurb, so a card stays a card. Clamped rather than
    truncated in JS: the full text is in the DOM for find-in-page, and the cut
    lands on a line rather than mid-word. */

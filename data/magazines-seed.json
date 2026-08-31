@@ -1,0 +1,1970 @@
+{
+ "note": "The National Geographic run, read off a photograph of the shelf. Each spine prints NATIONAL GEOGRAPHIC, the issue date, and the cover lines; the date and the cover lines sit on the same spine face, which is how they are paired here. Where a pairing was checked against the issue it is known to be — January 2000 the Millennium issue, April 2002 Afghan Girl, September 2005 the Africa issue, April 2007 Global Fisheries, January 2011 Population 7 Billion — it matched. No cover line was invented: an issue whose spine could not be read carries the date alone and is marked for checking. The shelf holds roughly 170 issues, so this is a partial catalogue; importing again is harmless, because an issue already on the shelf is skipped by its date.",
+ "source": "Photograph of the shelf, read at spine level.",
+ "magazines": [
+  {
+   "id": "ng-1960-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 1960",
+   "issue": "1960-09",
+   "publishedYear": 1960,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Africa Map",
+    "Africa",
+    "Alpine Cableway",
+    "Earliest Man",
+    "Maine Coast"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1964-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 1964",
+   "issue": "1964-02",
+   "publishedYear": 1964,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "N.W. South America Map",
+    "Cliff Dwellers",
+    "Peru",
+    "Johnson Tour",
+    "Ibis"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "ng-1964-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 1964",
+   "issue": "1964-09",
+   "publishedYear": 1964,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Peace Corps",
+    "Ancient Glass",
+    "Chesapeake Bay",
+    "Viet Nam Railroad"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1965-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 1965",
+   "issue": "1965-01",
+   "publishedYear": 1965,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Viet Nam",
+    "Treasure",
+    "Indian Wedding",
+    "Presidents: Part II",
+    "Astronauts"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1965-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 1965",
+   "issue": "1965-10",
+   "publishedYear": 1965,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Portugal",
+    "Mushrooms",
+    "Bird Book II",
+    "Presidents: Part IV",
+    "Mustang"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1966-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 1966",
+   "issue": "1966-07",
+   "publishedYear": 1966,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Vacationlands Map",
+    "National Parks",
+    "Hummingbird",
+    "Gibraltar",
+    "Lua Tribe"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1967-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 1967",
+   "issue": "1967-03",
+   "publishedYear": 1967,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Siberia",
+    "National Gallery of Art",
+    "Squids",
+    "Guadalajara",
+    "White Gold"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1967-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 1967",
+   "issue": "1967-08",
+   "publishedYear": 1967,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Champlain",
+    "Cook Is.",
+    "San Marino",
+    "Salt Lake",
+    "Greenland",
+    "Aphrodisias"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1995-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 1995",
+   "issue": "1995-06",
+   "publishedYear": 1995,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "The Brain",
+    "Sea Otters",
+    "Galilee",
+    "Holy Land",
+    "Puget Sound"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1999-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 1999",
+   "issue": "1999-08",
+   "publishedYear": 1999,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Culture",
+    "Global Culture",
+    "Three Cities",
+    "Vanishing Cultures",
+    "Endangered Art",
+    "Writing"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1999-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 1999",
+   "issue": "1999-09",
+   "publishedYear": 1999,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Kashmir",
+    "Balloon",
+    "Masai Initiation",
+    "Olive Oil",
+    "Rock Art",
+    "Eagle Hunters",
+    "Rodeos",
+    "Galileo"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1999-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 1999",
+   "issue": "1999-11",
+   "publishedYear": 1999,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Iraq",
+    "Sharks",
+    "Inca Mummies",
+    "Panama",
+    "African Rituals",
+    "Feathered Dinosaurs",
+    "Hurricane"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-1999-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 1999",
+   "issue": "1999-12",
+   "publishedYear": 1999,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Ancient Greece",
+    "Cheetahs",
+    "Florida Keys",
+    "Geographic Century",
+    "Japanese Wildlife",
+    "Athens, OH"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2000",
+   "issue": "2000-01",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Special Millennium Issue"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2000",
+   "issue": "2000-02",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Balkans",
+    "Black Dragon",
+    "Messel",
+    "Albanians",
+    "Kosovo",
+    "Gorillas",
+    "Voting Rights",
+    "Greece II"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2000",
+   "issue": "2000-03",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Madidi",
+    "Bugging Out",
+    "Around the World",
+    "Nairobi",
+    "Oil",
+    "AIDS",
+    "Pygmies"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2000",
+   "issue": "2000-04",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Sharks",
+    "Yemen",
+    "Chiquibul Cave",
+    "Research",
+    "San Pedro River",
+    "Nature's Rx",
+    "Platypus"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-05",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "May 2000",
+   "issue": "2000-05",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "low",
+   "notes": "May 2000 — cover lines hidden behind an insert in the photo"
+  },
+  {
+   "id": "ng-2000-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2000",
+   "issue": "2000-06",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Britain / Ireland",
+    "London",
+    "Dinosaur",
+    "Suriname",
+    "Sierra Madre",
+    "Jellyfish",
+    "Golan Heights",
+    "Indus"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 2000",
+   "issue": "2000-08",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Olympics Sydney",
+    "Zulus",
+    "Madagascar Fossils",
+    "Fungi",
+    "Phips's Fleet",
+    "Angkor",
+    "Big Sur"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2000",
+   "issue": "2000-09",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "California Trails",
+    "Unbeatable Body",
+    "Tombs",
+    "Rana Tharu",
+    "Rise of Life",
+    "Leopard",
+    "Mentone, TX"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 2000",
+   "issue": "2000-10",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Megatransect",
+    "Sonoran Desert",
+    "North Enders",
+    "Gliders",
+    "Oceans",
+    "Sea Vents",
+    "Fossil Trail"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2000-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2000",
+   "issue": "2000-11",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Libya",
+    "Putorana",
+    "Volcano",
+    "Luis Marden",
+    "Lions",
+    "Nepal",
+    "Pueblo Reburial",
+    "Beverly Hills"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2001",
+   "issue": "2001-01",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Surviving in Space",
+    "Great Barrier Reef",
+    "Mummers",
+    "Ashkelon",
+    "Imperial Palace",
+    "Quartzsite, AZ"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2001",
+   "issue": "2001-02",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Mars",
+    "Andes",
+    "Scarabs",
+    "Meadowlands",
+    "Research",
+    "Bushmen",
+    "Rock Art",
+    "Waimanalo, HI"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2001",
+   "issue": "2001-03",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Megatransect II",
+    "Jungle Clearing",
+    "Palmyra",
+    "Moche Burials",
+    "Indonesia"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-05",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "May 2001",
+   "issue": "2001-05",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Marco Polo",
+    "Jaguars",
+    "Black Sea",
+    "Poisonous Cave",
+    "Pterosaurs",
+    "Frogs",
+    "Jamestown, NM"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 2001",
+   "issue": "2001-08",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Public Lands",
+    "Spiders",
+    "ANWR",
+    "Kamchatka",
+    "Megatransect III",
+    "Chauvet",
+    "Ocean Grove, NJ"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2001",
+   "issue": "2001-09",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Africa",
+    "Peace Parks",
+    "Tombs",
+    "Immigration",
+    "Walruses",
+    "How Old Is It?",
+    "Garífuna",
+    "Dayton, TN"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 2001",
+   "issue": "2001-10",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Light",
+    "Rain Forest",
+    "China Tombs",
+    "Volcanoes",
+    "Leakey",
+    "Leopards",
+    "Swahili Coast",
+    "Adjuntas, PR"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2001",
+   "issue": "2001-11",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Russia",
+    "Hippos",
+    "Auroras",
+    "Whales",
+    "Pyramid Builders",
+    "King Cobras",
+    "Steelville, MO"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2001-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2001",
+   "issue": "2001-12",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Afghanistan",
+    "Antarctica",
+    "Ice Islands",
+    "Silicon Valley",
+    "Wired World",
+    "Supercroc",
+    "Abraham"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2002-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2002",
+   "issue": "2002-02",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Antarctica Challenges",
+    "AIDS",
+    "Reefs",
+    "Etna",
+    "Salt Lake Valley",
+    "Central Asia",
+    "Elkton, MD"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2002-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2002",
+   "issue": "2002-04",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Afghan Girl",
+    "Tibetans",
+    "Lions",
+    "Maya",
+    "Muskoxen",
+    "Lewis & Clark",
+    "China",
+    "Bats"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2002-05",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "May 2002",
+   "issue": "2002-05",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "The Inca",
+    "Food",
+    "Moths",
+    "Guyana Expedition",
+    "Aztec Excavations"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2002-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2002",
+   "issue": "2002-06",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "D-Day",
+    "Boreal Forest",
+    "Wolverines",
+    "Jamestown",
+    "Afghanistan",
+    "Andes Empires",
+    "Ames, Iowa"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2002-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2002",
+   "issue": "2002-07",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Nuclear Waste",
+    "Bald Eagles",
+    "Somalia",
+    "Philippines",
+    "Hunley",
+    "Flowers",
+    "Washington, D.C."
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2002-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 2002",
+   "issue": "2002-08",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "New Skull Find",
+    "Oceans",
+    "Fuji",
+    "Slave Ship",
+    "Bahia",
+    "Smokejumpers",
+    "Monkeys",
+    "Bear Island, NH"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2002-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2002",
+   "issue": "2002-11",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Weapons of Mass Destruction",
+    "Skin",
+    "Mola",
+    "Megacities",
+    "Geladas",
+    "Boys Town, NE"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2003-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2003",
+   "issue": "2003-01",
+   "publishedYear": 2003,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Great Wall",
+    "Volcano",
+    "Textiles",
+    "Egyptian Treasures"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2003-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2003",
+   "issue": "2003-03",
+   "publishedYear": 2003,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Diamonds",
+    "Arctic",
+    "Prairie Chickens",
+    "Danube",
+    "Bears",
+    "Greek Shipwreck",
+    "Murfreesboro, AR"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "ng-2003-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2003",
+   "issue": "2003-04",
+   "publishedYear": 2003,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Mammals",
+    "Oman Caves",
+    "Corsica",
+    "Gombe Chimps",
+    "Jane Goodall",
+    "Tibet Trek",
+    "Augusta, GA"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2003-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2003",
+   "issue": "2003-06",
+   "publishedYear": 2003,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "India",
+    "Minnesota",
+    "Baghdad",
+    "Porpoises",
+    "Andes Road",
+    "Caterpillars",
+    "Gold",
+    "Oak Bluffs, MA"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2003-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2003",
+   "issue": "2003-09",
+   "publishedYear": 2003,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Europe",
+    "Tut",
+    "Chesapeake",
+    "Hyenas",
+    "Romania",
+    "Convict",
+    "Weather",
+    "Tornadoes",
+    "Postville, IA"
+   ],
+   "confidence": "medium"
+  },
+  {
+   "id": "ng-2004-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2004",
+   "issue": "2004-06",
+   "publishedYear": 2004,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Shiites",
+    "Monterey Canyon",
+    "Peru Tombs",
+    "National Mall",
+    "Flickers",
+    "Oil",
+    "Pawtucket, RI"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2004-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2004",
+   "issue": "2004-11",
+   "publishedYear": 2004,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "The World",
+    "Evolution",
+    "Maya",
+    "Fiji Reefs",
+    "Terrorism",
+    "Sloth Bears",
+    "Australia",
+    "Kelly, WY"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2004-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2004",
+   "issue": "2004-12",
+   "publishedYear": 2004,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Bin Laden",
+    "Afghanistan",
+    "Okavango Delta",
+    "New Planets",
+    "Milky Way",
+    "Bristol Bay",
+    "Bats"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2005-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2005",
+   "issue": "2005-01",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Caffeine",
+    "Cheetahs",
+    "Ancient Italy",
+    "Morocco's Berbers",
+    "Yosemite",
+    "Hot Coffee, MS"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2005-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2005",
+   "issue": "2005-03",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "The Mind",
+    "Olmsted",
+    "Ancient Peru",
+    "Ireland",
+    "California",
+    "The Alps",
+    "Miami, FL"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2005-05",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "May 2005",
+   "issue": "2005-05",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Poison",
+    "Colorado",
+    "Fossil Trade",
+    "Deepest Cave",
+    "Reef Color",
+    "Diamond Shipwreck"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2005-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2005",
+   "issue": "2005-06",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "June 2005 — cover lines only partly legible"
+  },
+  {
+   "id": "ng-2005-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2005",
+   "issue": "2005-07",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Stem Cells",
+    "China's Armada",
+    "Jellyfish",
+    "Mars",
+    "Chechnya",
+    "Rockies",
+    "Glen Echo, MD"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2005-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2005",
+   "issue": "2005-09",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Africa",
+    "Portfolio",
+    "Human Footprint",
+    "Nairobi",
+    "Oil",
+    "AIDS",
+    "Pygmies"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2005-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 2005",
+   "issue": "2005-10",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Killer Flu",
+    "Africa Desert",
+    "Trafalgar",
+    "Hawaii",
+    "Stone Age Site",
+    "Elephants",
+    "Bridgewater, NJ"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2006-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2006",
+   "issue": "2006-01",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Kurds",
+    "Genocide",
+    "Grand Canyon",
+    "Lynx",
+    "Maya",
+    "Arctic Hunters",
+    "Mantids",
+    "Monroeville, AL"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2006-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2006",
+   "issue": "2006-02",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Serengeti",
+    "Love",
+    "Russian Bears",
+    "Lubavitch Jews",
+    "California",
+    "Einstein",
+    "Clarksburg, WV"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2006-05",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "May 2006",
+   "issue": "2006-05",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Alaska",
+    "Judas Gospel",
+    "Duchy of Cornwall",
+    "Allergies",
+    "Myanmar",
+    "Lindsborg, KS"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2006-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2006",
+   "issue": "2006-06",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Soccer",
+    "Peruvian Mummy",
+    "Pelicans",
+    "Nanotechnology",
+    "Walking the Way"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2006-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2006",
+   "issue": "2006-07",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Pandas",
+    "U.S. Coasts",
+    "Rome's Basement",
+    "Dance Across America",
+    "Human Body",
+    "Blackbeard"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2006-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2006",
+   "issue": "2006-12",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Solar System",
+    "Saturn",
+    "Early Earth",
+    "War Medicine",
+    "Bulgaria",
+    "Bartram",
+    "Rico, CO"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2007-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2007",
+   "issue": "2007-01",
+   "publishedYear": 2007,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Amazon",
+    "Humpback Whales",
+    "Dubai",
+    "Hummingbirds",
+    "Arctic Trek",
+    "Slovenia Treasure"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2007-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2007",
+   "issue": "2007-02",
+   "publishedYear": 2007,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Human Heart",
+    "Big Bend Park",
+    "Nigeria Oil",
+    "Hawaii Worms",
+    "Mangrove Forests"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2007-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2007",
+   "issue": "2007-03",
+   "publishedYear": 2007,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Zakouma Park",
+    "African Wildlife",
+    "Cosmic Explosions",
+    "Orlando",
+    "Sharks",
+    "Canyonlands"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2007-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2007",
+   "issue": "2007-04",
+   "publishedYear": 2007,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Global Fisheries Crisis",
+    "Hip-Hop Culture",
+    "Tallgrass Prairie",
+    "Botswana Leopards"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2008-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2008",
+   "issue": "2008-07",
+   "publishedYear": 2008,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Virunga Gorillas",
+    "Altiplano",
+    "Bolivia",
+    "Dinosaurs",
+    "Wildfires",
+    "Kingman Reef"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2008-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 2008",
+   "issue": "2008-10",
+   "publishedYear": 2008,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Neanderthals",
+    "Bee-Eaters",
+    "India Highway",
+    "Right Whales",
+    "Ozarks Trail"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2008-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2008",
+   "issue": "2008-12",
+   "publishedYear": 2008,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Jerusalem",
+    "King Herod",
+    "West Bank",
+    "India Health",
+    "Mars",
+    "Wallace",
+    "Klamath River"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2009-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 2009",
+   "issue": "2009-08",
+   "publishedYear": 2009,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Kamchatka Salmon",
+    "Yellowstone",
+    "Deceptive Animals",
+    "Venice",
+    "Camel Pageant"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2009-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 2009",
+   "issue": "2009-10",
+   "publishedYear": 2009,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Redwoods",
+    "Bryde's Whales",
+    "Indonesia",
+    "Sahara Desert",
+    "Hutterites",
+    "Mount Airy, NC"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2009-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2009",
+   "issue": "2009-11",
+   "publishedYear": 2009,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Animal Mummies",
+    "Reinventing Syria",
+    "Kingfishers",
+    "Madagascar",
+    "India",
+    "Crocodiles"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2009-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2009",
+   "issue": "2009-12",
+   "publishedYear": 2009,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "China's Uygurs",
+    "South Georgia Island",
+    "New Earths",
+    "Hadza",
+    "Pollen",
+    "Mount Athos"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2010",
+   "issue": "2010-03",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Wolf Wars",
+    "Nasca Lines",
+    "Carnivorous Plants",
+    "Ethiopian Tribes",
+    "Shanghai"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2010",
+   "issue": "2010-04",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Water: Our Thirsty World — a special issue"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2010",
+   "issue": "2010-06",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Melt Zone",
+    "Greenland",
+    "Whooping Cranes",
+    "South Africa",
+    "Foja Mountains",
+    "Chinese Caves"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2010",
+   "issue": "2010-07",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Evolutionary Road",
+    "Bowerbirds",
+    "Pakistan",
+    "Brazilian Dunes",
+    "Electrical Grid"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 2010",
+   "issue": "2010-08",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Bahamas Caves",
+    "Eurasian Railroad",
+    "Tribal Lands",
+    "Kaziranga",
+    "Kung Fu",
+    "Pollinators",
+    "Alaska"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2010",
+   "issue": "2010-09",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "King Tut",
+    "Fraser Island",
+    "Madagascar",
+    "India",
+    "Crocodiles"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 2010",
+   "issue": "2010-10",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Gulf Oil Spill",
+    "Protecting Marine Life",
+    "Australia's Giants",
+    "Jane Goodall",
+    "American West"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2010",
+   "issue": "2010-11",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Animal Migrations",
+    "Southern Sudan",
+    "Japan's Seas",
+    "Brothers Grimm",
+    "Survey"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2010-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2010",
+   "issue": "2010-12",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Afghan Women",
+    "Whooper Swans",
+    "David and Solomon",
+    "Medellín",
+    "Invasive Species",
+    "Moab, UT"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2011",
+   "issue": "2011-01",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Population",
+    "Phoenix Islands",
+    "Timbuktu",
+    "Vietnam Cave",
+    "Cahokia"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2011",
+   "issue": "2011-02",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Feathers",
+    "Opium Wars",
+    "Artificial Reefs",
+    "Paris Underground",
+    "Snub-Nosed Monkeys"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2011",
+   "issue": "2011-03",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Seven Billion",
+    "Taming the Wild",
+    "Age of Man",
+    "Coelacanths",
+    "Australia's Giants",
+    "Jane Goodall",
+    "American West"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2011",
+   "issue": "2011-04",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Inca",
+    "Crimea",
+    "Nyiragongo Volcano",
+    "Acid Sea",
+    "Manhattan's New Park",
+    "Snow Frogs"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-05",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "May 2011",
+   "issue": "2011-05",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Great Barrier Reef",
+    "Bangladesh",
+    "Ants",
+    "Yosemite",
+    "Camera Obscura",
+    "Panama"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2011",
+   "issue": "2011-06",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Göbekli Tepe",
+    "Namibia",
+    "Child Brides",
+    "Tide Pools",
+    "China",
+    "Rare Earths"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 2011",
+   "issue": "2011-08",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Kermode Bear",
+    "Great Bear Rainforest",
+    "Robots",
+    "Langur Monkeys",
+    "Myanmar",
+    "Fossils"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2011",
+   "issue": "2011-09",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Elephants",
+    "Personal Flight",
+    "Adirondacks",
+    "Brazil",
+    "South Pole",
+    "North Africa"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2011-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 2011",
+   "issue": "2011-10",
+   "publishedYear": 2011,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Teen Brains",
+    "Slot Canyons",
+    "Whale Sharks",
+    "Hothouse Earth",
+    "Mongolia",
+    "Ansel Adams"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2012-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2012",
+   "issue": "2012-01",
+   "publishedYear": 2012,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Twins",
+    "Panama Gold",
+    "Dogsled Patrol",
+    "Land Mines",
+    "Afar Depression",
+    "Montana"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2012-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2012",
+   "issue": "2012-07",
+   "publishedYear": 2012,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Easter Island",
+    "Epic Storms",
+    "Vanishing Languages",
+    "Mt. Erebus",
+    "Russian Summer"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2014-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2014",
+   "issue": "2014-06",
+   "publishedYear": 2014,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Hero Dogs",
+    "Peru Tomb",
+    "Puffins",
+    "Aquaculture",
+    "Siberia's Medical Train"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2014-08",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "August 2014",
+   "issue": "2014-08",
+   "publishedYear": 2014,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Orkney Islands",
+    "Jane Goodall",
+    "Hunger in America",
+    "Franz Josef Land",
+    "World War I"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2014-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2014",
+   "issue": "2014-11",
+   "publishedYear": 2014,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Vikings",
+    "Silver Queen",
+    "New Caledonia",
+    "Dawn of Humans",
+    "Ants & Plants",
+    "Lighthouse",
+    "Volcano"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2014-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2014",
+   "issue": "2014-12",
+   "publishedYear": 2014,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Joy of Food",
+    "South African Seas",
+    "Holy Lands",
+    "3-D Printers",
+    "Superfund",
+    "Patagonia"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2015-01",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "January 2015",
+   "issue": "2015-01",
+   "publishedYear": 2015,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Firsts: Artists",
+    "Year of Life",
+    "African City",
+    "Glimpse of Cosmos",
+    "Americans",
+    "Bird"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2015-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2015",
+   "issue": "2015-02",
+   "publishedYear": 2015,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Healing Soldiers",
+    "Hawaii",
+    "Mites",
+    "Gran Paradiso",
+    "Climate Change",
+    "Rising Waters"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2015-03",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "March 2015",
+   "issue": "2015-03",
+   "publishedYear": 2015,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "War on Science",
+    "Syrian Refugees",
+    "Glowing Creatures",
+    "Athens / Berlin",
+    "Greenland"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2015-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2015",
+   "issue": "2015-04",
+   "publishedYear": 2015,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Lincoln",
+    "Hubble at 25",
+    "India's Insurgency",
+    "Pine Beetles",
+    "Trajan's Column",
+    "Argentina"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2015-05",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "May 2015",
+   "issue": "2015-05",
+   "publishedYear": 2015,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Dolphin Intelligence",
+    "Detroit",
+    "Bees",
+    "Harnessing the Mekong",
+    "Po River",
+    "Chicago"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-2015-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2015",
+   "issue": "2015-12",
+   "publishedYear": 2015,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [
+    "Virgin Mary",
+    "Science of Taste",
+    "New York Skyline",
+    "Haiti",
+    "Leopards",
+    "Failed Utopias"
+   ],
+   "confidence": "high"
+  },
+  {
+   "id": "ng-sp-your-body",
+   "title": "Your Body: A User's Guide",
+   "publisher": "National Geographic Society",
+   "subtitle": "Special publication",
+   "confidence": "high",
+   "subjects": [],
+   "kind": "magazine",
+   "owner": "joel"
+  },
+  {
+   "id": "ng-sp-adventures",
+   "title": "Adventures of a Lifetime",
+   "publisher": "National Geographic Society",
+   "subtitle": "Special publication",
+   "confidence": "high",
+   "subjects": [],
+   "kind": "magazine",
+   "owner": "joel"
+  },
+  {
+   "id": "ng-sp-weed-nation",
+   "title": "Weed Nation",
+   "publisher": "Newsweek",
+   "subtitle": "Newsweek special edition",
+   "confidence": "high",
+   "subjects": [],
+   "kind": "magazine",
+   "owner": "joel"
+  },
+  {
+   "id": "ng-sp-2015-02",
+   "title": "National Geographic",
+   "publisher": "National Geographic Society",
+   "subtitle": "Special publication, February / March 2015",
+   "issue": "2015-02",
+   "publishedYear": 2015,
+   "confidence": "medium",
+   "subjects": [],
+   "notes": "Spine reads only \"Special Publication · February / March 2015\"; the title is not legible in the photo.",
+   "kind": "magazine",
+   "owner": "joel"
+  }
+ ]
+}

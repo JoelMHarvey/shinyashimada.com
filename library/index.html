@@ -63,6 +63,15 @@
       </label>
 
       <label class="field field--inline">
+        <span data-i18n="lib.kind.label"></span>
+        <select id="f-kind">
+          <option value="all" data-i18n="lib.kind.all"></option>
+          <option value="book" data-i18n="lib.kind.book"></option>
+          <option value="magazine" data-i18n="lib.kind.magazine"></option>
+        </select>
+      </label>
+
+      <label class="field field--inline">
         <span data-i18n="lib.filter.owner"></span>
         <select id="f-owner">
           <option value="all" data-i18n="common.all"></option>
@@ -109,6 +118,8 @@
       </button>
 
       <div class="toolbar__spacer"></div>
+      <button type="button" class="btn btn--ghost btn--sm" id="import-mags" data-i18n="lib.import.mags"
+              data-i18n-attr="title:lib.import.magsHint" hidden></button>
       <button type="button" class="btn btn--ghost btn--sm" id="bulk-go" data-i18n="lib.bulk.start"
               data-i18n-attr="title:lib.bulk.hint"></button>
       <button type="button" class="btn btn--ghost btn--sm" id="export" data-i18n="lib.export"></button>
