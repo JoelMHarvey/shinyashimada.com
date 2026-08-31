@@ -153,6 +153,14 @@
     background: var(--paper); padding: 1px 5px; border-radius: 4px;
   }
   .skeleton { color: var(--ink-soft); font-size: 14.5px; padding: 18px 0; }
+  .lockform { display: flex; gap: 8px; margin-top: 12px; }
+  .lockform input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 16px;
+    padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line);
+    background: var(--paper); color: var(--ink);
+  }
+  .lockform .btn { width: auto; padding: 12px 18px; font-size: 15px; }
+  .lockerr { color: var(--red); font-size: 13.5px; margin: 10px 0 0; font-weight: 700; }
 
   /* ---- game ---- */
   .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
@@ -252,6 +260,20 @@
     <div class="notice">
       <h2>No vocabulary yet</h2>
       <p>The database has no words in it. Import Shin's OneNote notebooks first — see <code>docs/onenote-import.md</code> — then reload this page.</p>
+    </div>
+  </div>
+
+  <div id="lockBox" hidden>
+    <div class="notice">
+      <h2>Se necesita el código</h2>
+      <p>Shin's vocabulary is not public. Enter the same passcode the balcony and
+      library pages use — this device will remember it.</p>
+      <form id="lockForm" class="lockform">
+        <input type="password" id="lockInput" autocomplete="current-password"
+               placeholder="Código" required aria-label="Passcode">
+        <button class="btn primary" type="submit">Entrar</button>
+      </form>
+      <p class="lockerr" id="lockErr" hidden>That passcode was not accepted.</p>
     </div>
   </div>
 
@@ -379,13 +401,27 @@ function topicLabel(id) {
 }
 
 // ================= LOADING =================
+// The same shared passcode the balcony and library pages use, under the same
+// localStorage key, so unlocking one unlocks the rest.
+const PASS_KEY = "ss.passcode";
+const passcode = () => { try { return localStorage.getItem(PASS_KEY) || ""; } catch (e) { return ""; } };
+
 // `no-cache` revalidates rather than skipping the cache: the CDN still
 // serves the response, but a player who opens the page just after Shin
 // imports new vocabulary does not get up to a minute of the old one.
-const FETCH_OPTS = { headers: { Accept: "application/json" }, cache: "no-cache" };
+function fetchOpts() {
+  const headers = { Accept: "application/json" };
+  const code = passcode();
+  if (code) headers["X-Store-Passcode"] = code;
+  return { headers, cache: "no-cache" };
+}
+
+/** Thrown when the server wants a passcode we do not have or do not like. */
+class Unauthorised extends Error {}
 
 async function loadTopics() {
-  const res = await fetch(`${API}?counts=1`, FETCH_OPTS);
+  const res = await fetch(`${API}?counts=1`, fetchOpts());
+  if (res.status === 401) throw new Unauthorised("passcode required");
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   const data = await res.json();
   topics = Array.isArray(data.topics) ? data.topics : [];
@@ -415,7 +451,8 @@ async function fetchDeck(keys) {
   );
   const url = `${API}?deck=1&lang=${encodeURIComponent(lang)}` +
     `&topic=${encodeURIComponent(wanted.join(","))}&size=${size || 1}`;
-  const res = await fetch(url, FETCH_OPTS);
+  const res = await fetch(url, fetchOpts());
+  if (res.status === 401) throw new Unauthorised("passcode required");
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
   const data = await res.json();
   deckCache[key] = Array.isArray(data.questions) ? data.questions : [];
@@ -434,10 +471,17 @@ async function boot() {
     await loadTopics();
   } catch (err) {
     $("loadingBox").hidden = true;
+    if (err instanceof Unauthorised) {
+      $("lockBox").hidden = false;
+      $("lockErr").hidden = !passcode();   // only "wrong" if one was tried
+      $("lockInput").focus();
+      return;
+    }
     $("errorBox").hidden = false;
     $("errorText").textContent = `The vocabulary API did not answer (${err.message}).`;
     return;
   }
+  $("lockBox").hidden = true;
   $("loadingBox").hidden = true;
   const available = topicsWithQuestions();
   if (!available.length) {
@@ -562,6 +606,7 @@ async function startGame(m, keys) {
     deck = shuffle(ofType(await fetchDeck(useKeys)));
   } catch (err) {
     setBusy(false);
+    if (err instanceof Unauthorised) return boot();
     $("errorBox").hidden = false;
     $("errorText").textContent = `Could not load those units (${err.message}).`;
     return;
@@ -769,6 +814,16 @@ function finish() {
 }
 
 // ================= WIRING =================
+$("lockForm").onsubmit = (ev) => {
+  ev.preventDefault();
+  const code = $("lockInput").value.trim();
+  if (!code) return;
+  try { localStorage.setItem(PASS_KEY, code); } catch (e) {}
+  $("lockInput").value = "";
+  $("lockErr").hidden = true;
+  boot();
+};
+
 $("pickAll").onclick = () => {
   selected = new Set(topicsWithQuestions().map(t => t.id));
   renderHome();
