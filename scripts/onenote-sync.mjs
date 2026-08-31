@@ -6,6 +6,7 @@
      node scripts/onenote-sync.mjs --notebook español --out .onenote-export
      node scripts/onenote-sync.mjs --all --out .onenote-export
      node scripts/onenote-sync.mjs --all --resume     # skip pages already saved
+     node scripts/onenote-sync.mjs --notebook español --section 2022_目標 --images
 
    There are two ways to authenticate. Either works; neither involves typing
    a password into this process.
@@ -90,6 +91,9 @@ const wantSections = values('section');
 const listOnly = flag('list');
 const syncAll = flag('all');
 const resume = flag('resume');
+// Page HTML only references its pictures; fetching them is a second request
+// each, so it is opt-in.
+const withImages = flag('images');
 
 const clientId = process.env.ONENOTE_CLIENT_ID;
 const tenant = process.env.ONENOTE_TENANT || 'consumers';
@@ -340,6 +344,8 @@ const sectionWanted = (name) => {
 
 const manifest = [];
 let skippedExisting = 0;
+let imagesSaved = 0;
+let imageFailures = 0;
 
 let matchedSections = 0;
 
@@ -388,6 +394,34 @@ for (const nb of targets) {
         skippedExisting++;
       }
 
+      // Pull the pictures down too, keyed by the resource id in their URL so
+      // the parser can match a row to the file on disk. Graph serves these
+      // only to an authenticated caller, which is why they cannot simply be
+      // hot-linked from the page later.
+      if (withImages) {
+        const dir = path.join(outDir, 'images');
+        await mkdir(dir, { recursive: true });
+        for (const m of html.matchAll(/<img\b[^>]*?\ssrc="([^"]+)"[^>]*>/gi)) {
+          const src = m[1].replace(/&amp;/g, '&');
+          const id = /resources\/([^/]+)\//.exec(src);
+          if (!id) continue;
+          const safe = id[1].replace(/[^A-Za-z0-9!._-]/g, '_').slice(0, 120);
+          const typeAttr = /data-src-type="image\/(\w+)"/.exec(m[0]);
+          const dest = path.join(dir, `${safe}.${(typeAttr?.[1] || 'jpg').replace('jpeg', 'jpg')}`);
+          if (resume) {
+            try { await readFile(dest); continue; } catch { /* not fetched yet */ }
+          }
+          try {
+            const res = await fetch(src, { headers: { Authorization: `Bearer ${token}` } });
+            if (!res.ok) { imageFailures++; continue; }
+            await writeFile(dest, Buffer.from(await res.arrayBuffer()));
+            imagesSaved++;
+          } catch {
+            imageFailures++;
+          }
+        }
+      }
+
       // Counting images here means the parser can flag photo-only pages
       // without re-reading every file.
       const images = (html.match(/<img\b/gi) || []).length;
@@ -417,6 +451,11 @@ if (!matchedSections) {
 
 await mkdir(outDir, { recursive: true });
 await writeFile(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2), 'utf8');
+
+if (withImages) {
+  console.log(`${imagesSaved} image(s) saved to ${outDir}/images/` +
+    (imageFailures ? `, ${imageFailures} could not be fetched` : ''));
+}
 
 const photoOnly = manifest.filter((p) => p.images > 0 && p.textLength < 120);
 console.log(`\n${manifest.length} pages in ${outDir}/` + (skippedExisting ? ` (${skippedExisting} already present, left alone)` : ''));

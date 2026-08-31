@@ -25,6 +25,7 @@ import pg from 'pg';
 
 import { corsHeaders, preflight } from '../lib/cors.mjs';
 import { secretsMatch } from '../lib/records.mjs';
+import { cleanDefinition, looksLikeTerm, maskTerm, slug } from '../lib/vocab-text.mjs';
 
 const { Pool } = pg;
 
@@ -142,16 +143,182 @@ function buildDeck(rows, lang, size) {
   return shuffle(questions).slice(0, size);
 }
 
+/**
+ * Writing is stricter than reading: a passcode must be configured *and*
+ * match. Reads fall open when SITE_PASSCODE is unset, which is a reasonable
+ * default for a personal site; letting anyone add rows would not be.
+ */
+function canWrite(req) {
+  const expected = process.env.SITE_PASSCODE;
+  if (!expected) return false;
+  return secretsMatch(req.headers.get('x-store-passcode'), expected);
+}
+
+const MAX_WRITE_ENTRIES = 500;
+const MAX_TERM = 120;
+const MAX_DEFINITION = 2000;
+
+/** Normalise one submitted entry, or explain why it cannot be stored. */
+function prepare(raw) {
+  const term = String(raw.term ?? '').trim().replace(/\s+/g, ' ');
+  if (!term) return { error: 'a term is required' };
+  if (term.length > MAX_TERM) return { error: `term is longer than ${MAX_TERM} characters` };
+  if (!looksLikeTerm(term)) return { error: `"${term}" reads as a sentence, not a headword` };
+
+  const topicId = String(raw.topic_id ?? '').trim();
+  if (!SLUG_RE.test(topicId)) return { error: `bad topic id ${JSON.stringify(topicId)}` };
+
+  const rawDefinition = String(raw.definition ?? '').trim();
+  if (!rawDefinition) return { error: `"${term}" has no definition` };
+  if (rawDefinition.length > MAX_DEFINITION) {
+    return { error: `definition for "${term}" is longer than ${MAX_DEFINITION} characters` };
+  }
+
+  // Exactly what the OneNote import does, from the same module, so a card
+  // typed by hand behaves like one that came out of the notebook.
+  const { text: definition, masked } = maskTerm(term, cleanDefinition(rawDefinition));
+  if (!definition || definition.replace(/_+/g, '').trim().length < 8) {
+    return { error: `the definition for "${term}" is almost entirely the word itself` };
+  }
+
+  const imageKey = raw.image_key ? String(raw.image_key).trim() : null;
+  if (imageKey && !/^[0-9a-f]{32}\.(jpg|png|webp|gif)$/.test(imageKey)) {
+    return { error: `bad image key on "${term}"` };
+  }
+
+  return {
+    entry: {
+      topic_id: topicId,
+      term,
+      definition,
+      cloze: masked,
+      image_key: imageKey,
+      image_alt: raw.image_alt ? String(raw.image_alt).trim().slice(0, 2000) : null,
+      level: raw.level ? String(raw.level).trim().slice(0, 12) : null,
+      note: raw.note ? String(raw.note).trim().slice(0, 500) : null,
+      source: raw.source ? String(raw.source).trim().slice(0, 200) : 'added by hand'
+    }
+  };
+}
+
 export default async (req) => {
   const pre = preflight(req);
   if (pre) return pre;
 
+  const url = new URL(req.url);
+  const db = getPool();
+
+  /* ---------------------------------------------------------------- write */
+
+  if (req.method === 'POST' || req.method === 'DELETE') {
+    if (!canWrite(req)) return json({ error: 'unauthorized' }, 401, req);
+    if (!db) return json({ error: 'no_database' }, 503, req);
+
+    if (req.method === 'DELETE') {
+      const id = Number(url.searchParams.get('id'));
+      if (!Number.isInteger(id) || id <= 0) return json({ error: 'bad_id' }, 400, req);
+      try {
+        const { rowCount } = await db.query(
+          `DELETE FROM vocab_entries WHERE id = $1 AND language = 'es'`, [id]
+        );
+        return json({ deleted: rowCount }, rowCount ? 200 : 404, req);
+      } catch (err) {
+        console.error('[vocab] delete failed', err);
+        return json({ error: 'query_failed' }, 500, req);
+      }
+    }
+
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return json({ error: 'bad_json' }, 400, req);
+    }
+
+    const submitted = Array.isArray(body?.entries) ? body.entries : [body];
+    if (!submitted.length) return json({ error: 'nothing_submitted' }, 400, req);
+    if (submitted.length > MAX_WRITE_ENTRIES) {
+      return json({ error: 'too_many', max: MAX_WRITE_ENTRIES }, 413, req);
+    }
+
+    // Validate everything before writing anything, so a bad row twenty
+    // lines into a paste does not leave the first nineteen committed.
+    const ready = [];
+    const rejected = [];
+    for (const [i, raw] of submitted.entries()) {
+      const { entry, error } = prepare(raw);
+      if (error) rejected.push({ row: i + 1, error });
+      else ready.push(entry);
+    }
+    if (rejected.length) return json({ error: 'invalid', rejected }, 400, req);
+
+    const newTopic = body?.topic_label
+      ? { id: slug(body.topic_label), label: String(body.topic_label).trim().slice(0, 120) }
+      : null;
+
+    const client = await db.connect();
+    try {
+      await client.query('BEGIN');
+
+      if (newTopic) {
+        await client.query(
+          `INSERT INTO vocab_topics (id, language, label_en, label_es, sort_order)
+           VALUES ($1, 'es', $2, $2,
+                   COALESCE((SELECT max(sort_order) + 1 FROM vocab_topics WHERE language = 'es'), 0))
+           ON CONFLICT (id) DO NOTHING`,
+          [newTopic.id, newTopic.label]
+        );
+      }
+
+      // Every entry must land in a unit that exists, or the foreign key
+      // would reject it with an error Shin cannot act on.
+      const topicIds = [...new Set(ready.map((e) => e.topic_id))];
+      const { rows: known } = await client.query(
+        `SELECT id FROM vocab_topics WHERE id = ANY($1::text[])`, [topicIds]
+      );
+      const missing = topicIds.filter((id) => !known.some((k) => k.id === id));
+      if (missing.length) {
+        await client.query('ROLLBACK');
+        return json({ error: 'unknown_topic', topics: missing }, 400, req);
+      }
+
+      let inserted = 0;
+      let updated = 0;
+      for (const e of ready) {
+        const { rows } = await client.query(
+          `INSERT INTO vocab_entries
+             (language, topic_id, term, definition, cloze, image_key, image_alt,
+              level, note, source)
+           VALUES ('es',$1,$2,$3,$4,$5,$6,$7,$8,$9)
+           ON CONFLICT (language, topic_id, lower(term)) DO UPDATE SET
+             definition = EXCLUDED.definition,
+             cloze      = EXCLUDED.cloze,
+             image_key  = COALESCE(EXCLUDED.image_key, vocab_entries.image_key),
+             image_alt  = COALESCE(EXCLUDED.image_alt, vocab_entries.image_alt),
+             level      = EXCLUDED.level,
+             note       = EXCLUDED.note,
+             updated_at = now()
+           RETURNING (xmax = 0) AS is_insert`,
+          [e.topic_id, e.term, e.definition, e.cloze, e.image_key, e.image_alt,
+           e.level, e.note, e.source]
+        );
+        rows[0].is_insert ? inserted++ : updated++;
+      }
+
+      await client.query('COMMIT');
+      return json({ inserted, updated, topic: newTopic?.id ?? null }, 200, req);
+    } catch (err) {
+      await client.query('ROLLBACK').catch(() => {});
+      console.error('[vocab] write failed', err);
+      return json({ error: 'write_failed' }, 500, req);
+    } finally {
+      client.release();
+    }
+  }
+
   if (req.method !== 'GET') {
     return json({ error: 'method_not_allowed' }, 405, req);
   }
-
-  const url = new URL(req.url);
-  const db = getPool();
 
   if (url.searchParams.get('health')) {
     if (!db) return json({ database: false, entries: 0, topics: 0 }, 200, req);
@@ -221,16 +388,29 @@ export default async (req) => {
     params.push(level);
     where.push(`level = $${params.length}`);
   }
-  const filter = where.join(' AND ');
+
+  // Browsing 3,463 cards wants a page at a time and a search box, not the
+  // whole table.
+  const q = (url.searchParams.get('q') || '').trim().slice(0, 80);
+  if (q) {
+    params.push(`%${q}%`);
+    where.push(`(term ILIKE $${params.length} OR definition ILIKE $${params.length})`);
+  }
+  const askedLimit = Number(url.searchParams.get('limit'));
+  const limit = Number.isFinite(askedLimit) && askedLimit > 0 ? Math.min(askedLimit, 500) : null;
+  const offset = Math.max(0, Number(url.searchParams.get('offset')) || 0);
+  const filter2 = where.join(' AND ');
 
   try {
-    const [entries, topics] = await Promise.all([
+    const [entries, topics, total] = await Promise.all([
       db.query(
-        `SELECT id, topic_id, term, definition, cloze, gloss_en, gloss_ja,
-                part_of_speech, gender, level, example_es, example_en, note
+        `SELECT id, topic_id, term, definition, cloze, image_key, image_alt,
+                gloss_en, gloss_ja, part_of_speech, gender, level,
+                example_es, example_en, note
            FROM vocab_entries
-          WHERE ${filter}
-          ORDER BY topic_id, lower(term)`,
+          WHERE ${filter2}
+          ORDER BY topic_id, lower(term)
+          ${limit ? `LIMIT ${limit} OFFSET ${offset}` : ''}`,
         params
       ),
       db.query(
@@ -238,7 +418,8 @@ export default async (req) => {
            FROM vocab_topics
           WHERE language = 'es'
           ORDER BY sort_order, id`
-      )
+      ),
+      db.query(`SELECT count(*)::int AS n FROM vocab_entries WHERE ${filter2}`, params)
     ]);
 
     if (url.searchParams.get('deck')) {
@@ -256,7 +437,13 @@ export default async (req) => {
       );
     }
 
-    return json({ topics: topics.rows, entries: entries.rows }, 200, req);
+    return json({
+      topics: topics.rows,
+      entries: entries.rows,
+      total: total.rows[0].n,
+      offset,
+      limit
+    }, 200, req);
   } catch (err) {
     console.error('[vocab] query failed', err);
     return json({ error: 'query_failed' }, 500, req);
