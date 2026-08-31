@@ -123,6 +123,15 @@ you can stop. Two rules keep it honest:
 about are marked, counted and filterable, so they can be confirmed by eye
 rather than quietly trusted.
 
+**Reading status.** A book is *to read*, *reading*, *read* or *lent out*, and
+the four are set from the book's own panel in one click rather than through the
+editor — on a shelf this size, marking something read is the thing you do most
+often, and it was four steps and a round trip through a form. Choosing *lent
+out* dates the loan and asks who has it; the name is optional and can follow
+later. Bringing a book back takes the borrower and the date with it, because a
+stale answer to *who has this?* is worse than no answer. Magazines keep their
+chip and sit out of it, for the same reason they sit out of the status tiles.
+
 **The magazines.** `data/magazines-seed.json` holds the National Geographic run
 — issue date, cover lines, and how confident the reading was — catalogued from
 a photograph of the shelf. *Add the magazines* imports it once the books are in;

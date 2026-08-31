@@ -96,6 +96,12 @@
     'lib.d.shelf':       { en: 'Shelf', ja: '置き場所', es: 'Estante' },
     'lib.d.subjects':    { en: 'Subjects', ja: '主題', es: 'Materias' },
     'lib.d.lentTo':      { en: 'Lent to', ja: '貸出先', es: 'Prestado a' },
+    'lib.d.lentSince':   { en: 'Lent since', ja: '貸出日', es: 'Prestado desde' },
+    'lib.d.lentWho':     { en: 'Who has it?', ja: '誰が借りていますか？', es: '¿Quién lo tiene?' },
+    'lib.d.lentSave':    { en: 'Save', ja: '保存', es: 'Guardar' },
+    'lib.d.statusSet':   { en: 'Marked as {s}', ja: '「{s}」にしました', es: 'Marcado como {s}' },
+    'lib.d.lentToSet':   { en: 'Lent to {who}', ja: '{who} に貸出', es: 'Prestado a {who}' },
+    'lib.d.lentCleared': { en: 'Back on the shelf', ja: '返却済み', es: 'De vuelta en el estante' },
     'lib.d.added':       { en: 'Added', ja: '追加日', es: 'Añadido' },
     'lib.d.enrich':      { en: 'Fill in the gaps', ja: '不足情報を補う', es: 'Completar lo que falta' },
     'lib.d.enriching':   { en: 'Looking it up…', ja: '照会中…', es: 'Buscando…' },
@@ -483,6 +489,62 @@
     return '<div class="kv"><dt>' + esc(I18N.t(labelKey)) + '</dt><dd>' + esc(value) + '</dd></div>';
   }
 
+  /* Four buttons rather than a select behind an edit form. Marking a book as
+     being read is the thing you do most often on a shelf this size, and it was
+     four steps and a round trip through the editor. */
+  function statusSwitcher(current) {
+    return '<div class="status-set" role="group">' + STATUSES.map(function (st) {
+      return '<button type="button" class="status-set__btn" data-set-status="' + st + '"' +
+        (st === current ? ' aria-pressed="true"' : ' aria-pressed="false"') + '>' +
+        esc(I18N.t('lib.status.' + st)) + '</button>';
+    }).join('') + '</div>';
+  }
+
+  /* Who has it is worth recording, but not worth blocking on: the status is
+     already set by the time this appears, and a blank name is allowed. */
+  function lentToRow(b) {
+    return '<div class="lent-row">' +
+      '<input type="text" id="lent-who" value="' + esc(b.lentTo || '') + '" ' +
+      'placeholder="' + esc(I18N.t('lib.d.lentWho')) + '">' +
+      '<button type="button" class="btn btn--ghost btn--sm" id="lent-save">' +
+      esc(I18N.t('lib.d.lentSave')) + '</button>' +
+    '</div>';
+  }
+
+  function setStatus(id, next) {
+    var b = store.get(id);
+    if (!b || statusOf(b) === next) return;
+
+    var patch = { status: next, updatedAt: new Date().toISOString() };
+    if (next === 'lent') {
+      // Dated on the way in, so "lent since" is a fact rather than a guess.
+      patch.lentAt = b.lentAt || new Date().toISOString();
+    } else {
+      // Off loan: the borrower and the date go with it, rather than lingering
+      // as a stale answer to a question nobody is asking any more.
+      patch.lentTo = '';
+      patch.lentAt = '';
+    }
+
+    store.put(Object.assign({}, b, patch));
+    Shell.toast(next === 'lent' || !b.lentTo
+      ? I18N.t('lib.d.statusSet', { s: I18N.t('lib.status.' + next) })
+      : I18N.t('lib.d.lentCleared'));
+    render();
+    openDetail(id);
+  }
+
+  function setLentTo(id, who) {
+    var b = store.get(id);
+    if (!b) return;
+    store.put(Object.assign({}, b, { lentTo: who, updatedAt: new Date().toISOString() }));
+    Shell.toast(who ? I18N.t('lib.d.lentToSet', { who: who }) : I18N.t('lib.d.statusSet', {
+      s: I18N.t('lib.status.lent')
+    }));
+    render();
+    openDetail(id);
+  }
+
   function openDetail(id) {
     var b = store.get(id);
     if (!b || b.deleted) return;
@@ -503,9 +565,14 @@
             ? '<p class="detail__authors">' + esc(I18N.t('lib.d.by', { authors: authorLine(b) })) + '</p>'
             : '') +
           '<div class="flex items-center gap-1 wrap-flex mb-1">' +
-            '<span class="' + STATUS_CHIP[status] + '">' + esc(I18N.t('lib.status.' + status)) + '</span>' +
+            /* Status is a book idea, so a magazine keeps its chip and sits out
+               of the switcher — the same line the stat tiles take. */
+            (isMagazine(b)
+              ? '<span class="chip chip--issue">' + esc(I18N.t('lib.kind.magazine')) + '</span>'
+              : statusSwitcher(status)) +
             '<span class="chip chip--terracotta">' + esc(I18N.t('lib.owner.' + ownerOf(b))) + '</span>' +
           '</div>' +
+          (!isMagazine(b) && status === 'lent' ? lentToRow(b) : '') +
           '<div class="stars">' + stars(b.rating, false) +
             (b.rating ? '' : ' <span class="tiny muted">' + esc(I18N.t('lib.rating.none')) + '</span>') +
           '</div>' +
@@ -517,6 +584,7 @@
             row('lib.d.language', b.language) +
             row('lib.d.shelf', b.location) +
             row('lib.d.lentTo', status === 'lent' ? b.lentTo : '') +
+            row('lib.d.lentSince', status === 'lent' && b.lentAt ? I18N.formatDate(b.lentAt) : '') +
             row('lib.d.added', b.createdAt ? I18N.formatDate(b.createdAt) : '') +
           '</dl>' +
         '</div>' +
@@ -536,9 +604,22 @@
           '<p>' + esc(b.notes) + '</p></div>'
         : '');
 
+    $('detail-body').querySelectorAll('[data-set-status]').forEach(function (btn) {
+      btn.onclick = function () { setStatus(id, this.getAttribute('data-set-status')); };
+    });
+
+    var who = $('lent-who');
+    if (who) {
+      var save = function () { setLentTo(id, who.value.trim()); };
+      $('lent-save').onclick = save;
+      who.onkeydown = function (e) { if (e.key === 'Enter') { e.preventDefault(); save(); } };
+    }
+
     $('detail-edit').onclick = function () { $('detail').close(); openEditor(id); };
     $('detail-enrich').onclick = function () { enrichExisting(id); };
-    $('detail').showModal();
+    // Re-drawn in place after a status change: showModal() on an already-open
+    // dialog throws, and would also lose the scroll position.
+    if (!$('detail').open) $('detail').showModal();
   }
 
   /* ====================================================================== */

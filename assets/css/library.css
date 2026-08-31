@@ -61,6 +61,32 @@
 .book__author { font-size: .8rem; color: var(--ink-faint); margin: 0; }
 .book__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-top: .15rem; }
 
+/* --- setting the status ------------------------------------------------- */
+
+.status-set { display: inline-flex; flex-wrap: wrap; gap: .25rem; }
+.status-set__btn {
+  font: inherit; font-size: .75rem; line-height: 1; cursor: pointer;
+  padding: .34rem .6rem; border-radius: 999px;
+  border: 1px solid var(--line-strong); background: transparent; color: var(--ink-soft);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.status-set__btn:hover { background: var(--paper-sunk); color: var(--ink); }
+.status-set__btn[aria-pressed="true"] {
+  background: var(--green); color: #fff; border-color: var(--green); font-weight: 600;
+}
+/* Same inversion the filled .btn takes in dark mode, for the same reason:
+   --green lightens there, so white text on it stops being legible. */
+html[data-theme="dark"] .status-set__btn[aria-pressed="true"] { color: #0e1512; }
+.status-set__btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.lent-row { display: flex; gap: .4rem; align-items: center; margin: 0 0 .7rem; }
+.lent-row input {
+  flex: 1 1 auto; min-width: 0; font: inherit; font-size: .82rem;
+  padding: .38rem .6rem; border-radius: var(--r-sm);
+  border: 1px solid var(--line-strong); background: var(--paper-raised); color: var(--ink);
+}
+.lent-row input:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+
 /* A back issue has no cover in any catalogue, so the placeholder gives it the
    one thing the shelf photo does show: the yellow border and the date. */
 .book__cover--issue {
