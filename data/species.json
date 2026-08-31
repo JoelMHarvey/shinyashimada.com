@@ -476,6 +476,132 @@
         "ja": "根を完全に乾かさないこと。冬は暖房で乾くので霧吹きを。春に古い葉を株元から切ります。",
         "es": "No dejes que las raíces se sequen del todo. Pulveriza en invierno con la calefacción."
       }
+    },
+    {
+      "id": "dracaena-marginata", "emoji": "🌿", "category": "foliage",
+      "name": { "en": "Madagascar dragon tree", "ja": "ドラセナ・マルギナータ", "es": "Drácena marginata" },
+      "botanical": "Dracaena marginata",
+      "sun": "bright-indirect", "minTemp": 10,
+      "water": { "spring": 10, "rainy": 12, "summer": 8, "autumn": 14, "winter": 21 },
+      "fertiliseDays": 45, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Brown leaf tips usually mean the tap water rather than thirst — dracaenas dislike fluoride. Stand the water overnight, or use rain.",
+        "ja": "葉先が茶色くなるのは水切れより水道水が原因。フッ素を嫌うので、一晩汲み置くか雨水を。",
+        "es": "Las puntas marrones suelen ser por el agua del grifo, no por sed: no toleran el flúor. Deja reposar el agua o usa lluvia."
+      }
+    },
+    {
+      "id": "dracaena-fragrans", "emoji": "🌿", "category": "foliage",
+      "name": { "en": "Corn plant", "ja": "ドラセナ・フラグランス", "es": "Palo de agua" },
+      "botanical": "Dracaena fragrans",
+      "sun": "bright-indirect", "minTemp": 10,
+      "water": { "spring": 10, "rainy": 12, "summer": 8, "autumn": 14, "winter": 21 },
+      "fertiliseDays": 45, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Yellowing lower leaves are old growth being retired, not a fault to correct. A bare cane cut back will resprout below the cut.",
+        "ja": "下葉の黄変は古い葉を落としているだけで異常ではありません。裸になった幹は切り戻せば下から芽吹きます。",
+        "es": "Las hojas bajas amarillas son crecimiento viejo que se retira, no un fallo. La caña desnuda rebrota bajo el corte."
+      }
+    },
+    {
+      "id": "nepenthes", "emoji": "🪴", "category": "foliage",
+      "name": { "en": "Pitcher plant", "ja": "ウツボカズラ", "es": "Planta jarro" },
+      "botanical": "Nepenthes",
+      "sun": "bright-indirect", "minTemp": 12,
+      "water": { "spring": 3, "rainy": 3, "summer": 2, "autumn": 4, "winter": 5 },
+      "fertiliseDays": 0, "fertiliseSeasons": [],
+      "pruneMonths": [4, 5], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Never feed it and never let it dry out. Rainwater only, and no fertiliser in the pot — ordinary plant food kills carnivorous roots, which is why this one never asks to be fed. Old brown pitchers are normal; snip them off.",
+        "ja": "肥料は厳禁、乾燥も厳禁。水は雨水で、鉢に肥料を入れないこと（食虫植物の根は肥料で枯れます）。だから施肥の通知は出ません。茶色い袋は切り取って構いません。",
+        "es": "Nunca la abones ni dejes que se seque: solo agua de lluvia y cero fertilizante — el abono normal mata las raíces carnívoras, por eso nunca pide comida. Los jarros marrones viejos son normales."
+      }
+    },
+    {
+      "id": "strelitzia", "emoji": "🌴", "category": "foliage",
+      "name": { "en": "Giant white bird of paradise", "ja": "オーガスタ", "es": "Ave del paraíso gigante" },
+      "botanical": "Strelitzia nicolai",
+      "sun": "full-sun", "minTemp": 5,
+      "water": { "spring": 6, "rainy": 8, "summer": 4, "autumn": 9, "winter": 14 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [4, 5], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Split leaves are how it survives wind, not damage — leave them alone. It flowers only when properly pot-bound, so resist repotting often.",
+        "ja": "葉が裂けるのは風を逃がす性質で、傷みではありません。根が回るまで花は咲かないので植え替えは控えめに。",
+        "es": "Las hojas rasgadas son su forma de resistir el viento, no un daño. Solo florece con la maceta llena de raíces."
+      }
+    },
+    {
+      "id": "ficus-benjamina", "emoji": "🌳", "category": "tree",
+      "name": { "en": "Weeping fig", "ja": "ベンジャミン", "es": "Ficus benjamina" },
+      "botanical": "Ficus benjamina",
+      "sun": "bright-indirect", "minTemp": 10,
+      "water": { "spring": 7, "rainy": 9, "summer": 5, "autumn": 11, "winter": 16 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [4, 5],
+      "tip": {
+        "en": "It drops leaves after any move — a change of light, a draught, a new pot. Settle it somewhere and leave it; the leaves come back.",
+        "ja": "場所や光、風、鉢が変わると葉を落とします。置き場所を決めたら動かさないこと。葉は戻ります。",
+        "es": "Suelta hojas tras cualquier cambio: luz, corriente o maceta. Elige un sitio y no lo muevas; las hojas vuelven."
+      }
+    },
+    {
+      "id": "phoenix-roebelenii", "emoji": "🌴", "category": "tree",
+      "name": { "en": "Pygmy date palm", "ja": "ヒメシュロチク", "es": "Palmera datilera enana" },
+      "botanical": "Phoenix roebelenii",
+      "sun": "full-sun", "minTemp": 3,
+      "water": { "spring": 6, "rainy": 8, "summer": 4, "autumn": 9, "winter": 14 },
+      "fertiliseDays": 45, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [5, 6], "repotMonths": [4, 5],
+      "tip": {
+        "en": "The spines at the base of each frond are needle-sharp, so wear gloves when tidying. Cut only fronds that have gone fully brown.",
+        "ja": "葉の付け根の棘は鋭いので手入れは手袋で。完全に枯れた葉だけを切ってください。",
+        "es": "Las espinas en la base de cada fronda son muy punzantes: usa guantes. Corta solo las frondas totalmente secas."
+      }
+    },
+    {
+      "id": "philodendron-hederaceum", "emoji": "🌿", "category": "foliage",
+      "name": { "en": "Heartleaf philodendron", "ja": "ヒメカズラ", "es": "Filodendro corazón" },
+      "botanical": "Philodendron hederaceum",
+      "sun": "bright-indirect", "minTemp": 12,
+      "water": { "spring": 8, "rainy": 9, "summer": 6, "autumn": 11, "winter": 16 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [4, 5, 6], "repotMonths": [4, 5],
+      "tip": {
+        "en": "Pinch the tips or it goes bare at the top. Every cutting roots in a glass of water within a fortnight.",
+        "ja": "先端を摘まないと上が寂しくなります。切った茎はコップの水で2週間ほどで根が出ます。",
+        "es": "Pinza las puntas o se quedará pelado arriba. Cualquier esqueje enraíza en un vaso de agua en dos semanas."
+      }
+    },
+    {
+      "id": "passiflora", "emoji": "🌸", "category": "flowering",
+      "name": { "en": "Passion flower", "ja": "トケイソウ", "es": "Pasiflora" },
+      "botanical": "Passiflora",
+      "sun": "full-sun", "minTemp": 5,
+      "water": { "spring": 4, "rainy": 6, "summer": 2, "autumn": 6, "winter": 12 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "rainy", "summer"],
+      "pruneMonths": [3, 4], "repotMonths": [3, 4],
+      "tip": {
+        "en": "It flowers on new growth, so cut it back hard in early spring. Left uncut, a vine turns into a great deal of leaf and very few flowers.",
+        "ja": "花は新しい枝につくので3〜4月に思い切って切り戻しを。放っておくと葉ばかりで花が減ります。",
+        "es": "Florece en brotes nuevos: poda a fondo a comienzos de primavera. Sin poda, mucha hoja y pocas flores."
+      }
+    },
+    {
+      "id": "citrus", "emoji": "🍊", "category": "fruit",
+      "name": { "en": "Citrus tree", "ja": "柑橘", "es": "Cítrico" },
+      "botanical": "Citrus",
+      "sun": "full-sun", "minTemp": 3,
+      "water": { "spring": 5, "rainy": 7, "summer": 3, "autumn": 7, "winter": 12 },
+      "fertiliseDays": 30, "fertiliseSeasons": ["spring", "summer", "autumn"],
+      "pruneMonths": [3, 4], "repotMonths": [3, 4],
+      "tip": {
+        "en": "Leaf drop is nearly always cold or a pot that dried out, not disease. Shelter it below about 3°C, and keep the roots evenly damp while fruit is swelling.",
+        "ja": "落葉の原因はたいてい寒さか水切れで、病気ではありません。3℃を下回る日は軒下へ。実が太る時期は乾かさないように。",
+        "es": "La caída de hojas casi siempre es frío o una maceta seca, no enfermedad. Protégelo bajo 3 °C y mantén la raíz húmeda mientras cuaja el fruto."
+      }
     }
   ]
 }
