@@ -255,11 +255,36 @@ indoors.
 
 The three data files are meant to be edited directly — no code changes needed:
 
-- `data/species.json` — 34 balcony plants with trilingual names, seasonal
+- `data/species.json` — 43 balcony plants with trilingual names, seasonal
   watering intervals, pruning/repotting months and a care tip.
+- `data/plants-seed.json` — the plants themselves, from the inventory
+  spreadsheet. *Add the inventory*, on the empty balcony or in the data menu,
+  imports it. Unlike the JSON import beside it, which replaces everything, this
+  one only adds: a plant already on the balcony keeps its watering history,
+  photo and notes, so running it twice is harmless.
 - `data/croissants.json` — the six judging criteria (with weights) and the
   bakery shortlist.
 - `data/italian.json` — the 128-phrase A1 deck across 12 topics.
+
+**Matching a plant to a species.** A plant inherits its whole schedule from
+`data/species.json`, so the match has to be right rather than plausible. One is
+made only where the inventory's own botanical name matches a species outright —
+nineteen of the twenty-five do. The other six are the ones the inventory itself
+was unsure about: two conifers it would not name, an aroid recorded as
+"Epipremnum aureum *or* Philodendron sp.", and three it marked low-confidence.
+They fall back to the generic seven-day watering reminder and get no feeding,
+pruning or repotting dates, which is the honest outcome: a guessed species
+produces a confident schedule for the wrong plant, and a watering date you
+believe is worse than none.
+
+The nine species the inventory needed and the file lacked were added with it —
+dragon tree, corn plant, pitcher plant, bird of paradise, weeping fig, pygmy
+date palm, heartleaf philodendron, passion flower and a generic citrus. Their
+care figures are ordinary horticultural guidance for a Tokyo balcony, the same
+basis as the original thirty-four, not measurements from these particular
+plants; every one of them can be overridden per plant. The pitcher plant is
+deliberately set to never prompt for feeding: fertiliser in the pot kills a
+carnivorous plant, so no reminder is the correct reminder.
 
 ## How the syncing works
 

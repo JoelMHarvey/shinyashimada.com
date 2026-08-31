@@ -74,6 +74,15 @@
     'pl.add':       { en: '+ Add plant', ja: '+ 植物を追加', es: '+ Añadir planta' },
     'pl.more':      { en: 'Data', ja: 'データ', es: 'Datos' },
 
+    'pl.seed.add':    { en: 'Add the inventory', ja: '一覧を読み込む', es: 'Añadir el inventario' },
+    'pl.seed.hint': {
+      en: 'The plants from the inventory spreadsheet, with a care schedule wherever the species is settled.',
+      ja: '一覧表の植物を読み込みます。種が特定できているものには水やりの予定が付きます。',
+      es: 'Las plantas del inventario, con calendario de cuidados cuando la especie está clara.'
+    },
+    'pl.seed.added':  { en: 'Added {n} plants', ja: '{n} 株を追加しました', es: 'Añadidas {n} plantas' },
+    'pl.seed.none':   { en: 'Those plants are already here.', ja: 'それらの植物はすでに登録済みです。', es: 'Esas plantas ya están aquí.' },
+    'pl.seed.fail':   { en: 'Could not read the inventory.', ja: '一覧を読み込めませんでした。', es: 'No se pudo leer el inventario.' },
     'pl.empty.title': { en: 'No plants yet', ja: 'まだ植物がありません', es: 'Aún no hay plantas' },
     'pl.empty.body': {
       en: 'Add the first pot and the watering schedule builds itself from there.',
@@ -403,7 +412,13 @@
       emptyHost.innerHTML =
         '<div class="empty-state"><div class="empty-state__icon">🪴</div>' +
         '<h3>' + esc(I18N.t('pl.empty.title')) + '</h3>' +
-        '<p>' + esc(I18N.t('pl.empty.body')) + '</p></div>';
+        '<p>' + esc(I18N.t('pl.empty.body')) + '</p>' +
+        (plants.length ? '' :
+          '<button type="button" class="btn" id="seed-go">' +
+          esc(I18N.t('pl.seed.add')) + '</button>') +
+        '</div>';
+      var seedBtn = $('seed-go');
+      if (seedBtn) seedBtn.addEventListener('click', function () { importSeed(this); });
       return;
     }
 
@@ -676,6 +691,40 @@
   /*  Data menu                                                             */
   /* ====================================================================== */
 
+  /* Additive, unlike the JSON import in the data menu, which replaces
+     everything. A plant already here is left exactly as it is — its watering
+     history, photo and notes are worth more than the sheet's version of it. */
+  function seedKey(p) {
+    if (p.inventoryId) return 'inv:' + String(p.inventoryId).toLowerCase();
+    return 'name:' + String(p.name || p.customSpecies || '').toLowerCase().trim() +
+           '|' + String(p.location || '').toLowerCase().trim();
+  }
+
+  function importSeed(btn) {
+    var was = btn.textContent;
+    btn.disabled = true;
+
+    return fetch('/data/plants-seed.json')
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (payload) {
+        var here = {};
+        store.items().forEach(function (p) { here[seedKey(p)] = true; });
+
+        var fresh = (payload.plants || []).filter(function (p) { return !here[seedKey(p)]; });
+        if (!fresh.length) { Shell.toast(I18N.t('pl.seed.none')); return 0; }
+
+        store.putMany(fresh);
+        Shell.toast(I18N.t('pl.seed.added', { n: I18N.formatNumber(fresh.length) }));
+        render();
+        return fresh.length;
+      })
+      .catch(function () { Shell.toast(I18N.t('pl.seed.fail'), 'error'); })
+      .then(function (n) { btn.disabled = false; btn.textContent = was; return n; });
+  }
+
   function download(filename, text) {
     var blob = new Blob([text], { type: 'application/json' });
     var url = URL.createObjectURL(blob);
@@ -702,6 +751,10 @@
         renderSyncPill();
         Shell.toast(I18N.t('common.saved'));
       });
+    });
+
+    $('do-seed').addEventListener('click', function () {
+      importSeed(this).then(function () { $('datamenu').close(); });
     });
 
     $('do-export').addEventListener('click', function () {
