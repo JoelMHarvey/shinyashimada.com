@@ -1752,7 +1752,7 @@ async function reviewSentence(sentence, send, skip) {
       body: JSON.stringify({ term: writeCard.a, definition: writeCard.q, sentence })
     });
     review = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(reviewError(res.status, review.error));
+    if (!res.ok) throw new Error(reviewError(res.status, review));
   } catch (err) {
     v.className = "wverdict bad";
     v.textContent = err.message;
@@ -1767,11 +1767,18 @@ async function reviewSentence(sentence, send, skip) {
   skip.focus();
 }
 
-function reviewError(status, code) {
+function reviewError(status, body = {}) {
+  const code = body.error;
   if (status === 401) return "Hace falta el código del sitio.";
   if (code === "no_api_key") return "Falta ANTHROPIC_API_KEY en Netlify — la corrección no está disponible.";
   if (code === "bad_api_key") return "La clave de Anthropic no es válida.";
-  if (status === 429) return "Demasiadas correcciones seguidas. Espera un momento.";
+  if (status === 429) {
+    // A ceiling reached is not a failure; say which one and that it resets.
+    return body.window === "daily"
+      ? `Has llegado al límite de ${body.limit} correcciones hoy. Vuelve mañana — las otras dos prácticas siguen funcionando.`
+      : `Has llegado al límite de ${body.limit} correcciones esta hora. Espera un poco.`;
+  }
+  if (code === "rate_limit_unavailable") return "No se pudo comprobar el límite de uso. Inténtalo otra vez.";
   if (code === "too_long") return "La frase es demasiado larga.";
   return `No se pudo corregir (${code || status}).`;
 }
