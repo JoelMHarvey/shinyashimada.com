@@ -217,6 +217,67 @@ await t('the no-description filter goes away once the gap is closed', async () =
   await page.locator('#f-nodesc').evaluate((el) => el.hidden)
     ? true : 'filter still offered with nothing to filter');
 
+/* --- setting the status without the editor ------------------------------- */
+// The detail panel is open on the enriched sparse book.
+
+await t('the detail offers all four states', async () =>
+  (await page.locator('[data-set-status]').count()) === 4
+    ? true : `${await page.locator('[data-set-status]').count()} buttons`);
+
+await t('the current state is the pressed one', async () =>
+  (await page.getAttribute('[data-set-status="unread"]', 'aria-pressed')) === 'true'
+    ? true : 'unread not marked as current');
+
+await page.click('[data-set-status="reading"]');
+await page.waitForTimeout(500);
+
+const mine = () => page.evaluate(() =>
+  JSON.parse(localStorage.getItem('ss.cache.books'))
+    .find(b => (b.publisher || '').includes('My own note of the publisher')));
+
+await t('one click moves it to reading', async () => {
+  const st = (await mine()).status;
+  return st === 'reading' ? true : `status is ${st}`;
+});
+await t('and the shelf summary follows immediately', async () => {
+  const txt = (await page.textContent('#stats')).replace(/\s+/g, ' ');
+  const n = Number((txt.match(/(\d+)\s*Reading/i) || [])[1]);
+  return n >= 1 ? true : `summary reads "${txt.trim().slice(0, 90)}"`;
+});
+
+await page.click('[data-set-status="lent"]');
+await page.waitForTimeout(500);
+
+await t('lending asks who has it', async () =>
+  await page.isVisible('#lent-who') ? true : 'no borrower field');
+await t('and dates the loan without being asked', async () =>
+  (await mine()).lentAt ? true : 'no lentAt recorded');
+
+await page.fill('#lent-who', 'Shin');
+await page.click('#lent-save');
+await page.waitForTimeout(500);
+
+await t('the borrower is recorded', async () => {
+  const v = (await mine()).lentTo;
+  return v === 'Shin' ? true : `lentTo is ${JSON.stringify(v)}`;
+});
+await t('and shown with the date it went out', async () => {
+  const txt = (await page.textContent('#detail-body')).replace(/\s+/g, ' ');
+  return /Lent to\s*Shin/.test(txt) && /Lent since/.test(txt) ? true : txt.slice(0, 120);
+});
+
+// Coming off loan takes the borrower with it: a stale name is worse than none.
+await page.click('[data-set-status="read"]');
+await page.waitForTimeout(500);
+await t('returning it clears the borrower and the date', async () => {
+  const b = await mine();
+  return !b.lentTo && !b.lentAt ? true : `lentTo=${JSON.stringify(b.lentTo)} lentAt=${JSON.stringify(b.lentAt)}`;
+});
+await t('the borrower field goes with it', async () =>
+  !(await page.isVisible('#lent-who')) ? true : 'borrower field still shown');
+await t('the detail stayed open throughout', async () =>
+  await page.isVisible('#detail') ? true : 'the panel closed on a status change');
+
 /* --- rating ------------------------------------------------------------- */
 
 await page.click('#detail-edit');
