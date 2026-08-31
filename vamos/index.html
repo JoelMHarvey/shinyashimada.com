@@ -385,7 +385,7 @@
       <button class="btn ghost" id="btnWeak">Repaso — drill my weakest topics</button>
     </div>
 
-    <footer>Tap a topic to toggle it. Pink % = your accuracy so far.</footer>
+    <footer>Pick a unit to start. Tap more to combine them. Pink % = your accuracy so far.</footer>
   </div>
   </div>
 </div>
@@ -580,9 +580,11 @@ async function boot() {
     $("emptyBox").hidden = false;
     return;
   }
-  // Default to every topic; a returning player's choice is not persisted
-  // because the topic list changes whenever Shin imports more vocabulary.
-  selected = new Set(available.map(t => t.id));
+  // Nothing selected to begin with. Studying happens a unit at a time, and
+  // starting with all sixteen lit meant a round drawn from three thousand
+  // cards unless he first turned fifteen of them off. `Todos` is one tap
+  // away for when he does want the lot.
+  selected = new Set();
   $("playBox").hidden = false;
   renderHome();
 }
@@ -639,7 +641,7 @@ function renderHome() {
   const words = all.filter(t => selected.has(t.id)).reduce((n, t) => n + t.count, 0);
   $("pickCount").textContent = selected.size
     ? `${selected.size}/${all.length} · ${words} palabras`
-    : "elige un tema";
+    : `elige un tema de ${all.length}`;
 
   const durWrap = $("durations");
   durWrap.textContent = "";
