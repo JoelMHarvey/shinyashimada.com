@@ -14,7 +14,6 @@
     { key: 'nav.library',    href: '/library/',    id: 'library' },
     { key: 'nav.tokyo',      href: '/tokyo/',      id: 'tokyo' },
     { key: 'nav.croissants', href: '/croissants/', id: 'croissants' },
-    { key: 'nav.italian',    href: '/italian/',    id: 'italian' },
     { key: 'nav.forza',      href: '/forza/',      id: 'forza' },
     { key: 'nav.research',   href: '/research/',   id: 'research' }
   ];

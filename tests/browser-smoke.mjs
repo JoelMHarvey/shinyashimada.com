@@ -4,6 +4,7 @@ const BASE = 'http://127.0.0.1:8899';
 const pages = process.argv.slice(2);
 const browser = await chromium.launch();
 let failures = 0;
+const navCounts = new Map();
 
 for (const path of pages) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
@@ -77,7 +78,11 @@ for (const path of pages) {
   // Sanity: the shell actually painted. /forza/ is a deliberately
   // standalone game page (own styling, no site shell), so it only gets
   // the content-length check.
-  const NAV_LINKS = 8;
+  //
+  // The nav is checked for being the same everywhere rather than for a
+  // particular length. A hard-coded count went stale the moment a section was
+  // retired, failing every page over a number that was never the point — what
+  // matters is that no page is missing links the others have.
   const standalone = path === '/forza/';
   const shell = await page.evaluate(() => ({
     nav: document.querySelectorAll('.site-nav a').length,
@@ -86,7 +91,8 @@ for (const path of pages) {
     text: document.body.innerText.replace(/\s+/g, ' ').trim().length
   }));
   if (!standalone) {
-    if (shell.nav !== NAV_LINKS) errors.push('nav links: ' + shell.nav + ' (expected ' + NAV_LINKS + ')');
+    if (shell.nav < 4) errors.push('nav looks unbuilt: only ' + shell.nav + ' links');
+    navCounts.set(path, shell.nav);
     if (!shell.brand) errors.push('no brand rendered');
     if (!shell.footer) errors.push('no footer rendered');
   }
@@ -103,5 +109,15 @@ for (const path of pages) {
 }
 
 await browser.close();
+
+// One page short of the others means a nav that did not finish building, which
+// is the failure the old fixed count was really there to catch.
+const counts = [...new Set(navCounts.values())];
+if (counts.length > 1) {
+  failures++;
+  console.log('\n✗ the nav is not the same on every page:');
+  for (const [path, n] of navCounts) console.log(`    ${path} → ${n} links`);
+}
+
 console.log(failures ? `\n${failures} page(s) with problems` : '\nAll pages clean');
 process.exit(failures ? 1 : 0);

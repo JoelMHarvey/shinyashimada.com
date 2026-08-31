@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 const b = await chromium.launch();
-const pages = ['/','/plants/','/tokyo/','/croissants/','/italian/','/research/'];
+const pages = ['/','/plants/','/tokyo/','/croissants/','/forza/','/research/'];
 let bad = 0;
 for (const path of pages) {
   const ctx = await b.newContext({ viewport:{width:375,height:800}, isMobile:true, hasTouch:true });

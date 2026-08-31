@@ -167,7 +167,6 @@
     'nav.library':     { en: 'Library',         ja: '書庫',             es: 'Biblioteca' },
     'nav.tokyo':       { en: 'Tokyo Today',     ja: '東京の今日',       es: 'Tokio Hoy' },
     'nav.croissants':  { en: 'Croissants',      ja: 'クロワッサン',     es: 'Croissants' },
-    'nav.italian':     { en: 'Italian',         ja: 'イタリア語',       es: 'Italiano' },
     'nav.forza':       { en: 'Forza!',          ja: 'フォルツァ！',     es: '¡Forza!' },
     'nav.research':    { en: 'Research',        ja: 'リサーチ',         es: 'Investigación' },
     'nav.menu':        { en: 'Menu',            ja: 'メニュー',         es: 'Menú' },

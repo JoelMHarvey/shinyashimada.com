@@ -29,6 +29,14 @@
   to     = "/.netlify/functions/:splat"
   status = 200
 
+# The Italian game was replaced by Forza Italiano!. Anything still pointing at
+# the old path — a bookmark, a link from elsewhere — lands on its successor
+# rather than the 404 page.
+[[redirects]]
+  from   = "/italian/*"
+  to     = "/forza/"
+  status = 301
+
 # SPA-ish fallback for unknown paths -> custom 404
 [[redirects]]
   from   = "/*"

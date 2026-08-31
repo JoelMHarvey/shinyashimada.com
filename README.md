@@ -11,7 +11,7 @@ Six sections:
 | **The Balcony** (`/plants/`) | Plant inventory with per-species care schedules — watering that shifts with the Tokyo season and the live forecast, plus pruning and repotting windows. Synced between devices. |
 | **Tokyo Today** (`/tokyo/`) | Current conditions, a 24-hour temperature chart and a seven-day outlook, read as *balcony* weather, alongside headlines in the language you are reading in. |
 | **Croissant Hunt** (`/croissants/`) | A six-criterion tasting log for Tokyo pain au chocolat that produces a leaderboard. Nothing is pre-rated. |
-| **Italian Game** (`/italian/`) | 128 A1 phrases, four question modes, SM-2 spaced repetition. Playable from English, Japanese or Spanish. |
+| **Forza Italiano!** (`/forza/`) | A1 and A2 Italian grammar drills against the clock — articles, past tenses, futuro, condizionale. Self-contained in one page. |
 | **Research Library** (`/research/`) | A blank instance of the Research Hub shell from joelmharvey.com — every screen, no content. |
 
 Everything is in **English, 日本語 and Español**, switchable from the header.
@@ -264,7 +264,6 @@ The three data files are meant to be edited directly — no code changes needed:
   photo and notes, so running it twice is harmless.
 - `data/croissants.json` — the six judging criteria (with weights) and the
   bakery shortlist.
-- `data/italian.json` — the 128-phrase A1 deck across 12 topics.
 
 **Matching a plant to a species.** A plant inherits its whole schedule from
 `data/species.json`, so the match has to be right rather than plausible. One is
@@ -349,11 +348,11 @@ test tell you whether it is safe to commit.
 ```
 shinyashimada.com/
 ├── index.html, 404.html
-├── plants/ library/ tokyo/ croissants/ italian/ research/
+├── plants/ library/ tokyo/ croissants/ forza/ research/
 ├── assets/
 │   ├── css/    site.css (design system) + one file per page
-│   └── js/     i18n · shell · store · care · srs · charts · weather + page scripts
-├── data/       species.json · croissants.json · italian.json · library-seed.json
+│   └── js/     i18n · shell · store · care · charts · weather + page scripts
+├── data/       species.json · croissants.json · library-seed.json · magazines-seed.json · plants-seed.json
 ├── netlify/functions/   weather.mjs · news.mjs · store.mjs · books.mjs · …
 ├── netlify/lib/         db · records · books · cors · trello · balcony
 ├── tests/
