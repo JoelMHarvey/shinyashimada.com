@@ -62,7 +62,16 @@ const GRAPH = 'https://graph.microsoft.com/v1.0';
 const SCOPES = 'offline_access Notes.Read User.Read';
 const TOKEN_CACHE = '.onenote-token.json';
 const POLL_CEILING_MS = 15 * 60 * 1000;
-const MAX_THROTTLE_RETRIES = 6;
+const MAX_THROTTLE_RETRIES = 7;
+/**
+ * How long to wait after a 429. Graph's Retry-After is often an optimistic
+ * 10 seconds while the actual cooldown runs to several minutes, so back off
+ * geometrically from whichever is larger and cap it.
+ */
+function throttleWait(res, attempt) {
+  const suggested = Number(res.headers.get('retry-after') || 0) * 1000;
+  return Math.min(300_000, Math.max(suggested, 15_000) * 2 ** attempt);
+}
 const IMAGE_PACE_MS = 120;
 
 /* ------------------------------------------------------------------ args */
@@ -236,11 +245,11 @@ async function graph(url, asText = false, attempt = 0) {
     // a throttle this persistent is telling us to come back later.
     if (attempt >= MAX_THROTTLE_RETRIES) {
       console.error(`\nGraph is still throttling after ${MAX_THROTTLE_RETRIES} attempts.`);
-      console.error('Wait a few minutes and re-run with --resume; nothing already on disk is refetched.');
+      console.error('Leave it 15-30 minutes and re-run with --resume; nothing already on disk is refetched.');
       process.exit(1);
     }
-    const wait = Number(res.headers.get('retry-after') || 10) * 1000;
-    console.log(`   throttled, waiting ${wait / 1000}s… (${attempt + 1}/${MAX_THROTTLE_RETRIES})`);
+    const wait = throttleWait(res, attempt);
+    console.log(`   throttled, waiting ${Math.round(wait / 1000)}s… (${attempt + 1}/${MAX_THROTTLE_RETRIES})`);
     await new Promise((r) => setTimeout(r, wait));
     return graph(url, asText, attempt + 1);
   }
@@ -272,8 +281,8 @@ async function graph(url, asText = false, attempt = 0) {
 async function fetchImage(src, attempt = 0) {
   const res = await fetch(src, { headers: { Authorization: `Bearer ${token}` } });
   if (res.status === 429 && attempt < MAX_THROTTLE_RETRIES) {
-    const wait = Number(res.headers.get('retry-after') || 10) * 1000;
-    console.log(`   image throttled, waiting ${wait / 1000}s… (${attempt + 1}/${MAX_THROTTLE_RETRIES})`);
+    const wait = throttleWait(res, attempt);
+    console.log(`   image throttled, waiting ${Math.round(wait / 1000)}s… (${attempt + 1}/${MAX_THROTTLE_RETRIES})`);
     await new Promise((r) => setTimeout(r, wait));
     return fetchImage(src, attempt + 1);
   }
