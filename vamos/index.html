@@ -1779,6 +1779,9 @@ function reviewError(status, body = {}) {
       : `Has llegado al límite de ${body.limit} correcciones esta hora. Espera un poco.`;
   }
   if (code === "rate_limit_unavailable") return "No se pudo comprobar el límite de uso. Inténtalo otra vez.";
+  if (body.detail && body.detail.includes("anthropic-workspace-id")) {
+    return "La clave de Anthropic pertenece a un workspace: añade ANTHROPIC_WORKSPACE_ID en Netlify.";
+  }
   if (code === "too_long") return "La frase es demasiado larga.";
   return `No se pudo corregir (${code || status}).`;
 }

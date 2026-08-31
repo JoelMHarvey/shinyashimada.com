@@ -20,6 +20,8 @@
    Environment:
      ANTHROPIC_API_KEY      required — the review is refused without it
      SITE_PASSCODE          required, always: every call costs money
+     ANTHROPIC_WORKSPACE_ID required only for an identity-linked key, which
+                            rejects requests that do not name a workspace
      VOCAB_REVIEW_MODEL     optional, defaults to claude-sonnet-5
      VOCAB_REVIEW_PER_HOUR  optional, defaults to 40
      VOCAB_REVIEW_PER_DAY   optional, defaults to 200
@@ -109,6 +111,7 @@ export default async (req) => {
   if (req.method === 'GET' && url.searchParams.get('health')) {
     return json({
       configured: Boolean(process.env.ANTHROPIC_API_KEY),
+      workspaceSet: Boolean(process.env.ANTHROPIC_WORKSPACE_ID),
       model: MODEL,
       limits: { perHour: MAX_PER_HOUR, perDay: MAX_PER_DAY },
       used: await usage()
@@ -154,7 +157,13 @@ export default async (req) => {
     }, 429, req);
   }
 
-  const client = new Anthropic();
+  // An identity-linked API key must name the workspace it acts in; a
+  // standard key must not be sent one. Set ANTHROPIC_WORKSPACE_ID only if
+  // the key requires it — the error message says so explicitly when it does.
+  const workspace = process.env.ANTHROPIC_WORKSPACE_ID;
+  const client = new Anthropic(
+    workspace ? { defaultHeaders: { 'anthropic-workspace-id': workspace } } : {}
+  );
 
   try {
     const response = await client.messages.parse({
