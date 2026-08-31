@@ -151,6 +151,7 @@
     'lib.importing':   { en: 'Importing…', ja: '読み込み中…', es: 'Importando…' },
     'lib.imported':    { en: 'Added {n} books from the shelf inventory.', ja: '蔵書リストから {n} 冊を追加しました。', es: 'Se añadieron {n} libros del inventario.' },
     'lib.importNone':  { en: 'Those books are already on the shelf.', ja: 'それらの本はすでに登録済みです。', es: 'Esos libros ya están en la estantería.' },
+    'lib.importNoneMags': { en: 'Those issues are already on the shelf.', ja: 'それらの号はすでに登録済みです。', es: 'Esos números ya están en la estantería.' },
     'lib.importFail':  { en: 'Could not read the inventory file.', ja: '蔵書リストを読み込めませんでした。', es: 'No se pudo leer el archivo del inventario.' },
 
     /* --- checking --- */
@@ -406,9 +407,11 @@
     /* The button disappears when the count reaches zero, which is the only
        "all done" signal this page has any business giving. */
     /* An "add more" action, not a first-run one: on an empty shelf the empty
-       state already offers the inventory, and once the issues are in,
-       re-importing can do nothing — either way the button would be noise. */
-    $('import-mags').hidden = !books().length || books().some(isMagazine);
+       state already offers the inventory. It stays put after that, because the
+       shelves are being read a photograph at a time and the seed grows — hiding
+       it once the first issues landed made a top-up unreachable. Running it
+       with nothing new to add is harmless and says so. */
+    $('import-mags').hidden = !books().length;
     $('repair-mags').hidden = !books().some(magazineWasEnriched);
 
     var toDescribe = books().filter(needsDescription).length;
@@ -757,7 +760,7 @@
   /* Both seeds load through here. Rows already on the shelf are skipped by
      their key, so importing twice adds nothing and importing the magazines
      after the books does not disturb them. */
-  function importSeed(btn, url, listKey) {
+  function importSeed(btn, url, listKey, noneKey) {
     var was = btn.textContent;
     btn.disabled = true;
     btn.textContent = I18N.t('lib.importing');
@@ -772,7 +775,7 @@
         books().forEach(function (b) { have[bookKey(b)] = true; });
 
         var fresh = (payload[listKey] || []).filter(function (b) { return !have[bookKey(b)]; });
-        if (!fresh.length) { Shell.toast(I18N.t('lib.importNone')); return 0; }
+        if (!fresh.length) { Shell.toast(I18N.t(noneKey || 'lib.importNone')); return 0; }
 
         store.putMany(fresh);
         Shell.toast(I18N.t('lib.imported', { n: I18N.formatNumber(fresh.length) }));
@@ -836,7 +839,7 @@
   }
 
   function importMagazines(btn) {
-    return importSeed(btn, '/data/magazines-seed.json', 'magazines');
+    return importSeed(btn, '/data/magazines-seed.json', 'magazines', 'lib.importNoneMags');
   }
 
   /* ====================================================================== */
