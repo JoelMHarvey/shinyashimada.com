@@ -10,8 +10,8 @@
   "scripts": {
     "dev": "netlify dev",
     "serve": "npx http-server -p 8888 -c-1 .",
-    "test": "node tests/lockfile.test.mjs && node tests/care.test.mjs && node tests/srs.test.mjs && node tests/news.test.mjs && node tests/trello-sync.test.mjs && node tests/camera.test.mjs && node tests/books.test.mjs && node tests/store-write.test.mjs",
-    "test:browser": "node tests/browser-smoke.mjs / /plants/ /library/ /tokyo/ /croissants/ /italian/ /forza/ /research/ /404.html && node tests/browser-mobile.mjs && node tests/browser-sync.mjs && node tests/browser-trello.mjs && node tests/browser-camera.mjs && node tests/browser-status.mjs && node tests/browser-plants.mjs && node tests/browser-plants-seed.mjs && node tests/browser-croissants.mjs && node tests/browser-italian.mjs && node tests/browser-library.mjs && node tests/browser-library-import.mjs && node tests/browser-library-recover.mjs && node tests/browser-library-magazines.mjs"
+    "test": "node tests/lockfile.test.mjs && node tests/care.test.mjs && node tests/news.test.mjs && node tests/trello-sync.test.mjs && node tests/camera.test.mjs && node tests/books.test.mjs && node tests/store-write.test.mjs",
+    "test:browser": "node tests/browser-smoke.mjs / /plants/ /library/ /tokyo/ /croissants/ /forza/ /research/ /404.html && node tests/browser-mobile.mjs && node tests/browser-sync.mjs && node tests/browser-trello.mjs && node tests/browser-camera.mjs && node tests/browser-status.mjs && node tests/browser-plants.mjs && node tests/browser-plants-seed.mjs && node tests/browser-croissants.mjs && node tests/browser-library.mjs && node tests/browser-library-import.mjs && node tests/browser-library-recover.mjs && node tests/browser-library-magazines.mjs"
   },
   "dependencies": {
     "pg": "^8.13.1"
