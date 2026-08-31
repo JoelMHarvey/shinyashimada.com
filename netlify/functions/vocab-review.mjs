@@ -196,7 +196,9 @@ export default async (req) => {
     }
     if (err instanceof Anthropic.APIError) {
       console.error('[vocab-review] API error', err.status, err.message);
-      return json({ error: 'api_error', status: err.status }, 502, req);
+      // Only the passcode holder reaches this, and "api_error 400" with no
+      // detail is impossible to act on.
+      return json({ error: 'api_error', status: err.status, detail: err.message }, 502, req);
     }
     console.error('[vocab-review] failed', err);
     return json({ error: 'review_failed' }, 500, req);
