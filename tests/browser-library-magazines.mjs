@@ -18,6 +18,10 @@ page.on('console', m => {
 
 await page.route('**/api/store*', r => r.fulfill({ status: 200, contentType: 'application/json',
   body: JSON.stringify({ ok: true, database: false, authRequired: false }) }));
+// The wrong cover the repair has to remove; served so the <img> does not fail.
+const PNG = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==', 'base64');
+await page.route('https://covers.example/**', r =>
+  r.fulfill({ status: 200, contentType: 'image/png', body: PNG }));
 // If a magazine ever reached the catalogue, this would fire and the test fail.
 let lookups = 0;
 await page.route('**/api/books*', r => { lookups++; r.fulfill({ status: 200,
@@ -176,6 +180,70 @@ await t('filling the gaps never looks up a magazine', async () => {
 });
 
 if (await page.isVisible('#bulk')) { await page.click('#bulk-go'); await page.waitForTimeout(600); }
+
+/* --- the catalogue's guesses, and putting them back ---------------------- */
+
+/* This reproduces what actually happened: the other site's bulk fill had no
+   magazine guard, so every issue was looked up, every issue matched "National
+   Geographic Kids: Tide Pools" because they all share a title, and its cover
+   went onto all of them. The title guard cannot catch it — the wrong book's
+   title starts with the right one. */
+
+await page.evaluate(() => {
+  const all = JSON.parse(localStorage.getItem('ss.cache.books') || '[]');
+  all.filter(b => b.kind === 'magazine').slice(0, 40).forEach(b => {
+    b.coverUrl = 'https://covers.example/tide-pools.jpg';
+    b.authors = ['Laura Marsh'];
+    b.description = 'Be a Nat Geo Kids Super Reader!';
+    b.isbn13 = '9781426317170';
+    b.pages = 32;
+  });
+  localStorage.setItem('ss.cache.books', JSON.stringify(all));
+});
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForTimeout(900);
+
+await t('the page offers to put it back', async () =>
+  await page.isVisible('#repair-mags') ? true : 'no repair offered after a bad enrichment');
+
+await page.click('#repair-mags');
+await page.waitForTimeout(2000);
+
+await t("the other book's cover is gone from every issue", async () => {
+  const bad = (await live()).filter(b => b.kind === 'magazine' && (b.coverUrl || b.cover)).length;
+  return bad === 0 ? true : `${bad} issues still carry a cover`;
+});
+await t('so are its author, blurb, ISBN and page count', async () => {
+  const bad = (await live()).filter(b => b.kind === 'magazine' &&
+    ((b.authors || []).length || b.description || b.isbn13 || b.pages)).length;
+  return bad === 0 ? true : `${bad} issues still carry catalogue fields`;
+});
+await t('what the shelf photo said is still there', async () => {
+  const b = (await live()).find(x => x.id === 'ng-2002-04');
+  return b && b.subtitle === 'April 2002' && (b.subjects || []).includes('Afghan Girl')
+    ? true : `record reads ${JSON.stringify(b && { s: b.subtitle, j: b.subjects })}`;
+});
+await t('the books were not touched by the repair', async () => {
+  const n = (await live()).filter(b => b.kind !== 'magazine').length;
+  return n === 319 ? true : `${n} books`;
+});
+await t('and the offer goes once there is nothing left to put back', async () =>
+  await page.locator('#repair-mags').evaluate(el => el.hidden)
+    ? true : 'repair still offered with nothing to repair');
+
+// The button that caused it must now refuse.
+await page.selectOption('#f-kind', 'magazine');
+await page.waitForTimeout(500);
+await page.locator('.book').first().click();
+await page.waitForTimeout(400);
+lookups = 0;
+await page.click('#detail-enrich');
+await page.waitForTimeout(800);
+await t('looking up a single issue is refused outright', async () =>
+  lookups === 0 ? true : `${lookups} lookups went out for a magazine`);
+await t('and it says why', async () =>
+  /do not carry magazine back issues/.test(await page.textContent('.toast-host'))
+    ? true : await page.textContent('.toast-host'));
 
 if (errs.length) fails.push('console/page errors: ' + errs.join(' | '));
 console.log(`\nbrowser-library-magazines: ${fails.length ? 'FAILED' : 'passed'}`);

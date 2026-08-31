@@ -160,6 +160,19 @@
     'lib.kind.magazine':{ en: 'Magazines', ja: '雑誌', es: 'Revistas' },
     'lib.stat.magazines': { en: 'Magazines', ja: '雑誌', es: 'Revistas' },
     'lib.import.mags':  { en: 'Add the magazines', ja: '雑誌を追加', es: 'Añadir las revistas' },
+    'lib.repair.mags':  { en: 'Repair the magazines', ja: '雑誌を修復', es: 'Reparar las revistas' },
+    'lib.repair.hint': {
+      en: 'A catalogue lookup wrote another book’s cover and details onto these issues. This puts back what the shelf photo said.',
+      ja: 'カタログ検索が別の本の表紙や情報をこれらの号に書き込みました。棚の写真から読み取った内容に戻します。',
+      es: 'Una búsqueda de catálogo escribió la portada y los datos de otro libro en estos números. Esto restaura lo que decía la foto del estante.'
+    },
+    'lib.repair.done':  { en: 'Put back {n} issues', ja: '{n} 冊を復元しました', es: 'Restaurados {n} números' },
+    'lib.repair.none':  { en: 'Nothing to put back', ja: '復元するものはありません', es: 'Nada que restaurar' },
+    'lib.d.noCatalogue': {
+      en: 'The catalogues do not carry magazine back issues — a lookup here can only return a different book.',
+      ja: 'カタログには雑誌のバックナンバーがありません。検索しても別の本が返るだけです。',
+      es: 'Los catálogos no incluyen números atrasados de revistas — una búsqueda solo devolvería otro libro.'
+    },
     'lib.import.magsHint': {
       en: 'The National Geographic run, read off a photograph of the shelf.',
       ja: '棚の写真から読み取ったナショナル ジオグラフィックの蔵書です。',
@@ -396,6 +409,7 @@
        state already offers the inventory, and once the issues are in,
        re-importing can do nothing — either way the button would be noise. */
     $('import-mags').hidden = !books().length || books().some(isMagazine);
+    $('repair-mags').hidden = !books().some(magazineWasEnriched);
 
     var toDescribe = books().filter(needsDescription).length;
     $('f-nodesc').hidden = toDescribe === 0;
@@ -683,6 +697,11 @@
   function enrichExisting(id) {
     var b = store.get(id);
     if (!b) return;
+    /* Every issue is titled "National Geographic", so a title lookup matches
+       whatever else carries that name and writes its cover onto the record.
+       titlesLookAlike cannot catch it either: the wrong book's title starts
+       with the right one. */
+    if (isMagazine(b)) { Shell.toast(I18N.t('lib.d.noCatalogue'), 'error'); return; }
 
     var btn = $('detail-enrich');
     var was = btn.textContent;
@@ -765,6 +784,55 @@
 
   function importInventory(btn) {
     return importSeed(btn, '/data/library-seed.json', 'books');
+  }
+
+  /* Fields a magazine issue never legitimately has. A catalogue lookup only
+     ever writes into blank fields, so anything here on an issue came from a
+     book that merely shared its name, and clearing it loses nothing of ours. */
+  var CATALOGUE_ONLY = ['authors', 'pages', 'language', 'description',
+                        'coverUrl', 'cover', 'isbn13', 'isbn10'];
+
+  /* Ours to say, so a repair leaves them exactly as they are. */
+  var OURS = ['id', 'createdAt', 'owner', 'status', 'rating', 'location',
+              'lentTo', 'lentAt', 'deleted'];
+
+  function magazineWasEnriched(b) {
+    return isMagazine(b) && CATALOGUE_ONLY.some(function (k) { return !isBlank(b[k]); });
+  }
+
+  function repairMagazines(btn) {
+    var was = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = I18N.t('lib.importing');
+
+    return fetch('/data/magazines-seed.json')
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (payload) {
+        var seeded = {};
+        (payload.magazines || []).forEach(function (m) { seeded[bookKey(m)] = m; });
+
+        var fixed = books().filter(magazineWasEnriched).map(function (b) {
+          var seed = seeded[bookKey(b)];
+          // The seed is what the shelf photo said; without one, clearing the
+          // catalogue's additions is still right, so fall back to that.
+          var rec = Object.assign({}, seed || b);
+          CATALOGUE_ONLY.forEach(function (k) { delete rec[k]; });
+          OURS.forEach(function (k) { if (b[k] !== undefined) rec[k] = b[k]; });
+          if (!isBlank(b.notes) && (!seed || b.notes !== seed.notes)) rec.notes = b.notes;
+          rec.updatedAt = new Date().toISOString();
+          return rec;
+        });
+
+        if (!fixed.length) { Shell.toast(I18N.t('lib.repair.none')); return 0; }
+        store.putMany(fixed);
+        Shell.toast(I18N.t('lib.repair.done', { n: I18N.formatNumber(fixed.length) }));
+        return fixed.length;
+      })
+      .catch(function () { Shell.toast(I18N.t('lib.importFail'), 'error'); })
+      .then(function (n) { btn.disabled = false; btn.textContent = was; return n; });
   }
 
   function importMagazines(btn) {
@@ -1162,6 +1230,7 @@
     });
 
     $('import-mags').addEventListener('click', function () { importMagazines(this); });
+    $('repair-mags').addEventListener('click', function () { repairMagazines(this); });
 
     $('bulk-go').addEventListener('click', runBulkEnrich);
 

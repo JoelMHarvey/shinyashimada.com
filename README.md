@@ -145,6 +145,16 @@ spine. That last part is the point. A placeholder showing only the title and
 the border is the same picture a hundred times over, which is exactly how the
 first version looked.
 
+**Why an issue is never looked up.** No catalogue carries back issues, and
+every issue is titled *National Geographic*, so a title lookup matches whatever
+else shares that name — a Nat Geo Kids reader, in practice — and writes its
+cover, author and ISBN onto the record. The title guard that protects the books
+cannot help here: the wrong book's title *starts with* the right one, so it
+passes. Magazines are therefore excluded from both the bulk fill and the
+per-book lookup, on both sites. *Repair the magazines* appears when an issue is
+found carrying fields only a catalogue could have supplied, and puts back what
+the shelf photo said.
+
 They live in the same `books` collection so that one search covers both, and
 sit out of everything that is a book idea: reading status (they get their own
 stat tile instead of being filed as "to read"), the description gap, and the
