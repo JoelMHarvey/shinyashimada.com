@@ -129,6 +129,21 @@
   .chip .num { font-weight: 700; font-size: 11px; opacity: .6; margin-left: 5px; font-variant-numeric: tabular-nums; }
 
   .modes { display: flex; flex-direction: column; gap: 12px; margin-top: 26px; }
+  /* How long the timed round runs. Anything from a quick minute to a proper
+     ten-minute sitting. */
+  .durations {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    /* Pulled down onto the Sprint button it belongs to, and away from the
+       round above, so it is not ambiguous which one it configures. */
+    margin: 8px 0 -8px;
+  }
+  .dur {
+    border: 1.5px solid var(--line); background: var(--card); color: var(--ink-soft);
+    border-radius: 999px; padding: 6px 13px; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit; font-variant-numeric: tabular-nums;
+  }
+  .dur.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .dur:active { transform: scale(.95); }
   .btn {
     border: 0; border-radius: 14px; padding: 18px 20px; font-size: 18px; font-weight: 800;
     cursor: pointer; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;
@@ -316,7 +331,7 @@
   </div>
 
   <div class="statrow">
-    <div class="stat"><div class="n" id="bestScore">0</div><div class="l">Best score</div></div>
+    <div class="stat"><div class="n" id="bestScore">0</div><div class="l" id="bestLabel">Best score</div></div>
     <div class="stat"><div class="n" id="totalAnswered">0</div><div class="l">Answered</div></div>
     <div class="stat"><div class="n" id="lifetimeAcc">–</div><div class="l">Accuracy</div></div>
   </div>
@@ -364,7 +379,8 @@
 
     <div class="modes">
       <button class="btn primary" id="btnRound">Ronda de 10 <span class="hint">10 questions · 18s each</span></button>
-      <button class="btn secondary" id="btnSprint">Sprint 60″ <span class="hint">as many as you can</span></button>
+      <div class="durations" id="durations" role="group" aria-label="Duración del sprint"></div>
+      <button class="btn secondary" id="btnSprint">Sprint <span class="hint" id="sprintHint">as many as you can</span></button>
       <button class="btn pink" id="btnMarathon">Maratón 50 <span class="hint">50 questions · 18s each</span></button>
       <button class="btn ghost" id="btnWeak">Repaso — drill my weakest topics</button>
     </div>
@@ -427,7 +443,9 @@
 const API = "/api/vocab";
 const DECK_SIZE = 4000;
 const QUESTION_MS = 18000;
-const SPRINT_MS = 60000;
+/** Choices for the timed round, in seconds. */
+const SPRINT_CHOICES = [60, 120, 180, 300, 600];
+const DEFAULT_SPRINT = 60;
 
 const PRAISE = ["¡Muy bien!", "¡Perfecto!", "¡Genial!", "¡Estupendo!", "¡Excelente!", "¡Así se hace!", "¡Olé!"];
 const OOPS = ["¡Vaya!", "¡Casi!", "¡Uy…!", "¡Qué pena!", "¡Ánimo!"];
@@ -445,12 +463,19 @@ if (store.best && typeof store.best === "object") {
   store.best = Math.max(store.best.en || 0, store.best.ja || 0);
 }
 if (typeof store.best !== "number") store.best = 0;
+// Scores from a ten-minute sitting are not comparable with a one-minute one,
+// so a best score belongs to the shape of the round that set it. The old
+// single number becomes the record for the ten-question round.
+if (!store.bests || typeof store.bests !== "object") store.bests = {};
+if (store.best && store.bests.round == null) store.bests.round = store.best;
+if (!SPRINT_CHOICES.includes(store.sprintSeconds)) store.sprintSeconds = DEFAULT_SPRINT;
 if (!["all", "cloze", "plain"].includes(store.cardType)) store.cardType = "all";
 function save() { try { localStorage.setItem(LS, JSON.stringify(store)); } catch (e) {} }
 
 const $ = id => document.getElementById(id);
 
 let cardType = store.cardType;
+let sprintSeconds = store.sprintSeconds;
 const lang = "es";
 let topics = [];                 // [{ id, label_en, label_ja, ... }]
 let deckCache = {};              // 'lang:unit,unit' -> [question]
@@ -574,7 +599,8 @@ function renderHome() {
   $("typeAll").classList.toggle("on", cardType === "all");
   $("typeCloze").classList.toggle("on", cardType === "cloze");
   $("typePlain").classList.toggle("on", cardType === "plain");
-  $("bestScore").textContent = store.best || 0;
+  $("bestScore").textContent = store.bests[bestKey("sprint")] || 0;
+  $("bestLabel").textContent = `Best · ${durationLabel(sprintSeconds)}`;
   $("totalAnswered").textContent = store.answered;
   $("lifetimeAcc").textContent = store.answered ? Math.round(100 * store.correct / store.answered) + "%" : "–";
 
@@ -616,6 +642,24 @@ function renderHome() {
     ? `${selected.size}/${all.length} · ${words} palabras`
     : "elige un tema";
 
+  const durWrap = $("durations");
+  durWrap.textContent = "";
+  for (const secs of SPRINT_CHOICES) {
+    const b = document.createElement("button");
+    b.className = "dur" + (secs === sprintSeconds ? " on" : "");
+    b.type = "button";
+    b.textContent = durationLabel(secs);
+    b.setAttribute("aria-pressed", String(secs === sprintSeconds));
+    b.onclick = () => {
+      sprintSeconds = secs;
+      store.sprintSeconds = secs;
+      save();
+      renderHome();
+    };
+    durWrap.appendChild(b);
+  }
+  $("sprintHint").textContent = `${durationLabel(sprintSeconds)} · as many as you can`;
+
   const nothingPicked = selected.size === 0;
   for (const id of ["btnRound", "btnSprint", "btnMarathon", "btnWeak"]) {
     $(id).disabled = nothingPicked;
@@ -629,6 +673,13 @@ function setCardType(which) {
   save();
   renderHome();
 }
+
+/** Which record a finished round counts towards. */
+function bestKey(m) {
+  return m === "sprint" ? `sprint:${sprintSeconds}` : m;
+}
+
+const durationLabel = (secs) => (secs % 60 === 0 && secs >= 60 ? `${secs / 60} min` : `${secs}s`);
 
 /** Cards of the chosen kind: fill-in-the-blank, plain definition, or both. */
 function ofType(questions) {
@@ -685,7 +736,8 @@ async function startGame(m, keys) {
     deck, i: 0, score: 0, streak: 0, best: 0,
     hits: 0, tries: 0, misses: [], perCat: {},
     limit: m === "sprint" ? Infinity : (m === "marathon" ? 50 : 10),
-    endAt: m === "sprint" ? Date.now() + SPRINT_MS : null,
+    endAt: m === "sprint" ? Date.now() + sprintSeconds * 1000 : null,
+    runMs: sprintSeconds * 1000,
     locked: false, qStart: 0
   };
   show("game");
@@ -699,8 +751,10 @@ function runSprintTimer() {
     if (!game || game.endAt === null) return clearInterval(tickHandle);
     const left = game.endAt - Date.now();
     const bar = $("timerBar");
-    bar.style.width = Math.max(0, 100 * left / SPRINT_MS) + "%";
-    bar.classList.toggle("hurry", left < 12000);
+    bar.style.width = Math.max(0, 100 * left / game.runMs) + "%";
+    // Warn proportionally, so a ten-minute round does not sit red for a fifth
+    // of its length.
+    bar.classList.toggle("hurry", left < Math.min(12000, game.runMs * 0.2));
     if (left <= 0) { clearInterval(tickHandle); finish(); }
   }, 100);
 }
@@ -819,8 +873,9 @@ function finish() {
   game = null;
 
   $("finalScore").textContent = g.score;
-  const isBest = g.score > (store.best || 0);
-  if (isBest) { store.best = g.score; save(); }
+  const key = bestKey(mode);
+  const isBest = g.score > (store.bests[key] || 0);
+  if (isBest) { store.bests[key] = g.score; save(); }
   $("newBest").hidden = !isBest;
   $("finalAcc").textContent = g.tries
     ? `${g.hits} / ${g.tries} correctas · ${Math.round(100 * g.hits / g.tries)}% · racha ${g.best}`
