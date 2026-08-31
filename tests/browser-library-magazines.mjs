@@ -55,7 +55,7 @@ await page.waitForTimeout(2500);
 
 await t('the whole run lands', async () => {
   const mags = (await live()).filter(b => b.kind === 'magazine').length;
-  return mags === 105 ? true : `${mags} issues`;
+  return mags === 118 ? true : `${mags} issues`;
 });
 
 await t('the books are untouched by it', async () => {
@@ -63,23 +63,25 @@ await t('the books are untouched by it', async () => {
   return vols === 319 ? true : `${vols} books`;
 });
 
-await t('the offer goes once they are in', async () =>
-  await page.isHidden('#import-mags') ? true : 'still offered with nothing to add');
+await t('the offer stays, so a later shelf can be added', async () =>
+  await page.isVisible('#import-mags') ? true : 'the offer went, leaving no way to top up');
 
 await t('importing again adds nothing', async () => {
   const before = (await live()).length;
-  await page.evaluate(() => document.getElementById('import-mags').hidden = false);
   await page.click('#import-mags');
   await page.waitForTimeout(1800);
   const after = (await live()).length;
   return before === after ? true : `${after - before} duplicates`;
 });
+await t('and says there was nothing new', async () =>
+  /Nothing new|already/i.test(await page.textContent('.toast-host'))
+    ? true : (await page.textContent('.toast-host')).trim().slice(-60));
 
 /* --- counted honestly ----------------------------------------------------- */
 
 await t('books and magazines are counted separately', async () => {
   const txt = (await page.textContent('#stats')).replace(/\s+/g, ' ');
-  return /319\s*Books/i.test(txt) && /105\s*Magazines/i.test(txt)
+  return /319\s*Books/i.test(txt) && /118\s*Magazines/i.test(txt)
     ? true : `stats read "${txt.trim().slice(0, 90)}"`;
 });
 
@@ -100,11 +102,11 @@ await page.selectOption('#f-kind', 'magazine');
 await page.waitForTimeout(600);
 await t('filtering to magazines shows only issues', async () => {
   const n = await count();
-  return n === 105 ? true : `${n} shown`;
+  return n === 118 ? true : `${n} shown`;
 });
 await t('every issue gets the yellow placeholder', async () => {
   const n = await page.locator('.book__cover--issue').count();
-  return n === 105 ? true : `${n} placeholders`;
+  return n === 118 ? true : `${n} placeholders`;
 });
 
 // A placeholder that shows only the shared title and border is 105 copies of
@@ -112,7 +114,7 @@ await t('every issue gets the yellow placeholder', async () => {
 await t('no two placeholders read the same', async () => {
   const texts = await page.locator('.book__cover--issue').allTextContents();
   const distinct = new Set(texts.map(t => t.replace(/\s+/g, ' ').trim())).size;
-  return distinct >= 100 ? true : `${distinct} distinct of ${texts.length}`;
+  return distinct >= 110 ? true : `${distinct} distinct of ${texts.length}`;
 });
 
 await t('the year is set large, and only when it is a year', async () => {

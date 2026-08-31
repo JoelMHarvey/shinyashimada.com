@@ -1,5 +1,5 @@
 {
- "note": "The National Geographic run, read off a photograph of the shelf. Each spine prints NATIONAL GEOGRAPHIC, the issue date, and the cover lines; the date and the cover lines sit on the same spine face, which is how they are paired here. Where a pairing was checked against the issue it is known to be — January 2000 the Millennium issue, April 2002 Afghan Girl, September 2005 the Africa issue, April 2007 Global Fisheries, January 2011 Population 7 Billion — it matched. No cover line was invented: an issue whose spine could not be read carries the date alone and is marked for checking. The shelf holds roughly 170 issues, so this is a partial catalogue; importing again is harmless, because an issue already on the shelf is skipped by its date.",
+ "note": "The National Geographic run, read off a photograph of the shelf. Each spine prints NATIONAL GEOGRAPHIC, the issue date, and the cover lines; the date and the cover lines sit on the same spine face, which is how they are paired here. Where a pairing was checked against the issue it is known to be — January 2000 the Millennium issue, April 2002 Afghan Girl, September 2005 the Africa issue, April 2007 Global Fisheries, January 2011 Population 7 Billion — it matched. No cover line was invented: an issue whose spine could not be read carries the date alone and is marked for checking. Two shelves have been read so far and neither is exhausted, so this is a partial catalogue; issues carrying a date but no cover lines came from a photograph too small to read them, and are marked for checking rather than filled in by guesswork; importing again is harmless, because an issue already on the shelf is skipped by its date.",
  "source": "Photograph of the shelf, read at spine level.",
  "magazines": [
   {
@@ -205,6 +205,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-1999-10",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "October 1999",
+   "issue": "1999-10",
+   "publishedYear": 1999,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
    "id": "ng-1999-11",
    "kind": "magazine",
    "title": "National Geographic",
@@ -353,6 +366,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-2000-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2000",
+   "issue": "2000-07",
+   "publishedYear": 2000,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
    "id": "ng-2000-08",
    "kind": "magazine",
    "title": "National Geographic",
@@ -492,6 +518,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-2001-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2001",
+   "issue": "2001-04",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
    "id": "ng-2001-05",
    "kind": "magazine",
    "title": "National Geographic",
@@ -510,6 +549,32 @@
     "Jamestown, NM"
    ],
    "confidence": "high"
+  },
+  {
+   "id": "ng-2001-06",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "June 2001",
+   "issue": "2001-06",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
+   "id": "ng-2001-07",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "July 2001",
+   "issue": "2001-07",
+   "publishedYear": 2001,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
   },
   {
    "id": "ng-2001-08",
@@ -734,6 +799,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-2002-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2002",
+   "issue": "2002-09",
+   "publishedYear": 2002,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
    "id": "ng-2002-11",
    "kind": "magazine",
    "title": "National Geographic",
@@ -953,6 +1031,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-2005-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2005",
+   "issue": "2005-04",
+   "publishedYear": 2005,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
    "id": "ng-2005-05",
    "kind": "magazine",
    "title": "National Geographic",
@@ -1086,6 +1177,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-2006-04",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "April 2006",
+   "issue": "2006-04",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
    "id": "ng-2006-05",
    "kind": "magazine",
    "title": "National Geographic",
@@ -1140,6 +1244,32 @@
     "Blackbeard"
    ],
    "confidence": "high"
+  },
+  {
+   "id": "ng-2006-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2006",
+   "issue": "2006-09",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
+   "id": "ng-2006-11",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "November 2006",
+   "issue": "2006-11",
+   "publishedYear": 2006,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
   },
   {
    "id": "ng-2006-12",
@@ -1233,6 +1363,19 @@
     "Botswana Leopards"
    ],
    "confidence": "high"
+  },
+  {
+   "id": "ng-2007-12",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "December 2007",
+   "issue": "2007-12",
+   "publishedYear": 2007,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
   },
   {
    "id": "ng-2008-07",
@@ -1365,6 +1508,19 @@
     "Mount Athos"
    ],
    "confidence": "high"
+  },
+  {
+   "id": "ng-2010-02",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "February 2010",
+   "issue": "2010-02",
+   "publishedYear": 2010,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
   },
   {
    "id": "ng-2010-03",
@@ -1772,6 +1928,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-2014-09",
+   "kind": "magazine",
+   "title": "National Geographic",
+   "subtitle": "September 2014",
+   "issue": "2014-09",
+   "publishedYear": 2014,
+   "publisher": "National Geographic Society",
+   "owner": "joel",
+   "subjects": [],
+   "confidence": "medium",
+   "notes": "Read from a second shelf photograph. The date is clear; the cover lines were too small to read at that resolution and none were guessed."
+  },
+  {
    "id": "ng-2014-11",
    "kind": "magazine",
    "title": "National Geographic",
@@ -1849,6 +2018,19 @@
    "confidence": "high"
   },
   {
+   "id": "ng-sp-2015-02",
+   "title": "National Geographic",
+   "publisher": "National Geographic Society",
+   "subtitle": "Special publication, February / March 2015",
+   "issue": "2015-02",
+   "publishedYear": 2015,
+   "confidence": "medium",
+   "subjects": [],
+   "notes": "Spine reads only \"Special Publication · February / March 2015\"; the title is not legible in the photo.",
+   "kind": "magazine",
+   "owner": "joel"
+  },
+  {
    "id": "ng-2015-03",
    "kind": "magazine",
    "title": "National Geographic",
@@ -1924,16 +2106,6 @@
    "confidence": "high"
   },
   {
-   "id": "ng-sp-your-body",
-   "title": "Your Body: A User's Guide",
-   "publisher": "National Geographic Society",
-   "subtitle": "Special publication",
-   "confidence": "high",
-   "subjects": [],
-   "kind": "magazine",
-   "owner": "joel"
-  },
-  {
    "id": "ng-sp-adventures",
    "title": "Adventures of a Lifetime",
    "publisher": "National Geographic Society",
@@ -1954,15 +2126,12 @@
    "owner": "joel"
   },
   {
-   "id": "ng-sp-2015-02",
-   "title": "National Geographic",
+   "id": "ng-sp-your-body",
+   "title": "Your Body: A User's Guide",
    "publisher": "National Geographic Society",
-   "subtitle": "Special publication, February / March 2015",
-   "issue": "2015-02",
-   "publishedYear": 2015,
-   "confidence": "medium",
+   "subtitle": "Special publication",
+   "confidence": "high",
    "subjects": [],
-   "notes": "Spine reads only \"Special Publication · February / March 2015\"; the title is not legible in the photo.",
    "kind": "magazine",
    "owner": "joel"
   }

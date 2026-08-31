@@ -134,9 +134,16 @@ chip and sit out of it, for the same reason they sit out of the status tiles.
 
 **The magazines.** `data/magazines-seed.json` holds the National Geographic run
 — issue date, cover lines, and how confident the reading was — catalogued from
-a photograph of the shelf. *Add the magazines* imports it once the books are in;
-importing twice is harmless, because an issue already on the shelf is skipped by
-its date rather than its title, which every issue shares.
+photographs of the shelves. *Add the magazines* imports it once the books are in,
+and stays put afterwards: the shelves are being read a photograph at a time, so
+the seed grows and a top-up has to stay reachable. Importing twice is harmless,
+because an issue already on the shelf is skipped by its date rather than its
+title, which every issue shares.
+
+Some issues carry a date and nothing else. Those came from a photograph too
+small to read the cover lines from; the date is legible, the rest was not, and
+none of it was guessed. They are marked for checking, so *Needs checking* is
+also the list of issues still waiting for a closer photograph.
 
 Back issues have no cover art anywhere — no catalogue carries periodicals — so
 each one gets a placeholder built from what the shelf photo does show: the
