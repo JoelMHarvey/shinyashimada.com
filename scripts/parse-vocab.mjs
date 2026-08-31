@@ -23,6 +23,16 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
+// Shared with the write path in netlify/functions/vocab.mjs, so a card Shin
+// types by hand is cleaned and masked exactly like an imported one.
+import {
+  cleanDefinition,
+  looksLikeTerm,
+  maskTerm,
+  slug,
+  tidy
+} from '../netlify/lib/vocab-text.mjs';
+
 /* ------------------------------------------------------------------ args */
 
 const argv = process.argv.slice(2);
@@ -46,28 +56,6 @@ if (!root) {
 
 /* ----------------------------------------------------------------- utils */
 
-const slug = (s) =>
-  String(s)
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .normalize('NFC')
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, '-')
-    .replace(/^-|-$/g, '')
-    .slice(0, 64) || 'untitled';
-
-const ENTITIES = {
-  nbsp: ' ', amp: '&', lt: '<', gt: '>', quot: '"', apos: "'",
-  laquo: '«', raquo: '»', hellip: '…', mdash: '—', ndash: '–', rsquo: '’', lsquo: '‘'
-};
-
-const decode = (s) =>
-  s
-    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
-    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
-    .replace(/&([a-z]+);/gi, (m, n) => (n.toLowerCase() in ENTITIES ? ENTITIES[n.toLowerCase()] : m));
-
-const tidy = (s) => decode(s).replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
 
 /**
  * Walk the HTML keeping a stack of open cells, so a table nested inside a
@@ -174,9 +162,18 @@ function readPage(html) {
         rowStart.push(m.index);
       } else if (tag === 'td' || tag === 'th') {
         cellStack.push([]);
-        imgStack.push(0);
+        imgStack.push([]);
       } else if (tag === 'img') {
-        if (imgStack.length) imgStack[imgStack.length - 1] += 1;
+        if (imgStack.length) {
+          const tagText = m[0];
+          const src = /\ssrc="([^"]+)"/.exec(tagText);
+          const id = src && /resources\/([^/]+)\//.exec(src[1].replace(/&amp;/g, '&'));
+          const alt = /\salt="([^"]*)"/.exec(tagText);
+          imgStack[imgStack.length - 1].push({
+            ref: id ? id[1] : null,
+            alt: alt ? tidy(alt[1]) : null
+          });
+        }
       } else if (tag === 'p') pBuf = [];
       else if (tag === 'br' || tag === 'li') text(' ');
     } else {
@@ -199,84 +196,6 @@ function readPage(html) {
 
 /* --------------------------------------------------------------- cleaning */
 
-/** Dictionary paste artefacts: "14. tr. Introducir…", "8Conseguir…", "loc. v. …". */
-function cleanDefinition(s) {
-  let out = s;
-  out = out.replace(/^\s*\d+\s*[.)]?\s*/, '');
-  out = out.replace(/^(loc\.\s*(v|adj|adv|s)?\.?|tr\.|intr\.|prnl\.|adj\.|adv\.|m\.|f\.|s\.\s*m\.|s\.\s*f\.)\s*/i, '');
-  out = out.replace(/^\s*\d+\s*/, '');
-  // Stray angle brackets survive from the source text itself, not from markup.
-  out = out.replace(/\s*[<>]+\s*/g, ' ');
-  return out.replace(/\s+/g, ' ').trim();
-}
-
-/** Accent- and case-insensitive form, for comparing a term to a definition. */
-const fold = (s) =>
-  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-
-/**
- * Blank the answer out of its own definition.
- *
- * The second column is often an example sentence using the very word being
- * asked about — 42% of rows leak the answer that way. Rather than throw
- * those away, mask the term so the card becomes a fill-in-the-blank, which
- * is a better question than the bare definition was.
- */
-function maskTerm(term, definition) {
-  const foldedDef = fold(definition);
-  const foldedTerm = fold(term).trim();
-  if (!foldedTerm) return { text: definition, masked: false };
-
-  let masked = false;
-  let out = '';
-  let i = 0;
-
-  // Whole-term occurrences first. The match has to swallow the whole word:
-  // "desplegar" sits inside "desplegaron", and blanking only the stem leaves
-  // "____on" on the card, which hands the reader the ending.
-  const isLetter = (ch) => ch !== undefined && /\p{L}/u.test(ch);
-  while (i < definition.length) {
-    const at = foldedDef.indexOf(foldedTerm, i);
-    if (at < 0) break;
-    let start = at;
-    let end = at + foldedTerm.length;
-    while (isLetter(definition[end])) end++;
-    while (start > 0 && isLetter(definition[start - 1])) start--;
-    out += definition.slice(i, start) + '____';
-    i = end;
-    masked = true;
-  }
-  out += definition.slice(i);
-
-  // Then inflected forms of a single-word term: 'deleitarse' vs 'se deleita'.
-  const first = foldedTerm.split(/\s+/)[0];
-  if (first.length >= 6) {
-    // Long enough to stay specific, short enough to catch inflections:
-    // 'deleitarse' -> 'deleit', which matches both 'deleite' and 'deleita',
-    // while 'estepa' stays whole so it cannot swallow 'este'.
-    const stem = first.slice(0, Math.max(6, first.length - 4));
-    out = out.replace(/\p{L}+/gu, (w) => {
-      if (fold(w).startsWith(stem) && fold(w) !== stem.slice(0, 3)) {
-        masked = true;
-        return '____';
-      }
-      return w;
-    });
-  }
-
-  return { text: out.replace(/(?:____[\s,]*){2,}/g, '____ ').replace(/\s+/g, ' ').trim(), masked };
-}
-
-/** A headword, not a sentence someone pasted into the wrong column. */
-function looksLikeTerm(s) {
-  if (!s) return false;
-  const words = s.split(/\s+/);
-  if (words.length > 5) return false;
-  if (s.length > 48) return false;
-  if (/[.!?;]$/.test(s)) return false;
-  if (/^(index|unidad|sin\.|ant\.|ejemplo)/i.test(s)) return false;
-  return /\p{L}/u.test(s);
-}
 
 function topicFor(heading, pageTitle) {
   // Rows sitting above the first unit anchor belong to the page's own opening
@@ -385,11 +304,18 @@ for (const file of files) {
       });
     }
 
+    // A row rarely holds more than one picture; the first is the one that
+    // belongs to the word. `image_ref` is resolved to a stored image later
+    // by scripts/import-images.mjs — the parse step never uploads anything.
+    const picture = row.cells.flatMap((c) => c.imgs || []).find((i) => i && i.ref) || null;
+
     entries.push({
       topic_id: topicId,
       term,
       definition,
       cloze: masked,
+      image_ref: picture ? picture.ref : null,
+      image_alt: picture && picture.alt ? picture.alt.slice(0, 2000) : null,
       gloss_en: null,
       gloss_ja: null,
       part_of_speech: null,

@@ -162,6 +162,63 @@
   .lockform .btn { width: auto; padding: 12px 18px; font-size: 15px; }
   .lockerr { color: var(--red); font-size: 13.5px; margin: 10px 0 0; font-weight: 700; }
 
+
+  /* ---- tabs ---- */
+  .tabs { display: flex; gap: 6px; margin: 4px 0 18px; border-bottom: 1.5px solid var(--line); }
+  .tab {
+    background: none; border: 0; border-bottom: 2.5px solid transparent;
+    color: var(--ink-soft); font-family: inherit; font-size: 15px; font-weight: 800;
+    padding: 9px 12px; cursor: pointer; margin-bottom: -1.5px;
+  }
+  .tab.on { color: var(--red); border-bottom-color: var(--red); }
+  .tab:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+  /* ---- list ---- */
+  .listbar { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .listbar input, .listbar select {
+    font-family: inherit; font-size: 15px; padding: 10px 12px;
+    border: 1.5px solid var(--line); border-radius: 12px;
+    background: var(--card); color: var(--ink); min-width: 0;
+  }
+  .listbar input { flex: 1; }
+  .listmeta { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 10px; }
+  .row {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .row .body { flex: 1; min-width: 0; }
+  .row .term { font-weight: 800; font-size: 16px; }
+  .row .def { font-size: 14px; color: var(--ink-soft); line-height: 1.5; margin-top: 3px; }
+  .row .def .blank { color: var(--gold); font-weight: 800; }
+  .row .unit { font-size: 11px; font-weight: 700; color: var(--ink-soft); opacity: .75; margin-top: 5px; letter-spacing: .04em; }
+  .row img.thumb { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid var(--line); }
+  .row .acts { display: flex; flex-direction: column; gap: 6px; }
+  .mini {
+    background: none; border: 1.5px solid var(--line); border-radius: 8px;
+    color: var(--ink-soft); font-family: inherit; font-size: 12px; font-weight: 700;
+    padding: 5px 9px; cursor: pointer; white-space: nowrap;
+  }
+  .mini.danger { color: var(--red); border-color: var(--red-soft); }
+  .pager { display: flex; gap: 8px; justify-content: center; margin: 16px 0 4px; }
+
+  /* ---- add ---- */
+  .field { display: block; margin-bottom: 12px; }
+  .field span { display: block; font-size: 12px; font-weight: 700; letter-spacing: .08em;
+                text-transform: uppercase; color: var(--ink-soft); margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; font-family: inherit; font-size: 16px; padding: 11px 13px;
+    border: 1.5px solid var(--line); border-radius: 12px;
+    background: var(--card); color: var(--ink);
+  }
+  .field textarea { min-height: 130px; resize: vertical; line-height: 1.5; }
+  .field .help { font-size: 12.5px; color: var(--ink-soft); font-weight: 500;
+                 text-transform: none; letter-spacing: 0; margin-top: 5px; }
+  .msg { border-radius: 12px; padding: 12px 14px; font-size: 14px; margin: 12px 0; font-weight: 600; }
+  .msg.ok  { background: var(--green-soft); color: var(--green); }
+  .msg.bad { background: var(--red-soft); color: var(--red); }
+  .preview { max-height: 260px; overflow-y: auto; margin: 10px 0; }
+  .subtabs { display: flex; gap: 8px; margin-bottom: 14px; }
+
   /* ---- game ---- */
   .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
   .quit { background: none; border: 0; color: var(--ink-soft); font-size: 15px; font-weight: 700; cursor: pointer; padding: 6px; font-family: inherit; }
@@ -242,6 +299,16 @@
     <p class="sub" id="subLine">Shin's own DELE notebooks, turned into a fast tap game. Read the definition, pick the word. Beat the clock, keep the streak.</p>
   </div>
 
+  <nav class="tabs" role="tablist">
+    <button class="tab on" id="tabPlay"  role="tab" aria-selected="true">Jugar</button>
+    <button class="tab"    id="tabList"  role="tab" aria-selected="false">Lista</button>
+    <button class="tab"    id="tabAdd"   role="tab" aria-selected="false">Añadir</button>
+  </nav>
+
+  <div id="paneList" class="pane" hidden></div>
+  <div id="paneAdd"  class="pane" hidden></div>
+
+  <div id="panePlay" class="pane">
   <div class="levels">
     <button class="lvl" data-type="all" id="typeAll">Todo<span class="tag">ambos tipos</span></button>
     <button class="lvl" data-type="cloze" id="typeCloze">Rellenar<span class="tag">completa la frase</span></button>
@@ -303,6 +370,7 @@
     </div>
 
     <footer>Tap a topic to toggle it. Pink % = your accuracy so far.</footer>
+  </div>
   </div>
 </div>
 
@@ -848,6 +916,463 @@ $("btnWeak").onclick = () => {
 $("btnQuit").onclick = () => { clearInterval(tickHandle); game = null; show("home"); renderHome(); };
 $("btnAgain").onclick = () => startGame(mode, lastKeys);
 $("btnHome").onclick = () => { show("home"); renderHome(); };
+
+/* ================= TABS: LISTA & AÑADIR ================= */
+
+let tab = "play";
+let listState = { q: "", topic: "", offset: 0, limit: 25, total: 0 };
+
+function setTab(which) {
+  tab = which;
+  for (const [id, name] of [["tabPlay","play"], ["tabList","list"], ["tabAdd","add"]]) {
+    $(id).classList.toggle("on", name === which);
+    $(id).setAttribute("aria-selected", String(name === which));
+  }
+  $("panePlay").hidden = which !== "play";
+  $("paneList").hidden = which !== "list";
+  $("paneAdd").hidden  = which !== "add";
+  if (which === "list") renderList();
+  if (which === "add") renderAdd();
+}
+
+/* Object URLs held for the thumbnails currently on screen; revoked when the
+   list is redrawn so a long browse does not leak them. */
+let objectUrls = [];
+function releaseImages() {
+  for (const u of objectUrls) URL.revokeObjectURL(u);
+  objectUrls = [];
+}
+
+async function showImage(img, key) {
+  try {
+    const res = await fetch(`/api/vocab-image?key=${encodeURIComponent(key)}`, fetchOpts());
+    if (!res.ok) throw new Error(String(res.status));
+    const url = URL.createObjectURL(await res.blob());
+    objectUrls.push(url);
+    img.src = url;
+  } catch {
+    img.remove();   // a broken thumbnail helps nobody
+  }
+}
+
+/** Definitions carry ____ where the answer was masked; show that, safely. */
+function withBlanks(text) {
+  const frag = document.createDocumentFragment();
+  for (const piece of String(text).split(/(_{2,})/)) {
+    if (/^_{2,}$/.test(piece)) {
+      const b = document.createElement("span");
+      b.className = "blank";
+      b.textContent = "____";
+      frag.appendChild(b);
+    } else frag.appendChild(document.createTextNode(piece));
+  }
+  return frag;
+}
+
+function unitOptions(select, { includeAll }) {
+  select.textContent = "";
+  if (includeAll) {
+    const o = document.createElement("option");
+    o.value = ""; o.textContent = "Todas las unidades";
+    select.appendChild(o);
+  }
+  for (const t of topics) {
+    const o = document.createElement("option");
+    o.value = t.id;
+    o.textContent = topicLabel(t.id) + (t.count != null ? ` (${t.count})` : "");
+    select.appendChild(o);
+  }
+}
+
+/* ---------------------------------------------------------------- lista */
+
+function listShell() {
+  const pane = $("paneList");
+  if (pane.dataset.built) return;
+  pane.dataset.built = "1";
+
+  const bar = document.createElement("div");
+  bar.className = "listbar";
+  const search = document.createElement("input");
+  search.type = "search";
+  search.placeholder = "Buscar palabra o definición…";
+  search.id = "listQ";
+  const sel = document.createElement("select");
+  sel.id = "listTopic";
+  bar.append(search, sel);
+
+  const meta = document.createElement("div");
+  meta.className = "listmeta";
+  meta.id = "listMeta";
+
+  const rows = document.createElement("div");
+  rows.id = "listRows";
+
+  const pager = document.createElement("div");
+  pager.className = "pager";
+  const prev = document.createElement("button");
+  prev.className = "mini"; prev.id = "listPrev"; prev.textContent = "← Anterior";
+  const next = document.createElement("button");
+  next.className = "mini"; next.id = "listNext"; next.textContent = "Siguiente →";
+  pager.append(prev, next);
+
+  pane.append(bar, meta, rows, pager);
+
+  let timer = null;
+  search.oninput = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      listState.q = search.value.trim();
+      listState.offset = 0;
+      loadList();
+    }, 250);
+  };
+  sel.onchange = () => { listState.topic = sel.value; listState.offset = 0; loadList(); };
+  prev.onclick = () => { listState.offset = Math.max(0, listState.offset - listState.limit); loadList(); };
+  next.onclick = () => {
+    if (listState.offset + listState.limit < listState.total) {
+      listState.offset += listState.limit;
+      loadList();
+    }
+  };
+}
+
+function renderList() {
+  listShell();
+  unitOptions($("listTopic"), { includeAll: true });
+  $("listTopic").value = listState.topic;
+  loadList();
+}
+
+async function loadList() {
+  const rows = $("listRows");
+  $("listMeta").textContent = "Cargando…";
+  const params = new URLSearchParams({
+    limit: String(listState.limit),
+    offset: String(listState.offset)
+  });
+  if (listState.q) params.set("q", listState.q);
+  if (listState.topic) params.set("topic", listState.topic);
+
+  let data;
+  try {
+    const res = await fetch(`${API}?${params}`, fetchOpts());
+    if (res.status === 401) throw new Unauthorised("passcode required");
+    if (!res.ok) throw new Error(`${res.status}`);
+    data = await res.json();
+  } catch (err) {
+    if (err instanceof Unauthorised) { setTab("play"); return boot(); }
+    $("listMeta").textContent = `No se pudo cargar (${err.message}).`;
+    return;
+  }
+
+  listState.total = data.total;
+  const from = data.total ? listState.offset + 1 : 0;
+  const to = Math.min(listState.offset + listState.limit, data.total);
+  $("listMeta").textContent = `${from}–${to} de ${data.total}`;
+  $("listPrev").disabled = listState.offset === 0;
+  $("listNext").disabled = listState.offset + listState.limit >= data.total;
+
+  releaseImages();
+  rows.textContent = "";
+  for (const e of data.entries) {
+    const row = document.createElement("div");
+    row.className = "row";
+
+    if (e.image_key) {
+      const img = document.createElement("img");
+      img.className = "thumb";
+      img.alt = e.image_alt ? e.image_alt.slice(0, 120) : e.term;
+      // An <img src> cannot carry the passcode header, and the pictures are
+      // as private as the words, so fetch the bytes and hand the element an
+      // object URL instead of leaving the endpoint open.
+      showImage(img, e.image_key);
+      row.appendChild(img);
+    }
+
+    const body = document.createElement("div");
+    body.className = "body";
+    const term = document.createElement("div");
+    term.className = "term";
+    term.textContent = e.term;
+    const def = document.createElement("div");
+    def.className = "def";
+    def.appendChild(withBlanks(e.definition || ""));
+    const unit = document.createElement("div");
+    unit.className = "unit";
+    unit.textContent = topicLabel(e.topic_id);
+    body.append(term, def, unit);
+
+    const acts = document.createElement("div");
+    acts.className = "acts";
+    const pic = document.createElement("button");
+    pic.className = "mini";
+    pic.textContent = e.image_key ? "Cambiar foto" : "Añadir foto";
+    pic.onclick = () => pickImageFor(e, pic);
+    const del = document.createElement("button");
+    del.className = "mini danger";
+    del.textContent = "Borrar";
+    del.onclick = () => removeEntry(e, row, del);
+    acts.append(pic, del);
+
+    row.append(body, acts);
+    rows.appendChild(row);
+  }
+}
+
+/** Attach a picture to one entry: upload the bytes, then save the key. */
+function pickImageFor(entry, btn) {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/jpeg,image/png,image/webp,image/gif";
+  input.onchange = async () => {
+    const file = input.files && input.files[0];
+    if (!file) return;
+    const was = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = "Subiendo…";
+    try {
+      const key = await uploadImage(file);
+      await saveEntries([{ topic_id: entry.topic_id, term: entry.term,
+                           definition: entry.definition, image_key: key }]);
+      loadList();
+    } catch (err) {
+      btn.textContent = was;
+      btn.disabled = false;
+      alert(`No se pudo subir la imagen: ${err.message}`);
+    }
+  };
+  input.click();
+}
+
+async function removeEntry(entry, row, btn) {
+  if (!confirm(`¿Borrar "${entry.term}"?`)) return;
+  btn.disabled = true;
+  try {
+    const res = await fetch(`${API}?id=${entry.id}`, { method: "DELETE", ...fetchOpts() });
+    if (!res.ok) throw new Error(`${res.status}`);
+    row.remove();
+    listState.total--;
+    deckCache = {};   // the deck it belonged to is now stale
+  } catch (err) {
+    btn.disabled = false;
+    alert(`No se pudo borrar: ${err.message}`);
+  }
+}
+
+/* --------------------------------------------------------------- añadir */
+
+async function uploadImage(file) {
+  const res = await fetch("/api/vocab-image", {
+    method: "POST",
+    headers: { "Content-Type": file.type, ...(passcode() ? { "X-Store-Passcode": passcode() } : {}) },
+    body: file
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data.key;
+}
+
+async function saveEntries(entries, topicLabelNew) {
+  const body = { entries };
+  if (topicLabelNew) body.topic_label = topicLabelNew;
+  const res = await fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...fetchOpts().headers },
+    body: JSON.stringify(body)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    if (res.status === 401) throw new Unauthorised("passcode required");
+    const detail = Array.isArray(data.rejected)
+      ? data.rejected.map(r => `fila ${r.row}: ${r.error}`).join("; ")
+      : (data.topics ? `unidad desconocida: ${data.topics.join(", ")}` : data.error || `HTTP ${res.status}`);
+    throw new Error(detail);
+  }
+  deckCache = {};        // new words must appear in the next round
+  await loadTopics();    // counts moved
+  return data;
+}
+
+/** `término — definición`, `término = definición`, or a tab between them. */
+function parseBulk(text) {
+  const rows = [];
+  const bad = [];
+  for (const [i, line] of text.split(/\r?\n/).entries()) {
+    const t = line.trim();
+    if (!t) continue;
+    const parts = t.split(/\t+|\s+(?:—|–|=|:)\s+|\s{3,}/);
+    if (parts.length < 2 || !parts[0].trim() || !parts.slice(1).join(" ").trim()) {
+      bad.push({ line: i + 1, text: t.slice(0, 60) });
+      continue;
+    }
+    rows.push({ term: parts[0].trim(), definition: parts.slice(1).join(" ").trim() });
+  }
+  return { rows, bad };
+}
+
+function addShell() {
+  const pane = $("paneAdd");
+  if (pane.dataset.built) return;
+  pane.dataset.built = "1";
+  pane.innerHTML = "";
+
+  const sub = document.createElement("div");
+  sub.className = "subtabs";
+  const bOne = document.createElement("button");
+  bOne.className = "mini"; bOne.id = "addModeOne"; bOne.textContent = "Una palabra";
+  const bMany = document.createElement("button");
+  bMany.className = "mini"; bMany.id = "addModeMany"; bMany.textContent = "Pegar una lista";
+  sub.append(bOne, bMany);
+
+  const form = document.createElement("form");
+  form.id = "addForm";
+  form.innerHTML = `
+    <label class="field"><span>Unidad</span><select id="addTopic"></select></label>
+    <label class="field"><span>Nueva unidad (opcional)</span>
+      <input id="addNewTopic" placeholder="Las claves C2 — unidad 1">
+      <span class="help">Rellena esto para crear una unidad nueva en vez de usar la de arriba.</span>
+    </label>
+    <label class="field"><span>Palabra</span><input id="addTerm" required></label>
+    <label class="field"><span>Definición en español</span><textarea id="addDef" required></textarea>
+      <span class="help">Si la definición contiene la palabra, se tapa sola y la tarjeta se vuelve de rellenar.</span>
+    </label>
+    <label class="field"><span>Foto (opcional)</span>
+      <input id="addImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif">
+    </label>
+    <button class="btn primary" type="submit">Guardar</button>`;
+
+  const bulk = document.createElement("form");
+  bulk.id = "bulkForm";
+  bulk.hidden = true;
+  bulk.innerHTML = `
+    <label class="field"><span>Unidad</span><select id="bulkTopic"></select></label>
+    <label class="field"><span>Nueva unidad (opcional)</span>
+      <input id="bulkNewTopic" placeholder="Las claves C2 — unidad 1"></label>
+    <label class="field"><span>Una palabra por línea</span>
+      <textarea id="bulkText" placeholder="acertar — dar con lo cierto&#10;el acierto = una decisión buena"></textarea>
+      <span class="help">Separa la palabra de su definición con un tabulador, o con — = : entre espacios.</span>
+    </label>
+    <button class="btn secondary" type="button" id="bulkPreview">Ver antes de guardar</button>
+    <div id="bulkOut"></div>`;
+
+  const msg = document.createElement("div");
+  msg.id = "addMsg";
+
+  pane.append(sub, msg, form, bulk);
+
+  bOne.onclick = () => { form.hidden = false; bulk.hidden = true; };
+  bMany.onclick = () => { form.hidden = true; bulk.hidden = false; };
+  form.onsubmit = submitOne;
+  $("bulkPreview").onclick = previewBulk;
+}
+
+function renderAdd() {
+  addShell();
+  unitOptions($("addTopic"), { includeAll: false });
+  unitOptions($("bulkTopic"), { includeAll: false });
+}
+
+function say(kind, text) {
+  const m = $("addMsg");
+  m.className = `msg ${kind}`;
+  m.textContent = text;
+}
+
+async function submitOne(ev) {
+  ev.preventDefault();
+  const btn = ev.target.querySelector("button[type=submit]");
+  btn.disabled = true;
+  say("ok", "Guardando…");
+  try {
+    const newTopic = $("addNewTopic").value.trim();
+    const file = $("addImage").files && $("addImage").files[0];
+    const entry = {
+      topic_id: newTopic ? slugify(newTopic) : $("addTopic").value,
+      term: $("addTerm").value.trim(),
+      definition: $("addDef").value.trim()
+    };
+    if (file) entry.image_key = await uploadImage(file);
+    await saveEntries([entry], newTopic || undefined);
+    say("ok", `Guardado: ${entry.term}`);
+    $("addTerm").value = ""; $("addDef").value = ""; $("addImage").value = "";
+    $("addNewTopic").value = "";
+    renderAdd();
+  } catch (err) {
+    if (err instanceof Unauthorised) { setTab("play"); return boot(); }
+    say("bad", err.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/** Mirrors slug() in netlify/lib/vocab-text.mjs, for the id of a new unit. */
+function slugify(s) {
+  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").normalize("NFC")
+    .toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "").slice(0, 64) || "untitled";
+}
+
+function previewBulk() {
+  const { rows, bad } = parseBulk($("bulkText").value);
+  const out = $("bulkOut");
+  out.textContent = "";
+
+  if (bad.length) {
+    const w = document.createElement("div");
+    w.className = "msg bad";
+    w.textContent = `${bad.length} línea(s) sin definición: ` +
+      bad.slice(0, 3).map(b => `${b.line}. ${b.text}`).join(" · ");
+    out.appendChild(w);
+  }
+  if (!rows.length) {
+    say("bad", "No se reconoció ninguna palabra.");
+    return;
+  }
+
+  const box = document.createElement("div");
+  box.className = "preview";
+  for (const r of rows.slice(0, 60)) {
+    const d = document.createElement("div");
+    d.className = "row";
+    const b = document.createElement("div");
+    b.className = "body";
+    const t = document.createElement("div");
+    t.className = "term"; t.textContent = r.term;
+    const df = document.createElement("div");
+    df.className = "def"; df.textContent = r.definition;
+    b.append(t, df);
+    d.appendChild(b);
+    box.appendChild(d);
+  }
+  out.appendChild(box);
+
+  const go = document.createElement("button");
+  go.className = "btn primary";
+  go.textContent = `Guardar ${rows.length}`;
+  go.onclick = async () => {
+    go.disabled = true;
+    say("ok", `Guardando ${rows.length}…`);
+    try {
+      const newTopic = $("bulkNewTopic").value.trim();
+      const topicId = newTopic ? slugify(newTopic) : $("bulkTopic").value;
+      const res = await saveEntries(
+        rows.map(r => ({ ...r, topic_id: topicId })), newTopic || undefined);
+      say("ok", `Añadidas ${res.inserted}, actualizadas ${res.updated}.`);
+      $("bulkText").value = "";
+      out.textContent = "";
+      renderAdd();
+    } catch (err) {
+      if (err instanceof Unauthorised) { setTab("play"); return boot(); }
+      say("bad", err.message);
+      go.disabled = false;
+    }
+  };
+  out.appendChild(go);
+}
+
+$("tabPlay").onclick = () => setTab("play");
+$("tabList").onclick = () => setTab("list");
+$("tabAdd").onclick  = () => setTab("add");
 
 boot();
 </script>

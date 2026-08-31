@@ -6,6 +6,7 @@
      node scripts/onenote-sync.mjs --notebook español --out .onenote-export
      node scripts/onenote-sync.mjs --all --out .onenote-export
      node scripts/onenote-sync.mjs --all --resume     # skip pages already saved
+     node scripts/onenote-sync.mjs --notebook español --section 2022_目標 --images
 
    There are two ways to authenticate. Either works; neither involves typing
    a password into this process.
@@ -61,6 +62,17 @@ const GRAPH = 'https://graph.microsoft.com/v1.0';
 const SCOPES = 'offline_access Notes.Read User.Read';
 const TOKEN_CACHE = '.onenote-token.json';
 const POLL_CEILING_MS = 15 * 60 * 1000;
+const MAX_THROTTLE_RETRIES = 7;
+/**
+ * How long to wait after a 429. Graph's Retry-After is often an optimistic
+ * 10 seconds while the actual cooldown runs to several minutes, so back off
+ * geometrically from whichever is larger and cap it.
+ */
+function throttleWait(res, attempt) {
+  const suggested = Number(res.headers.get('retry-after') || 0) * 1000;
+  return Math.min(300_000, Math.max(suggested, 15_000) * 2 ** attempt);
+}
+const IMAGE_PACE_MS = 120;
 
 /* ------------------------------------------------------------------ args */
 
@@ -90,6 +102,9 @@ const wantSections = values('section');
 const listOnly = flag('list');
 const syncAll = flag('all');
 const resume = flag('resume');
+// Page HTML only references its pictures; fetching them is a second request
+// each, so it is opt-in.
+const withImages = flag('images');
 
 const clientId = process.env.ONENOTE_CLIENT_ID;
 const tenant = process.env.ONENOTE_TENANT || 'consumers';
@@ -225,11 +240,18 @@ async function graph(url, asText = false, attempt = 0) {
   const full = url.startsWith('http') ? url : GRAPH + url;
   const res = await fetch(full, { headers: { Authorization: `Bearer ${token}` } });
   if (res.status === 429) {
-    // Graph throttles hard on bulk page reads; honour its own backoff.
-    const wait = Number(res.headers.get('retry-after') || 10) * 1000;
-    console.log(`   throttled, waiting ${wait / 1000}s…`);
+    // Graph throttles hard on bulk reads; honour its own backoff, but give
+    // up eventually. Retrying forever looks identical to a hung script, and
+    // a throttle this persistent is telling us to come back later.
+    if (attempt >= MAX_THROTTLE_RETRIES) {
+      console.error(`\nGraph is still throttling after ${MAX_THROTTLE_RETRIES} attempts.`);
+      console.error('Leave it 15-30 minutes and re-run with --resume; nothing already on disk is refetched.');
+      process.exit(1);
+    }
+    const wait = throttleWait(res, attempt);
+    console.log(`   throttled, waiting ${Math.round(wait / 1000)}s… (${attempt + 1}/${MAX_THROTTLE_RETRIES})`);
     await new Promise((r) => setTimeout(r, wait));
-    return graph(url, asText, attempt);
+    return graph(url, asText, attempt + 1);
   }
   // 502/503/504 from Graph are transient — big OneNote pages routinely time
   // out on the first ask and come back fine a few seconds later.
@@ -250,6 +272,32 @@ async function graph(url, asText = false, attempt = 0) {
   }
   if (!res.ok) throw new Error(`${res.status} ${res.statusText} for ${full}`);
   return asText ? res.text() : res.json();
+}
+
+/**
+ * An image resource, with the same bounded backoff as the rest. Returns null
+ * when it cannot be had, so one unreachable picture does not stop the run.
+ */
+async function fetchImage(src, attempt = 0) {
+  const res = await fetch(src, { headers: { Authorization: `Bearer ${token}` } });
+
+  if (res.status === 429) {
+    // Unlike the page listing, a throttled picture is not worth waiting out:
+    // it is optional, `--resume` will collect it next time, and stalling the
+    // whole run for one image then aborting loses the pages that did work.
+    // One short retry, then defer.
+    if (attempt < 1) {
+      const wait = Math.min(30_000, Math.max(Number(res.headers.get('retry-after') || 0) * 1000, 10_000));
+      await new Promise((r) => setTimeout(r, wait));
+      return fetchImage(src, attempt + 1);
+    }
+    throttledInARow++;
+    return null;
+  }
+
+  throttledInARow = 0;
+  if (!res.ok) return null;
+  return res.arrayBuffer();
 }
 
 /** Follow @odata.nextLink until the collection is exhausted. */
@@ -340,6 +388,14 @@ const sectionWanted = (name) => {
 
 const manifest = [];
 let skippedExisting = 0;
+let imagesSaved = 0;
+let imageFailures = 0;
+let imagesDeferred = 0;
+let throttledInARow = 0;
+// Once Graph is throttling steadily there is no point asking for the rest;
+// the run finishes with what it has and `--resume` collects them later.
+const GIVE_UP_IMAGES_AFTER = 3;
+let stopFetchingImages = false;
 
 let matchedSections = 0;
 
@@ -388,6 +444,48 @@ for (const nb of targets) {
         skippedExisting++;
       }
 
+      // Pull the pictures down too, keyed by the resource id in their URL so
+      // the parser can match a row to the file on disk. Graph serves these
+      // only to an authenticated caller, which is why they cannot simply be
+      // hot-linked from the page later.
+      if (withImages) {
+        const dir = path.join(outDir, 'images');
+        await mkdir(dir, { recursive: true });
+        for (const m of html.matchAll(/<img\b[^>]*?\ssrc="([^"]+)"[^>]*>/gi)) {
+          const src = m[1].replace(/&amp;/g, '&');
+          const id = /resources\/([^/]+)\//.exec(src);
+          if (!id) continue;
+          const safe = id[1].replace(/[^A-Za-z0-9!._-]/g, '_').slice(0, 120);
+          const typeAttr = /data-src-type="image\/(\w+)"/.exec(m[0]);
+          const dest = path.join(dir, `${safe}.${(typeAttr?.[1] || 'jpg').replace('jpeg', 'jpg')}`);
+          if (resume) {
+            try { await readFile(dest); continue; } catch { /* not fetched yet */ }
+          }
+          if (stopFetchingImages) { imagesDeferred++; continue; }
+          try {
+            // A section can reference over a thousand pictures. Asking for
+            // them flat out is what earns the throttling in the first place,
+            // so go at a deliberate pace.
+            await new Promise((r) => setTimeout(r, IMAGE_PACE_MS));
+            const bytes = await fetchImage(src);
+            if (!bytes) {
+              if (throttledInARow >= GIVE_UP_IMAGES_AFTER) {
+                stopFetchingImages = true;
+                console.log('   still throttled — leaving the rest of the images for a later --resume');
+                imagesDeferred++;
+              } else {
+                imageFailures++;
+              }
+              continue;
+            }
+            await writeFile(dest, Buffer.from(bytes));
+            imagesSaved++;
+          } catch {
+            imageFailures++;
+          }
+        }
+      }
+
       // Counting images here means the parser can flag photo-only pages
       // without re-reading every file.
       const images = (html.match(/<img\b/gi) || []).length;
@@ -417,6 +515,15 @@ if (!matchedSections) {
 
 await mkdir(outDir, { recursive: true });
 await writeFile(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 2), 'utf8');
+
+if (withImages) {
+  console.log(`${imagesSaved} image(s) saved to ${outDir}/images/` +
+    (imageFailures ? `, ${imageFailures} could not be fetched` : '') +
+    (imagesDeferred ? `, ${imagesDeferred} left for later` : ''));
+  if (imagesDeferred) {
+    console.log('Re-run the same command once the throttle clears to collect the rest.');
+  }
+}
 
 const photoOnly = manifest.filter((p) => p.images > 0 && p.textLength < 120);
 console.log(`\n${manifest.length} pages in ${outDir}/` + (skippedExisting ? ` (${skippedExisting} already present, left alone)` : ''));

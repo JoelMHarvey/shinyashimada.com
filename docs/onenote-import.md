@@ -123,6 +123,22 @@ vocabulary table makes mistakes that a learner will not spot once they are
 being quizzed on them. Treat OCR output as a draft for Shin to proofread, never
 as import-ready data.
 
+### Bringing the pictures over
+
+The page HTML only *references* its images; fetching each one is a second
+Graph request, so it is opt-in:
+
+```bash
+node scripts/onenote-sync.mjs --notebook español --section 2022_目標 --images
+```
+
+They land in `.onenote-export/images/`, named by the resource id that appears
+in the page markup, which is how the parser matches a picture to the row it
+sat on. 218 of the 3,463 entries reference one.
+
+Uploading them is a separate step, after the words are already in Postgres —
+see **5. Attach the pictures** below.
+
 ## 2. Parse into normalised JSON
 
 ```bash
@@ -150,6 +166,31 @@ of duplicating them. Nothing is deleted unless you pass `--prune`, which
 removes entries the import no longer mentions — and only within the topics that
 import actually covers.
 
+## 5. Attach the pictures
+
+The blob store only exists inside Netlify, so images are uploaded *through*
+the deployed site rather than written directly:
+
+```bash
+SITE_PASSCODE=… node --env-file=.env scripts/import-images.mjs data/spanish-vocab.json
+```
+
+Add `--dry-run` to see what it would do, or `--base http://localhost:8899` to
+push into a local run instead of production. Re-running is safe: the key is a
+hash of the bytes, so the same picture never becomes two objects.
+
+## Adding vocabulary without OneNote
+
+Shin does not need any of the above to keep studying. `/vamos/` has an
+**Añadir** tab with a form for a single word and a paste box that accepts the
+rows he already writes — `término — definición`, an `=` or `:`, or a tab.
+Everything he adds is cleaned and masked by the same code that handled the
+import, so a card he types behaves like one that came out of the notebook.
+
+The **Lista** tab is the same vocabulary without the quiz: searchable,
+filterable by unit, and where a picture gets attached to a word that lacks
+one.
+
 ## Environment
 
 | Variable | Where | Purpose |
@@ -158,4 +199,6 @@ import actually covers.
 | `ONENOTE_CLIENT_ID` | your shell | Azure application ID (route B) |
 | `ONENOTE_TENANT` | your shell | Defaults to `consumers`; set to `common` or a tenant GUID for a work account |
 | `DATABASE_URL` | `.env` locally, Netlify env in production | Neon connection string |
-| `SITE_PASSCODE` | Netlify env | When set, `/api/vocab` requires it for anything but `?health=1` |
+| `SITE_PASSCODE` | Netlify env | Required for reads, and always required for writes and image uploads |
+| `VOCAB_API_BASE` | your shell | Where `import-images.mjs` uploads; defaults to the live site |
+| `VOCAB_IMAGE_DIR` | your shell | Local directory standing in for Netlify Blobs off-platform |

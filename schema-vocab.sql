@@ -46,6 +46,13 @@ CREATE TABLE IF NOT EXISTS vocab_entries (
   example_en     TEXT,
   note           TEXT,                        -- irregularity, usage warning
 
+  -- A picture for the card. `image_key` names an object in the blob store
+  -- (see netlify/functions/vocab-image.mjs); `image_alt` is the text OneNote
+  -- had already OCR'd out of an imported screenshot, kept because it is the
+  -- only description those images come with.
+  image_key      TEXT,
+  image_alt      TEXT,
+
   source         TEXT,                        -- OneNote notebook/section/page
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at     TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -73,6 +80,12 @@ CREATE INDEX IF NOT EXISTS vocab_entries_pos_idx
 
 ALTER TABLE vocab_entries ADD COLUMN IF NOT EXISTS definition TEXT;
 ALTER TABLE vocab_entries ADD COLUMN IF NOT EXISTS cloze BOOLEAN NOT NULL DEFAULT false;
+ALTER TABLE vocab_entries ADD COLUMN IF NOT EXISTS image_key TEXT;
+ALTER TABLE vocab_entries ADD COLUMN IF NOT EXISTS image_alt TEXT;
+
+-- Browsing the list searches term and definition together.
+CREATE INDEX IF NOT EXISTS vocab_entries_search_idx
+  ON vocab_entries USING gin (to_tsvector('spanish', coalesce(term,'') || ' ' || coalesce(definition,'')));
 
 -- Handy queries -------------------------------------------------------------
 
