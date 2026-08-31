@@ -103,6 +103,33 @@ await t('every issue gets the yellow placeholder', async () => {
   return n === 105 ? true : `${n} placeholders`;
 });
 
+// A placeholder that shows only the shared title and border is 105 copies of
+// the same picture, which is exactly how it looked before.
+await t('no two placeholders read the same', async () => {
+  const texts = await page.locator('.book__cover--issue').allTextContents();
+  const distinct = new Set(texts.map(t => t.replace(/\s+/g, ' ').trim())).size;
+  return distinct >= 100 ? true : `${distinct} distinct of ${texts.length}`;
+});
+
+await t('the year is set large, and only when it is a year', async () => {
+  const years = await page.locator('.issue__year').allTextContents();
+  const bad = years.filter(y => !/^(19|20)\d{2}$/.test(y.trim()));
+  return bad.length === 0 ? true : `not years: ${JSON.stringify(bad.slice(0, 4))}`;
+});
+
+// Three specials print no date on the spine. Taking the last word as the year
+// would set "publication" in 24px on each of them.
+await t('an undated special gets no invented year', async () => {
+  const n = await page.evaluate(() => document.querySelectorAll(
+    '.book__cover--issue:not(:has(.issue__year)) .issue__month').length);
+  return n >= 3 ? true : `${n} undated placeholders rendered`;
+});
+
+await t('the lead story appears where there is one', async () => {
+  const leads = await page.locator('.issue__lead').count();
+  return leads >= 95 ? true : `${leads} leads for 105 issues`;
+});
+
 await page.selectOption('#f-kind', 'book');
 await page.waitForTimeout(600);
 await t('filtering to books hides the issues', async () => {

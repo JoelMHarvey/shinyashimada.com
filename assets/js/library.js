@@ -354,8 +354,7 @@
       ? '<img class="book__cover" src="' + esc(cover) + '" alt="" loading="lazy" ' +
         'onerror="this.classList.add(\'is-broken\')">'
       : mag
-        ? '<div class="book__cover book__cover--issue"><span>' +
-          esc(b.subtitle || b.title || '?') + '</span></div>'
+        ? issueCover(b)
         : '<div class="book__cover book__cover--blank" style="--spine-hue:' + spineHue(b) + '">' +
           '<span>' + esc(b.title || '?') + '</span></div>';
 
@@ -492,6 +491,27 @@
   /* Four buttons rather than a select behind an edit form. Marking a book as
      being read is the thing you do most often on a shelf this size, and it was
      four steps and a round trip through the editor. */
+  /* Every issue shares a title and a yellow border, so a placeholder that
+     shows only those is 105 copies of the same picture. What tells one issue
+     from another is its date and what was on the cover, so the placeholder
+     leads with the year and carries the lead story underneath. */
+  function issueCover(b) {
+    /* Only an actual four-digit year gets the large type. Splitting on the last
+       word instead would set "publication" in 24px on every special that has no
+       date on its spine. */
+    var sub = String(b.subtitle || '');
+    var m = sub.match(/^(.*?)[\s,]*\b((?:19|20)\d{2})\s*$/);
+    var year = m ? m[2] : '';
+    var month = (m ? m[1] : sub).trim();
+    var lead = (b.subjects || [])[0] || '';
+
+    return '<div class="book__cover book__cover--issue">' +
+      (month ? '<span class="issue__month">' + esc(month) + '</span>' : '') +
+      (year ? '<span class="issue__year">' + esc(year) + '</span>' : '') +
+      (lead ? '<span class="issue__lead">' + esc(lead) + '</span>' : '') +
+    '</div>';
+  }
+
   function statusSwitcher(current) {
     return '<div class="status-set" role="group">' + STATUSES.map(function (st) {
       return '<button type="button" class="status-set__btn" data-set-status="' + st + '"' +
@@ -557,8 +577,11 @@
       '<div class="detail-grid">' +
         (cover
           ? '<img class="detail__cover" src="' + esc(cover) + '" alt="">'
-          : '<div class="detail__cover book__cover--blank" style="--spine-hue:' + spineHue(b) + '">' +
-            '<span>' + esc(b.title || '?') + '</span></div>') +
+          : isMagazine(b)
+            ? issueCover(b).replace('book__cover book__cover--issue',
+                                    'detail__cover book__cover--issue')
+            : '<div class="detail__cover book__cover--blank" style="--spine-hue:' + spineHue(b) + '">' +
+              '<span>' + esc(b.title || '?') + '</span></div>') +
         '<div>' +
           (b.subtitle ? '<p class="detail__subtitle">' + esc(b.subtitle) + '</p>' : '') +
           (authorLine(b)
