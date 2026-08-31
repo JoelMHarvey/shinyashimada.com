@@ -234,6 +234,37 @@
   .preview { max-height: 260px; overflow-y: auto; margin: 10px 0; }
   .subtabs { display: flex; gap: 8px; margin-bottom: 14px; }
 
+  /* ---- writing ---- */
+  .wcard {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 20px 18px; box-shadow: var(--shadow); margin-bottom: 14px;
+  }
+  .wprompt { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+             color: var(--ink-soft); margin-bottom: 8px; }
+  .wtext { font-size: 18px; line-height: 1.5; font-weight: 600; }
+  .wtext .blank { color: var(--gold); font-weight: 800; }
+  .wterm { font-size: 26px; font-weight: 800; letter-spacing: -.01em; }
+  .wdef { font-size: 14.5px; color: var(--ink-soft); line-height: 1.5; margin-top: 8px; }
+  .winput {
+    width: 100%; font-family: inherit; font-size: 17px; padding: 13px 14px; margin-top: 14px;
+    border: 1.5px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink);
+  }
+  .winput:focus { outline: 2px solid var(--red); outline-offset: 1px; }
+  textarea.winput { min-height: 96px; resize: vertical; line-height: 1.5; }
+  .wrow { display: flex; gap: 8px; margin-top: 12px; }
+  .wrow .btn { width: auto; flex: 1; padding: 14px 16px; font-size: 16px; justify-content: center; }
+  .wverdict { margin-top: 14px; font-size: 15px; line-height: 1.6; }
+  .wverdict .head { font-weight: 800; font-size: 17px; }
+  .wverdict.good .head { color: var(--green); }
+  .wverdict.bad  .head { color: var(--red); }
+  .wanswer { font-weight: 800; color: var(--green); }
+  .wnote { border-left: 3px solid var(--line); padding: 4px 0 4px 11px; margin-top: 10px; }
+  .wnote .issue { font-weight: 700; }
+  .wnote .why { color: var(--ink-soft); font-size: 14px; }
+  .wbetter { background: var(--green-soft); border-radius: 10px; padding: 11px 13px; margin-top: 12px; font-size: 15px; }
+  .wscore { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
+  .wthinking { color: var(--ink-soft); font-size: 14.5px; margin-top: 12px; }
+
   /* ---- game ---- */
   .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
   .quit { background: none; border: 0; color: var(--ink-soft); font-size: 15px; font-weight: 700; cursor: pointer; padding: 6px; font-family: inherit; }
@@ -311,16 +342,18 @@
   <div class="masthead">
     <a href="/" style="text-decoration:none;color:inherit"><div class="eyebrow">← shinyashimada.com · vocabulario</div></a>
     <h1><span class="hl">¡Vamos!</span> Español</h1>
-    <p class="sub" id="subLine">Shin's own DELE notebooks, turned into a fast tap game. Read the definition, pick the word. Beat the clock, keep the streak.</p>
+    <p class="sub" id="subLine">Shin's own DELE notebooks. Tap the answer, write it out, or compose a sentence and have it marked.</p>
   </div>
 
   <nav class="tabs" role="tablist">
     <button class="tab on" id="tabPlay"  role="tab" aria-selected="true">Jugar</button>
     <button class="tab"    id="tabList"  role="tab" aria-selected="false">Lista</button>
+    <button class="tab"    id="tabWrite" role="tab" aria-selected="false">Escribir</button>
     <button class="tab"    id="tabAdd"   role="tab" aria-selected="false">Añadir</button>
   </nav>
 
   <div id="paneList" class="pane" hidden></div>
+  <div id="paneWrite" class="pane" hidden></div>
   <div id="paneAdd"  class="pane" hidden></div>
 
   <div id="panePlay" class="pane">
@@ -979,14 +1012,16 @@ let listState = { q: "", topic: "", offset: 0, limit: 25, total: 0 };
 
 function setTab(which) {
   tab = which;
-  for (const [id, name] of [["tabPlay","play"], ["tabList","list"], ["tabAdd","add"]]) {
+  for (const [id, name] of [["tabPlay","play"], ["tabList","list"], ["tabWrite","write"], ["tabAdd","add"]]) {
     $(id).classList.toggle("on", name === which);
     $(id).setAttribute("aria-selected", String(name === which));
   }
   $("panePlay").hidden = which !== "play";
   $("paneList").hidden = which !== "list";
+  $("paneWrite").hidden = which !== "write";
   $("paneAdd").hidden  = which !== "add";
   if (which === "list") renderList();
+  if (which === "write") renderWrite();
   if (which === "add") renderAdd();
 }
 
@@ -1428,6 +1463,377 @@ function previewBulk() {
 $("tabPlay").onclick = () => setTab("play");
 $("tabList").onclick = () => setTab("list");
 $("tabAdd").onclick  = () => setTab("add");
+
+/* ================= ESCRIBIR ================= */
+
+const WRITE_MODES = [
+  { id: "cloze", label: "Rellenar", hint: "completa la frase" },
+  { id: "define", label: "Definir",  hint: "escribe la palabra" },
+  { id: "compose", label: "Redactar", hint: "escribe una frase" }
+];
+
+let writeMode = "cloze";
+let writeQueue = [];
+let writeCard = null;
+let writeStats = { asked: 0, right: 0 };
+
+/**
+ * Accents count, case does not.
+ *
+ * `erudicion` is wrong and `Erudición` is right — accents are examinable and
+ * 558 of these terms carry one, so forgiving them would drill the wrong
+ * spelling. Case and surrounding punctuation carry no such information, and
+ * the source capitalises inconsistently, so both are ignored.
+ */
+function normaliseAnswer(s) {
+  return String(s)
+    .normalize("NFC")
+    .toLowerCase()
+    .replace(/[¡!¿?.,;:"'()]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Same, but accents stripped — to tell a near miss from a wrong answer. */
+function withoutAccents(s) {
+  return normaliseAnswer(s).normalize("NFD").replace(/[̀-ͯ]/g, "");
+}
+
+function writeShell() {
+  const pane = $("paneWrite");
+  if (pane.dataset.built) return;
+  pane.dataset.built = "1";
+
+  const modes = document.createElement("div");
+  modes.className = "levels";
+  for (const m of WRITE_MODES) {
+    const b = document.createElement("button");
+    b.className = "lvl";
+    b.id = `wmode-${m.id}`;
+    b.appendChild(document.createTextNode(m.label));
+    const tag = document.createElement("span");
+    tag.className = "tag";
+    tag.textContent = m.hint;
+    b.appendChild(tag);
+    b.onclick = () => { writeMode = m.id; writeQueue = []; renderWrite(); };
+    modes.appendChild(b);
+  }
+
+  const score = document.createElement("div");
+  score.className = "wscore";
+  score.id = "wScore";
+
+  const holder = document.createElement("div");
+  holder.id = "wHolder";
+
+  pane.append(modes, score, holder);
+}
+
+function renderWrite() {
+  writeShell();
+  for (const m of WRITE_MODES) {
+    $(`wmode-${m.id}`).classList.toggle("on", m.id === writeMode);
+  }
+  $("wScore").textContent = writeStats.asked
+    ? `${writeStats.right}/${writeStats.asked} correctas`
+    : "";
+  nextWriteCard();
+}
+
+async function nextWriteCard() {
+  const holder = $("wHolder");
+
+  if (!selected.size) {
+    holder.textContent = "";
+    const n = document.createElement("div");
+    n.className = "notice";
+    const h = document.createElement("h2");
+    h.textContent = "Elige un tema";
+    const p = document.createElement("p");
+    p.textContent = "Escoge una unidad en la pestaña Jugar y vuelve aquí.";
+    n.append(h, p);
+    holder.appendChild(n);
+    return;
+  }
+
+  if (!writeQueue.length) {
+    holder.textContent = "";
+    const loading = document.createElement("div");
+    loading.className = "skeleton";
+    loading.textContent = "Cargando…";
+    holder.appendChild(loading);
+    try {
+      const deck = await fetchDeck([...selected]);
+      // Rellenar only works on cards whose sentence has a gap in it.
+      const pool = writeMode === "cloze" ? deck.filter(q => q.cloze) : deck;
+      writeQueue = shuffle(pool);
+    } catch (err) {
+      if (err instanceof Unauthorised) { setTab("play"); return boot(); }
+      holder.textContent = `No se pudo cargar (${err.message}).`;
+      return;
+    }
+  }
+
+  writeCard = writeQueue.pop() || null;
+  if (!writeCard) {
+    holder.textContent = "";
+    const n = document.createElement("div");
+    n.className = "notice";
+    const p = document.createElement("p");
+    p.textContent = writeMode === "cloze"
+      ? "Esta unidad no tiene frases para rellenar. Prueba con Definir."
+      : "No hay tarjetas en esta unidad.";
+    n.appendChild(p);
+    holder.appendChild(n);
+    return;
+  }
+
+  writeMode === "compose" ? drawCompose() : drawTyping();
+}
+
+/* ------------------------------------------------------------ typing */
+
+function drawTyping() {
+  const holder = $("wHolder");
+  holder.textContent = "";
+
+  const card = document.createElement("div");
+  card.className = "wcard";
+
+  const label = document.createElement("div");
+  label.className = "wprompt";
+  label.textContent = writeMode === "cloze" ? "Completa la frase" : "¿Qué palabra es?";
+
+  const body = document.createElement("div");
+  body.className = "wtext";
+  body.appendChild(withBlanks(writeCard.q));
+
+  const input = document.createElement("input");
+  input.className = "winput";
+  input.id = "wInput";
+  input.autocapitalize = "off";
+  input.autocomplete = "off";
+  input.spellcheck = false;
+  input.placeholder = "escribe aquí…";
+
+  card.append(label, body, input);
+
+  const row = document.createElement("div");
+  row.className = "wrow";
+  const check = document.createElement("button");
+  check.className = "btn primary";
+  check.textContent = "Comprobar";
+  const skip = document.createElement("button");
+  skip.className = "btn ghost";
+  skip.textContent = "Pasar";
+  skip.onclick = () => nextWriteCard();
+  row.append(check, skip);
+
+  const verdict = document.createElement("div");
+  verdict.id = "wVerdict";
+
+  holder.append(card, row, verdict);
+
+  const submit = () => checkTyped(input.value, check, skip);
+  check.onclick = submit;
+  input.onkeydown = (ev) => { if (ev.key === "Enter") submit(); };
+  input.focus();
+}
+
+function checkTyped(value, check, skip) {
+  if (!value.trim() || !writeCard) return;
+
+  const expected = writeCard.a;
+  const exact = normaliseAnswer(value) === normaliseAnswer(expected);
+  const accentsOnly = !exact && withoutAccents(value) === withoutAccents(expected);
+
+  writeStats.asked++;
+  if (exact) writeStats.right++;
+  $("wScore").textContent = `${writeStats.right}/${writeStats.asked} correctas`;
+
+  // Track it the same way the quiz does, so Repaso still knows his weak units.
+  const cat = store.cats[writeCard.cat] || (store.cats[writeCard.cat] = { n: 0, ok: 0 });
+  cat.n++;
+  if (exact) cat.ok++;
+  store.answered++;
+  if (exact) store.correct++;
+  save();
+
+  const v = $("wVerdict");
+  v.textContent = "";
+  v.className = "wverdict " + (exact ? "good" : "bad");
+
+  const head = document.createElement("div");
+  head.className = "head";
+  head.textContent = exact
+    ? PRAISE[Math.floor(Math.random() * PRAISE.length)]
+    : accentsOnly ? "Casi — te faltan las tildes" : OOPS[Math.floor(Math.random() * OOPS.length)];
+  v.appendChild(head);
+
+  if (!exact) {
+    const line = document.createElement("div");
+    line.appendChild(document.createTextNode("La respuesta es "));
+    const a = document.createElement("span");
+    a.className = "wanswer";
+    a.textContent = expected;
+    line.appendChild(a);
+    v.appendChild(line);
+  }
+
+  check.disabled = true;
+  skip.textContent = "Siguiente →";
+  $("wInput").disabled = true;
+  skip.focus();
+}
+
+/* ----------------------------------------------------------- compose */
+
+function drawCompose() {
+  const holder = $("wHolder");
+  holder.textContent = "";
+
+  const card = document.createElement("div");
+  card.className = "wcard";
+
+  const label = document.createElement("div");
+  label.className = "wprompt";
+  label.textContent = "Escribe una frase con esta palabra";
+
+  const term = document.createElement("div");
+  term.className = "wterm";
+  term.textContent = writeCard.a;
+
+  const def = document.createElement("div");
+  def.className = "wdef";
+  def.appendChild(withBlanks(writeCard.q));
+
+  const input = document.createElement("textarea");
+  input.className = "winput";
+  input.id = "wInput";
+  input.placeholder = "Escribe una frase…";
+  input.maxLength = 600;
+
+  card.append(label, term, def, input);
+
+  const row = document.createElement("div");
+  row.className = "wrow";
+  const send = document.createElement("button");
+  send.className = "btn primary";
+  send.textContent = "Corregir";
+  const skip = document.createElement("button");
+  skip.className = "btn ghost";
+  skip.textContent = "Pasar";
+  skip.onclick = () => nextWriteCard();
+  row.append(send, skip);
+
+  const verdict = document.createElement("div");
+  verdict.id = "wVerdict";
+
+  holder.append(card, row, verdict);
+  send.onclick = () => reviewSentence(input.value, send, skip);
+  input.focus();
+}
+
+async function reviewSentence(sentence, send, skip) {
+  if (!sentence.trim() || !writeCard) return;
+  send.disabled = true;
+  const was = send.textContent;
+  send.textContent = "Corrigiendo…";
+
+  const v = $("wVerdict");
+  v.className = "wthinking";
+  v.textContent = "Claude está leyendo tu frase…";
+
+  let review;
+  try {
+    const res = await fetch("/api/vocab-review", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ...fetchOpts().headers },
+      body: JSON.stringify({ term: writeCard.a, definition: writeCard.q, sentence })
+    });
+    review = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(reviewError(res.status, review));
+  } catch (err) {
+    v.className = "wverdict bad";
+    v.textContent = err.message;
+    send.disabled = false;
+    send.textContent = was;
+    return;
+  }
+
+  drawReview(review);
+  send.textContent = was;
+  skip.textContent = "Siguiente →";
+  skip.focus();
+}
+
+function reviewError(status, body = {}) {
+  const code = body.error;
+  if (status === 401) return "Hace falta el código del sitio.";
+  if (code === "no_api_key") return "Falta ANTHROPIC_API_KEY en Netlify — la corrección no está disponible.";
+  if (code === "bad_api_key") return "La clave de Anthropic no es válida.";
+  if (status === 429) {
+    // A ceiling reached is not a failure; say which one and that it resets.
+    return body.window === "daily"
+      ? `Has llegado al límite de ${body.limit} correcciones hoy. Vuelve mañana — las otras dos prácticas siguen funcionando.`
+      : `Has llegado al límite de ${body.limit} correcciones esta hora. Espera un poco.`;
+  }
+  if (code === "rate_limit_unavailable") return "No se pudo comprobar el límite de uso. Inténtalo otra vez.";
+  if (code === "too_long") return "La frase es demasiado larga.";
+  return `No se pudo corregir (${code || status}).`;
+}
+
+function drawReview(r) {
+  const v = $("wVerdict");
+  v.textContent = "";
+  const good = r.correct && r.usedWell;
+  v.className = "wverdict " + (good ? "good" : "bad");
+
+  writeStats.asked++;
+  if (good) writeStats.right++;
+  $("wScore").textContent = `${writeStats.right}/${writeStats.asked} correctas`;
+
+  const head = document.createElement("div");
+  head.className = "head";
+  head.textContent = good
+    ? "¡Bien escrito!"
+    : r.correct ? "Correcto, pero no se usa así" : "Hay errores";
+  v.appendChild(head);
+
+  if (r.corrected && normaliseAnswer(r.corrected) !== normaliseAnswer($("wInput").value)) {
+    const c = document.createElement("div");
+    c.className = "wbetter";
+    c.textContent = r.corrected;
+    v.appendChild(c);
+  }
+
+  for (const n of r.notes || []) {
+    const d = document.createElement("div");
+    d.className = "wnote";
+    const i = document.createElement("div");
+    i.className = "issue";
+    i.textContent = n.issue;
+    const w = document.createElement("div");
+    w.className = "why";
+    w.textContent = n.why;
+    d.append(i, w);
+    v.appendChild(d);
+  }
+
+  if (r.better) {
+    const b = document.createElement("div");
+    b.className = "wnote";
+    const i = document.createElement("div");
+    i.className = "issue";
+    i.textContent = "Más natural:";
+    const w = document.createElement("div");
+    w.textContent = r.better;
+    b.append(i, w);
+    v.appendChild(b);
+  }
+}
+
+$("tabWrite").onclick = () => setTab("write");
 
 boot();
 </script>
