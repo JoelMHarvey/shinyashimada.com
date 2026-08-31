@@ -5,3 +5,12 @@ node_modules/
 
 # Home relay secrets — camera credentials and a tunnel token.
 homelab/.env
+
+# OneNote import: OAuth refresh token and the raw notebook export.
+.onenote-token.json
+.onenote-export/
+
+# Shin's parsed vocabulary. The database is the source of truth, and the
+# content is transcribed from copyrighted DELE prep books, so it is not
+# published here. Regenerate with scripts/parse-vocab.mjs.
+data/spanish-vocab.json

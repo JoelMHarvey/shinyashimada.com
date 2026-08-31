@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>¡Vamos, Español! — Shinya Shimada</title>
+<meta name="description" content="Spanish vocabulary drills from Shin's own notebooks — beat the clock, keep the streak. Part of shinyashimada.com.">
+</head>
+<body>
+<style>
+  :root {
+    --paper: #FAF6EE;
+    --card: #FFFFFF;
+    --ink: #1F1B16;
+    --ink-soft: #6B6257;
+    --line: #E8E0D2;
+    --red: #C8102E;
+    --red-deep: #A50D26;
+    --pink: #D2447F;
+    --green: #2E9E5B;
+    --green-soft: #E3F4E9;
+    --red-soft: #FBE5E7;
+    --gold: #E4A11B;
+    --shadow: 0 2px 10px rgba(60, 40, 20, .08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #1D1813;
+      --card: #292219;
+      --ink: #F2EADC;
+      --ink-soft: #A89B88;
+      --line: #3B3226;
+      --red: #EE4256;
+      --red-deep: #DC2B41;
+      --pink: #F0569B;
+      --green: #45BE76;
+      --green-soft: #24382C;
+      --red-soft: #46262A;
+      --gold: #F0B84A;
+      --shadow: 0 2px 12px rgba(0, 0, 0, .35);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #FAF6EE; --card: #FFFFFF; --ink: #1F1B16; --ink-soft: #6B6257;
+    --line: #E8E0D2; --red: #C8102E; --red-deep: #A50D26; --pink: #D2447F;
+    --green: #2E9E5B; --green-soft: #E3F4E9; --red-soft: #FBE5E7; --gold: #E4A11B;
+    --shadow: 0 2px 10px rgba(60, 40, 20, .08);
+  }
+  :root[data-theme="dark"] {
+    --paper: #1D1813; --card: #292219; --ink: #F2EADC; --ink-soft: #A89B88;
+    --line: #3B3226; --red: #EE4256; --red-deep: #DC2B41; --pink: #F0569B;
+    --green: #45BE76; --green-soft: #24382C; --red-soft: #46262A; --gold: #F0B84A;
+    --shadow: 0 2px 12px rgba(0, 0, 0, .35);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+  .screen { display: none; max-width: 480px; margin: 0 auto; padding: 20px 18px 40px; }
+  .screen.active { display: block; }
+
+  /* ---- highlighter label device, shared with /forza/ ---- */
+  .hl {
+    display: inline-block;
+    background: var(--red);
+    color: #fff;
+    padding: 3px 12px 5px;
+    border-radius: 4px 14px 6px 12px / 12px 5px 13px 6px;
+    transform: rotate(-1.2deg);
+    font-weight: 800;
+    letter-spacing: .04em;
+  }
+  .hl.pink { background: var(--pink); transform: rotate(.8deg); }
+  .hl.green { background: var(--green); transform: rotate(-.6deg); }
+  .hl.gold { background: var(--gold); color: #241a06; transform: rotate(.5deg); }
+
+  /* ---- home ---- */
+  .masthead { text-align: left; margin: 14px 0 4px; }
+  .eyebrow {
+    font-size: 12px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 10px;
+  }
+  h1 { font-size: 40px; line-height: 1.1; margin: 0 0 10px; letter-spacing: -.01em; text-wrap: balance; }
+  .sub { color: var(--ink-soft); font-size: 15px; line-height: 1.5; margin: 0 0 18px; max-width: 40ch; }
+  .statrow { display: flex; gap: 10px; margin: 18px 0 22px; }
+  .stat {
+    flex: 1; background: var(--card); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow);
+  }
+  .stat .n { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-top: 2px; }
+
+  .levels { display: flex; gap: 8px; margin: 4px 0 14px; }
+  .lvl {
+    flex: 1; border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 12px; padding: 10px 0; font-size: 15px; font-weight: 800; cursor: pointer;
+    font-family: inherit; letter-spacing: .04em; transition: transform .08s ease;
+  }
+  .lvl:active { transform: scale(.96); }
+  .lvl.on { background: var(--green); border-color: var(--green); color: #fff; }
+  .lvl .tag { display: block; font-size: 10.5px; font-weight: 600; opacity: .8; letter-spacing: .02em; }
+  .sectionlabel { margin: 22px 0 12px; font-size: 15px; }
+  /* With sixteen units, "one unit only" has to be two taps, not fifteen. */
+  .pickrow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .picks { display: flex; align-items: baseline; gap: 6px; }
+  .pick {
+    border: 1.5px solid var(--line); background: var(--card); color: var(--ink-soft);
+    border-radius: 999px; padding: 4px 11px; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .pick:active { transform: scale(.95); }
+  .pickcount { font-size: 12px; font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    border: 1.5px solid var(--line); background: var(--card); color: var(--ink);
+    border-radius: 999px; padding: 8px 14px; font-size: 13.5px; font-weight: 600;
+    cursor: pointer; transition: transform .08s ease;
+    font-family: inherit;
+  }
+  .chip:active { transform: scale(.95); }
+  .chip.on { background: var(--red); border-color: var(--red); color: #fff; }
+  .chip.on.weak { background: var(--pink); border-color: var(--pink); }
+  .chip .pct { font-weight: 800; font-size: 11px; opacity: .75; margin-left: 4px; font-variant-numeric: tabular-nums; }
+  .chip .num { font-weight: 700; font-size: 11px; opacity: .6; margin-left: 5px; font-variant-numeric: tabular-nums; }
+
+  .modes { display: flex; flex-direction: column; gap: 12px; margin-top: 26px; }
+  .btn {
+    border: 0; border-radius: 14px; padding: 18px 20px; font-size: 18px; font-weight: 800;
+    cursor: pointer; width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: center;
+    transition: transform .08s ease; font-family: inherit; letter-spacing: .01em;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .45; cursor: default; transform: none; }
+  .btn .hint { font-size: 12.5px; font-weight: 600; opacity: .85; }
+  .btn.primary { background: var(--red); color: #fff; box-shadow: 0 4px 14px rgba(200, 16, 46, .32); }
+  .btn.secondary { background: var(--ink); color: var(--paper); }
+  .btn.pink { background: var(--pink); color: #fff; box-shadow: 0 4px 14px rgba(210, 68, 127, .3); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); font-weight: 700; font-size: 15px; padding: 14px 20px; }
+
+  /* ---- loading / empty ---- */
+  .notice {
+    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--gold);
+    border-radius: 12px; padding: 16px 18px; margin: 20px 0; font-size: 14.5px; line-height: 1.6;
+  }
+  .notice h2 { font-size: 16px; margin: 0 0 6px; }
+  .notice code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+    background: var(--paper); padding: 1px 5px; border-radius: 4px;
+  }
+  .skeleton { color: var(--ink-soft); font-size: 14.5px; padding: 18px 0; }
+  .lockform { display: flex; gap: 8px; margin-top: 12px; }
+  .lockform input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 16px;
+    padding: 12px 14px; border-radius: 12px; border: 1.5px solid var(--line);
+    background: var(--paper); color: var(--ink);
+  }
+  .lockform .btn { width: auto; padding: 12px 18px; font-size: 15px; }
+  .lockerr { color: var(--red); font-size: 13.5px; margin: 10px 0 0; font-weight: 700; }
+
+  /* ---- game ---- */
+  .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
+  .quit { background: none; border: 0; color: var(--ink-soft); font-size: 15px; font-weight: 700; cursor: pointer; padding: 6px; font-family: inherit; }
+  .score { font-weight: 800; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .streak { font-weight: 800; font-size: 14px; color: var(--gold); min-width: 52px; text-align: right; }
+  .timerwrap { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 4px 0 20px; }
+  .timerbar { height: 100%; background: var(--green); border-radius: 99px; width: 100%; }
+  .timerbar.hurry { background: var(--red); }
+  .qmeta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .qcat { font-size: 12px; }
+  .qcount { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .qcard {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 26px 22px; box-shadow: var(--shadow); margin-bottom: 18px; min-height: 130px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .qprompt { font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
+  .qtext { font-size: 26px; line-height: 1.35; font-weight: 700; text-wrap: balance; }
+  .qnote { margin-top: 10px; font-size: 13.5px; color: var(--ink-soft); }
+  .qtrans { margin-top: 10px; font-size: 14.5px; color: var(--ink-soft); font-style: italic; }
+  .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .answers.stack { grid-template-columns: 1fr; }
+  .ans {
+    background: var(--card); border: 1.5px solid var(--line); border-radius: 13px;
+    padding: 16px 10px; font-size: 18px; font-weight: 700; cursor: pointer; color: var(--ink);
+    transition: transform .07s ease; font-family: inherit; line-height: 1.3;
+  }
+  .ans:active { transform: scale(.96); }
+  .ans.correct { background: var(--green); border-color: var(--green); color: #fff; }
+  .ans.wrong { background: var(--red); border-color: var(--red); color: #fff; animation: shake .35s; }
+  .ans.reveal { border-color: var(--green); color: var(--green); }
+  .ans:disabled { cursor: default; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(5px)} 75%{transform:translateX(-3px)} }
+  .verdict { text-align: center; margin-top: 16px; font-size: 20px; font-weight: 800; min-height: 30px; }
+  .verdict.good { color: var(--green); }
+  .verdict.bad { color: var(--red); }
+  .verdict .fix { display: block; font-size: 14px; font-weight: 600; color: var(--ink-soft); margin-top: 4px; }
+
+  /* ---- results ---- */
+  .bigscore { text-align: center; margin: 26px 0 6px; }
+  .bigscore .n { font-size: 64px; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; }
+  .bigscore .l { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-top: 6px; }
+  .newbest { text-align: center; margin: 10px 0 4px; }
+  .accuracy { text-align: center; color: var(--ink-soft); font-size: 15px; margin-bottom: 22px; }
+  .catbars { display: flex; flex-direction: column; gap: 10px; margin: 18px 0 8px; }
+  .catbar { display: grid; grid-template-columns: 130px 1fr 40px; align-items: center; gap: 10px; font-size: 13.5px; }
+  .catbar .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .catbar .track { height: 9px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .catbar .fill { height: 100%; border-radius: 99px; background: var(--green); }
+  .catbar .fill.mid { background: var(--gold); }
+  .catbar .fill.low { background: var(--red); }
+  .catbar .val { font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; color: var(--ink-soft); }
+  .misses { margin: 22px 0 8px; }
+  .miss {
+    background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--red);
+    border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; font-size: 14.5px; line-height: 1.5;
+  }
+  .miss .mq { font-weight: 600; }
+  .miss .ma { color: var(--green); font-weight: 800; }
+  .miss .mn { color: var(--ink-soft); font-size: 13px; display: block; margin-top: 3px; }
+  .allgood {
+    background: var(--green-soft); border-radius: 12px; padding: 16px; text-align: center;
+    font-weight: 700; color: var(--green); margin: 18px 0;
+  }
+  .resultbtns { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+  footer { text-align: center; color: var(--ink-soft); font-size: 12px; margin-top: 34px; }
+  @media (prefers-reduced-motion: reduce) {
+    .ans.wrong { animation: none; }
+    .btn, .ans, .chip { transition: none; }
+  }
+</style>
+
+<!-- ============ HOME ============ -->
+<div class="screen active" id="home">
+  <div class="masthead">
+    <a href="/" style="text-decoration:none;color:inherit"><div class="eyebrow">← shinyashimada.com · vocabulario</div></a>
+    <h1><span class="hl">¡Vamos!</span> Español</h1>
+    <p class="sub" id="subLine">Shin's own DELE notebooks, turned into a fast tap game. Read the definition, pick the word. Beat the clock, keep the streak.</p>
+  </div>
+
+  <div class="levels">
+    <button class="lvl" data-type="all" id="typeAll">Todo<span class="tag">ambos tipos</span></button>
+    <button class="lvl" data-type="cloze" id="typeCloze">Rellenar<span class="tag">completa la frase</span></button>
+    <button class="lvl" data-type="plain" id="typePlain">Definir<span class="tag">de la definición</span></button>
+  </div>
+
+  <div class="statrow">
+    <div class="stat"><div class="n" id="bestScore">0</div><div class="l">Best score</div></div>
+    <div class="stat"><div class="n" id="totalAnswered">0</div><div class="l">Answered</div></div>
+    <div class="stat"><div class="n" id="lifetimeAcc">–</div><div class="l">Accuracy</div></div>
+  </div>
+
+  <div id="loadingBox" class="skeleton">Cargando el vocabulario…</div>
+
+  <div id="emptyBox" hidden>
+    <div class="notice">
+      <h2>No vocabulary yet</h2>
+      <p>The database has no words in it. Import Shin's OneNote notebooks first — see <code>docs/onenote-import.md</code> — then reload this page.</p>
+    </div>
+  </div>
+
+  <div id="lockBox" hidden>
+    <div class="notice">
+      <h2>Se necesita el código</h2>
+      <p>Shin's vocabulary is not public. Enter the same passcode the balcony and
+      library pages use — this device will remember it.</p>
+      <form id="lockForm" class="lockform">
+        <input type="password" id="lockInput" autocomplete="current-password"
+               placeholder="Código" required aria-label="Passcode">
+        <button class="btn primary" type="submit">Entrar</button>
+      </form>
+      <p class="lockerr" id="lockErr" hidden>That passcode was not accepted.</p>
+    </div>
+  </div>
+
+  <div id="errorBox" hidden>
+    <div class="notice">
+      <h2>Could not reach the word list</h2>
+      <p id="errorText">The vocabulary API did not answer.</p>
+    </div>
+  </div>
+
+  <div id="playBox" hidden>
+    <div class="pickrow">
+      <div class="sectionlabel"><span class="hl pink">Temas</span></div>
+      <div class="picks">
+        <button class="pick" id="pickAll">Todos</button>
+        <button class="pick" id="pickNone">Ninguno</button>
+        <span class="pickcount" id="pickCount"></span>
+      </div>
+    </div>
+    <div class="chips" id="chips"></div>
+
+    <div class="modes">
+      <button class="btn primary" id="btnRound">Ronda de 10 <span class="hint">10 questions · 18s each</span></button>
+      <button class="btn secondary" id="btnSprint">Sprint 60″ <span class="hint">as many as you can</span></button>
+      <button class="btn pink" id="btnMarathon">Maratón 50 <span class="hint">50 questions · 18s each</span></button>
+      <button class="btn ghost" id="btnWeak">Repaso — drill my weakest topics</button>
+    </div>
+
+    <footer>Tap a topic to toggle it. Pink % = your accuracy so far.</footer>
+  </div>
+</div>
+
+<!-- ============ GAME ============ -->
+<div class="screen" id="game">
+  <div class="topbar">
+    <button class="quit" id="btnQuit">✕ Salir</button>
+    <div class="score" id="scoreView">0</div>
+    <div class="streak" id="streakView"></div>
+  </div>
+  <div class="timerwrap"><div class="timerbar" id="timerBar"></div></div>
+  <div class="qmeta">
+    <span class="qcat"><span class="hl" id="catLabel" style="font-size:12px">—</span></span>
+    <span class="qcount" id="qCount"></span>
+  </div>
+  <div class="qcard">
+    <div class="qprompt" id="qPrompt">¿Cómo se dice…?</div>
+    <div class="qtext" id="qText"></div>
+    <div class="qtrans" id="qTrans"></div>
+    <div class="qnote" id="qNote"></div>
+  </div>
+  <div class="answers" id="answers"></div>
+  <div class="verdict" id="verdict"></div>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<div class="screen" id="results">
+  <div class="bigscore">
+    <div class="n" id="finalScore">0</div>
+    <div class="l">Puntos</div>
+  </div>
+  <div class="newbest" id="newBest" hidden><span class="hl green">¡Nuevo récord! 🎉</span></div>
+  <div class="accuracy" id="finalAcc"></div>
+
+  <div class="sectionlabel"><span class="hl pink">Por tema</span></div>
+  <div class="catbars" id="catBars"></div>
+
+  <div class="misses" id="missWrap">
+    <div class="sectionlabel"><span class="hl">Para repasar</span></div>
+    <div id="missList"></div>
+  </div>
+  <div class="allgood" id="allGood" hidden>¡Todo correcto! 🇪🇸</div>
+
+  <div class="resultbtns">
+    <button class="btn primary" id="btnAgain">¡Otra vez! <span class="hint">same mode</span></button>
+    <button class="btn ghost" id="btnHome">← Menú</button>
+  </div>
+</div>
+
+<script>
+// ================= CONFIG =================
+// The deck lives in Postgres, not in this file: /api/vocab?deck=1 does the
+// distractor picking server-side, where the whole topic is visible at once.
+const API = "/api/vocab";
+const DECK_SIZE = 4000;
+const QUESTION_MS = 18000;
+const SPRINT_MS = 60000;
+
+const PRAISE = ["¡Muy bien!", "¡Perfecto!", "¡Genial!", "¡Estupendo!", "¡Excelente!", "¡Así se hace!", "¡Olé!"];
+const OOPS = ["¡Vaya!", "¡Casi!", "¡Uy…!", "¡Qué pena!", "¡Ánimo!"];
+
+// ================= STATE & STORAGE =================
+const LS = "vamosEspanol.v1";
+let store = { best: 0, answered: 0, correct: 0, cats: {}, cardType: "all" };
+try {
+  const saved = JSON.parse(localStorage.getItem(LS));
+  if (saved && typeof saved === "object") store = Object.assign(store, saved);
+} catch (e) {}
+// Pre-monolingual saves kept a best score per prompt language; there is only
+// one prompt language now, so take the better of the two.
+if (store.best && typeof store.best === "object") {
+  store.best = Math.max(store.best.en || 0, store.best.ja || 0);
+}
+if (typeof store.best !== "number") store.best = 0;
+if (!["all", "cloze", "plain"].includes(store.cardType)) store.cardType = "all";
+function save() { try { localStorage.setItem(LS, JSON.stringify(store)); } catch (e) {} }
+
+const $ = id => document.getElementById(id);
+
+let cardType = store.cardType;
+const lang = "es";
+let topics = [];                 // [{ id, label_en, label_ja, ... }]
+let deckCache = {};              // 'lang:unit,unit' -> [question]
+let selected = new Set();
+let mode = "round";
+let lastKeys = null;   // units of the round just played, so "otra vez" repeats it
+let game = null;
+let tickHandle = null;
+
+const topicById = id => topics.find(t => t.id === id) || null;
+
+function topicLabel(id) {
+  const t = topicById(id);
+  if (!t) return id;
+  return t.label_es || t.label_en || t.id;
+}
+
+// ================= LOADING =================
+// The same shared passcode the balcony and library pages use, under the same
+// localStorage key, so unlocking one unlocks the rest.
+const PASS_KEY = "ss.passcode";
+const passcode = () => { try { return localStorage.getItem(PASS_KEY) || ""; } catch (e) { return ""; } };
+
+// `no-cache` revalidates rather than skipping the cache: the CDN still
+// serves the response, but a player who opens the page just after Shin
+// imports new vocabulary does not get up to a minute of the old one.
+function fetchOpts() {
+  const headers = { Accept: "application/json" };
+  const code = passcode();
+  if (code) headers["X-Store-Passcode"] = code;
+  return { headers, cache: "no-cache" };
+}
+
+/** Thrown when the server wants a passcode we do not have or do not like. */
+class Unauthorised extends Error {}
+
+async function loadTopics() {
+  const res = await fetch(`${API}?counts=1`, fetchOpts());
+  if (res.status === 401) throw new Unauthorised("passcode required");
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  const data = await res.json();
+  topics = Array.isArray(data.topics) ? data.topics : [];
+  return topics;
+}
+
+function topicsWithQuestions() {
+  return topics.filter(t => (t.count || 0) > 0);
+}
+
+/**
+ * Questions for one set of units.
+ *
+ * The whole deck is three thousand cards — a quarter of a megabyte gzipped —
+ * and a round of ten needs one unit of it. So the menu is drawn from counts
+ * alone and the questions are fetched when a round actually starts, then
+ * kept so replaying the same units costs nothing.
+ */
+async function fetchDeck(keys) {
+  const wanted = keys.slice().sort();
+  const key = `${lang}:${wanted.join(",")}`;
+  if (deckCache[key]) return deckCache[key];
+
+  const size = Math.min(
+    DECK_SIZE,
+    wanted.reduce((n, id) => n + ((topics.find(t => t.id === id) || {}).count || 0), 0)
+  );
+  const url = `${API}?deck=1&lang=${encodeURIComponent(lang)}` +
+    `&topic=${encodeURIComponent(wanted.join(","))}&size=${size || 1}`;
+  const res = await fetch(url, fetchOpts());
+  if (res.status === 401) throw new Unauthorised("passcode required");
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  const data = await res.json();
+  deckCache[key] = Array.isArray(data.questions) ? data.questions : [];
+  return deckCache[key];
+}
+
+async function boot() {
+  $("loadingBox").hidden = false;
+  $("playBox").hidden = true;
+  $("emptyBox").hidden = true;
+  $("errorBox").hidden = true;
+  // Lifetime stats and the language toggle are worth showing even when the
+  // deck fails to load, so render them before anything can return early.
+  renderHome();
+  try {
+    await loadTopics();
+  } catch (err) {
+    $("loadingBox").hidden = true;
+    if (err instanceof Unauthorised) {
+      $("lockBox").hidden = false;
+      $("lockErr").hidden = !passcode();   // only "wrong" if one was tried
+      $("lockInput").focus();
+      return;
+    }
+    $("errorBox").hidden = false;
+    $("errorText").textContent = `The vocabulary API did not answer (${err.message}).`;
+    return;
+  }
+  $("lockBox").hidden = true;
+  $("loadingBox").hidden = true;
+  const available = topicsWithQuestions();
+  if (!available.length) {
+    $("emptyBox").hidden = false;
+    return;
+  }
+  // Default to every topic; a returning player's choice is not persisted
+  // because the topic list changes whenever Shin imports more vocabulary.
+  selected = new Set(available.map(t => t.id));
+  $("playBox").hidden = false;
+  renderHome();
+}
+
+// ================= HOME =================
+function catAccuracy(k) {
+  const c = store.cats[k];
+  if (!c || c.n < 3) return null;
+  return Math.round(100 * c.ok / c.n);
+}
+
+function renderHome() {
+  $("typeAll").classList.toggle("on", cardType === "all");
+  $("typeCloze").classList.toggle("on", cardType === "cloze");
+  $("typePlain").classList.toggle("on", cardType === "plain");
+  $("bestScore").textContent = store.best || 0;
+  $("totalAnswered").textContent = store.answered;
+  $("lifetimeAcc").textContent = store.answered ? Math.round(100 * store.correct / store.answered) + "%" : "–";
+
+  const wrap = $("chips");
+  wrap.textContent = "";
+  for (const t of topicsWithQuestions()) {
+    const acc = catAccuracy(t.id);
+    const b = document.createElement("button");
+    b.className = "chip" + (selected.has(t.id) ? " on" : "") + (acc !== null && acc < 70 ? " weak" : "");
+    b.appendChild(document.createTextNode(topicLabel(t.id)));
+
+    const num = document.createElement("span");
+    num.className = "num";
+    num.textContent = t.count;
+    b.appendChild(num);
+
+    if (acc !== null) {
+      const pct = document.createElement("span");
+      pct.className = "pct";
+      pct.textContent = acc + "%";
+      b.appendChild(pct);
+    }
+
+    b.onclick = () => {
+      // An empty selection is allowed: it is how "Ninguno, then this one"
+      // works. The start buttons stay disabled until something is chosen.
+      if (selected.has(t.id)) selected.delete(t.id);
+      else selected.add(t.id);
+      renderHome();
+    };
+    wrap.appendChild(b);
+  }
+
+  // How big the deck is for the current pick, so a one-unit round shows what
+  // it is about to draw from.
+  const all = topicsWithQuestions();
+  const words = all.filter(t => selected.has(t.id)).reduce((n, t) => n + t.count, 0);
+  $("pickCount").textContent = selected.size
+    ? `${selected.size}/${all.length} · ${words} palabras`
+    : "elige un tema";
+
+  const nothingPicked = selected.size === 0;
+  for (const id of ["btnRound", "btnSprint", "btnMarathon", "btnWeak"]) {
+    $(id).disabled = nothingPicked;
+  }
+}
+
+function setCardType(which) {
+  if (which === cardType) return;
+  cardType = which;
+  store.cardType = which;
+  save();
+  renderHome();
+}
+
+/** Cards of the chosen kind: fill-in-the-blank, plain definition, or both. */
+function ofType(questions) {
+  if (cardType === "cloze") return questions.filter(q => q.cloze);
+  if (cardType === "plain") return questions.filter(q => !q.cloze);
+  return questions;
+}
+
+// ================= GAME ENGINE =================
+function shuffle(a) {
+  const out = a.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+/** Disable the start buttons while a round's questions are being fetched. */
+function setBusy(busy) {
+  for (const id of ["btnRound", "btnSprint", "btnMarathon", "btnWeak"]) {
+    $(id).disabled = busy || selected.size === 0;
+  }
+  $("pickCount").textContent = busy ? "cargando…" : $("pickCount").textContent;
+  if (!busy) renderHome();
+}
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  $(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+async function startGame(m, keys) {
+  mode = m;
+  const useKeys = keys && keys.length ? keys : [...selected];
+  if (!useKeys.length) return;
+
+  lastKeys = useKeys;
+  let deck;
+  try {
+    setBusy(true);
+    deck = shuffle(ofType(await fetchDeck(useKeys)));
+  } catch (err) {
+    setBusy(false);
+    if (err instanceof Unauthorised) return boot();
+    $("errorBox").hidden = false;
+    $("errorText").textContent = `Could not load those units (${err.message}).`;
+    return;
+  }
+  setBusy(false);
+  if (!deck.length) return;
+  game = {
+    deck, i: 0, score: 0, streak: 0, best: 0,
+    hits: 0, tries: 0, misses: [], perCat: {},
+    limit: m === "sprint" ? Infinity : (m === "marathon" ? 50 : 10),
+    endAt: m === "sprint" ? Date.now() + SPRINT_MS : null,
+    locked: false, qStart: 0
+  };
+  show("game");
+  nextQ();
+  if (m === "sprint") runSprintTimer();
+}
+
+function runSprintTimer() {
+  clearInterval(tickHandle);
+  tickHandle = setInterval(() => {
+    if (!game || game.endAt === null) return clearInterval(tickHandle);
+    const left = game.endAt - Date.now();
+    const bar = $("timerBar");
+    bar.style.width = Math.max(0, 100 * left / SPRINT_MS) + "%";
+    bar.classList.toggle("hurry", left < 12000);
+    if (left <= 0) { clearInterval(tickHandle); finish(); }
+  }, 100);
+}
+
+function runQuestionTimer() {
+  clearInterval(tickHandle);
+  game.qStart = Date.now();
+  tickHandle = setInterval(() => {
+    if (!game || game.locked) return;
+    const left = QUESTION_MS - (Date.now() - game.qStart);
+    const bar = $("timerBar");
+    bar.style.width = Math.max(0, 100 * left / QUESTION_MS) + "%";
+    bar.classList.toggle("hurry", left < 5000);
+    if (left <= 0) { clearInterval(tickHandle); answer(null); }
+  }, 80);
+}
+
+function nextQ() {
+  if (!game) return;
+  if (game.i >= game.limit || game.i >= game.deck.length) return finish();
+  game.locked = false;
+
+  const item = game.deck[game.i];
+  $("catLabel").textContent = topicLabel(item.cat);
+  $("qPrompt").textContent = "¿Cómo se dice…?";
+  $("qText").textContent = item.q;
+  $("qTrans").textContent = "";
+  $("qNote").textContent = "";
+  $("verdict").textContent = "";
+  $("verdict").className = "verdict";
+  $("qCount").textContent = mode !== "sprint" ? `${game.i + 1} / ${game.limit}` : `#${game.i + 1}`;
+
+  const opts = shuffle([item.a, ...item.wrong]);
+  const wrap = $("answers");
+  wrap.textContent = "";
+  wrap.className = "answers" + (opts.some(o => o.length > 14) ? " stack" : "");
+  for (const o of opts) {
+    const b = document.createElement("button");
+    b.className = "ans";
+    b.textContent = o;
+    b.onclick = () => answer(o, b);
+    wrap.appendChild(b);
+  }
+
+  updateHud();
+  if (mode !== "sprint") runQuestionTimer();
+}
+
+function updateHud() {
+  $("scoreView").textContent = game.score;
+  $("streakView").textContent = game.streak >= 3 ? `🔥 ${game.streak}` : "";
+}
+
+function answer(choice, btn) {
+  if (!game || game.locked) return;
+  game.locked = true;
+  if (mode !== "sprint") clearInterval(tickHandle);
+
+  const item = game.deck[game.i];
+  const right = choice === item.a;
+
+  game.tries++;
+  store.answered++;
+  const cat = game.perCat[item.cat] || (game.perCat[item.cat] = { n: 0, ok: 0 });
+  cat.n++;
+  const lifetime = store.cats[item.cat] || (store.cats[item.cat] = { n: 0, ok: 0 });
+  lifetime.n++;
+
+  if (right) {
+    game.hits++;
+    cat.ok++;
+    lifetime.ok++;
+    store.correct++;
+    game.streak++;
+    game.best = Math.max(game.best, game.streak);
+    game.score += 10 + Math.min(game.streak, 10);
+  } else {
+    game.streak = 0;
+    game.misses.push({ q: item.q, a: item.a, note: item.note, cat: item.cat });
+  }
+
+  for (const b of document.querySelectorAll(".ans")) {
+    b.disabled = true;
+    if (b.textContent === item.a) b.classList.add(right ? "correct" : "reveal");
+  }
+  if (!right && btn) btn.classList.add("wrong");
+
+  const v = $("verdict");
+  v.textContent = "";
+  if (right) {
+    v.className = "verdict good";
+    v.textContent = PRAISE[Math.floor(Math.random() * PRAISE.length)];
+  } else {
+    v.className = "verdict bad";
+    v.appendChild(document.createTextNode(
+      choice === null ? "¡Se acabó el tiempo! ⏰" : OOPS[Math.floor(Math.random() * OOPS.length)]
+    ));
+    const fix = document.createElement("span");
+    fix.className = "fix";
+    fix.textContent = item.note ? `${item.a} — ${item.note}` : item.a;
+    v.appendChild(fix);
+  }
+
+  save();
+  game.i++;
+  setTimeout(() => {
+    if (game) { nextQ(); if (mode === "sprint") runSprintTimer(); }
+  }, right ? 850 : 2100);
+}
+
+// ================= RESULTS =================
+function finish() {
+  clearInterval(tickHandle);
+  if (!game) return;
+  const g = game;
+  game = null;
+
+  $("finalScore").textContent = g.score;
+  const isBest = g.score > (store.best || 0);
+  if (isBest) { store.best = g.score; save(); }
+  $("newBest").hidden = !isBest;
+  $("finalAcc").textContent = g.tries
+    ? `${g.hits} / ${g.tries} correctas · ${Math.round(100 * g.hits / g.tries)}% · racha ${g.best}`
+    : "Sin respuestas.";
+
+  const bars = $("catBars");
+  bars.textContent = "";
+  for (const [key, c] of Object.entries(g.perCat)) {
+    const pct = Math.round(100 * c.ok / c.n);
+    const row = document.createElement("div");
+    row.className = "catbar";
+
+    const name = document.createElement("div");
+    name.className = "name";
+    name.textContent = topicLabel(key);
+
+    const track = document.createElement("div");
+    track.className = "track";
+    const fill = document.createElement("div");
+    fill.className = "fill" + (pct < 50 ? " low" : pct < 80 ? " mid" : "");
+    fill.style.width = pct + "%";
+    track.appendChild(fill);
+
+    const val = document.createElement("div");
+    val.className = "val";
+    val.textContent = pct + "%";
+
+    row.append(name, track, val);
+    bars.appendChild(row);
+  }
+
+  const list = $("missList");
+  list.textContent = "";
+  $("missWrap").hidden = g.misses.length === 0;
+  $("allGood").hidden = g.misses.length > 0;
+  for (const m of g.misses) {
+    const d = document.createElement("div");
+    d.className = "miss";
+
+    const q = document.createElement("span");
+    q.className = "mq";
+    q.textContent = m.q + " → ";
+    const a = document.createElement("span");
+    a.className = "ma";
+    a.textContent = m.a;
+    d.append(q, a);
+
+    if (m.note) {
+      const n = document.createElement("span");
+      n.className = "mn";
+      n.textContent = m.note;
+      d.appendChild(n);
+    }
+    list.appendChild(d);
+  }
+
+  show("results");
+  renderHome();
+}
+
+// ================= WIRING =================
+$("lockForm").onsubmit = (ev) => {
+  ev.preventDefault();
+  const code = $("lockInput").value.trim();
+  if (!code) return;
+  try { localStorage.setItem(PASS_KEY, code); } catch (e) {}
+  $("lockInput").value = "";
+  $("lockErr").hidden = true;
+  boot();
+};
+
+$("pickAll").onclick = () => {
+  selected = new Set(topicsWithQuestions().map(t => t.id));
+  renderHome();
+};
+$("pickNone").onclick = () => { selected.clear(); renderHome(); };
+$("typeAll").onclick = () => setCardType("all");
+$("typeCloze").onclick = () => setCardType("cloze");
+$("typePlain").onclick = () => setCardType("plain");
+$("btnRound").onclick = () => startGame("round");
+$("btnSprint").onclick = () => startGame("sprint");
+$("btnMarathon").onclick = () => startGame("marathon");
+$("btnWeak").onclick = () => {
+  // Weakest first, but only topics with enough history to judge.
+  const ranked = topicsWithQuestions()
+    .map(t => ({ id: t.id, acc: catAccuracy(t.id) }))
+    .filter(t => t.acc !== null)
+    .sort((a, b) => a.acc - b.acc)
+    .slice(0, 3)
+    .map(t => t.id);
+  startGame("round", ranked.length ? ranked : [...selected]);
+};
+$("btnQuit").onclick = () => { clearInterval(tickHandle); game = null; show("home"); renderHome(); };
+$("btnAgain").onclick = () => startGame(mode, lastKeys);
+$("btnHome").onclick = () => { show("home"); renderHome(); };
+
+boot();
+</script>
+</body>
+</html>
