@@ -16,6 +16,7 @@
     { key: 'nav.croissants', href: '/croissants/', id: 'croissants' },
     { key: 'nav.italian',    href: '/italian/',    id: 'italian' },
     { key: 'nav.forza',      href: '/forza/',      id: 'forza' },
+    { key: 'nav.vamos',      href: '/vamos/',      id: 'vamos' },
     { key: 'nav.research',   href: '/research/',   id: 'research' }
   ];
 

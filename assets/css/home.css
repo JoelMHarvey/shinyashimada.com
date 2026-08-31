@@ -84,6 +84,9 @@ html[data-theme="dark"] .card-library { --accent: #9db3d0; }
 .card-forza      { --accent: #b5404e;           --accent-wash: color-mix(in srgb, #b5404e 12%, transparent); }
 html[data-theme="dark"] .card-forza { --accent: #e8737f; }
 
+.card-vamos      { --accent: #c8102e;           --accent-wash: color-mix(in srgb, #c8102e 12%, transparent); }
+html[data-theme="dark"] .card-vamos { --accent: #ee4256; }
+
 .home-note {
   margin-top: 3.5rem; padding: 1.6rem 1.8rem;
   border-left: 3px solid var(--terracotta);

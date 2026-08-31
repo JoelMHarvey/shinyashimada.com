@@ -169,6 +169,7 @@
     'nav.croissants':  { en: 'Croissants',      ja: 'クロワッサン',     es: 'Croissants' },
     'nav.italian':     { en: 'Italian',         ja: 'イタリア語',       es: 'Italiano' },
     'nav.forza':       { en: 'Forza!',          ja: 'フォルツァ！',     es: '¡Forza!' },
+    'nav.vamos':       { en: '¡Vamos!',         ja: 'スペイン語',       es: '¡Vamos!' },
     'nav.research':    { en: 'Research',        ja: 'リサーチ',         es: 'Investigación' },
     'nav.menu':        { en: 'Menu',            ja: 'メニュー',         es: 'Menú' },
     'nav.skip':        { en: 'Skip to content', ja: '本文へスキップ',   es: 'Saltar al contenido' },
