@@ -148,6 +148,17 @@
     'lib.importFail':  { en: 'Could not read the inventory file.', ja: '蔵書リストを読み込めませんでした。', es: 'No se pudo leer el archivo del inventario.' },
 
     /* --- checking --- */
+    'lib.kind.label':   { en: 'Kind', ja: '種類', es: 'Tipo' },
+    'lib.kind.all':     { en: 'Everything', ja: 'すべて', es: 'Todo' },
+    'lib.kind.book':    { en: 'Books', ja: '本', es: 'Libros' },
+    'lib.kind.magazine':{ en: 'Magazines', ja: '雑誌', es: 'Revistas' },
+    'lib.stat.magazines': { en: 'Magazines', ja: '雑誌', es: 'Revistas' },
+    'lib.import.mags':  { en: 'Add the magazines', ja: '雑誌を追加', es: 'Añadir las revistas' },
+    'lib.import.magsHint': {
+      en: 'The National Geographic run, read off a photograph of the shelf.',
+      ja: '棚の写真から読み取ったナショナル ジオグラフィックの蔵書です。',
+      es: 'La colección de National Geographic, leída de una foto del estante.'
+    },
     'lib.desc.filter':  { en: 'No description', ja: '内容なし', es: 'Sin descripción' },
     'lib.desc.hint': {
       en: 'Books with no description yet. Fill gaps writes one where a catalogue has it; the rest are yours to add.',
@@ -192,7 +203,7 @@
 
   var store = Store.open('books');
 
-  var filters = { q: '', owner: 'all', status: 'all', shelf: 'all', sort: 'added',
+  var filters = { q: '', kind: 'all', owner: 'all', status: 'all', shelf: 'all', sort: 'added',
                   check: false, nodesc: false };
   var editingId = null;
   var detailId = null;
@@ -227,7 +238,15 @@
      size that gap is most of the work. Filterable, so it can be worked
      through rather than discovered one book at a time. */
   function needsDescription(b) {
-    return isBlank(b.description);
+    return !isMagazine(b) && isBlank(b.description);
+  }
+
+  /* A magazine issue is a different sort of thing from a book: it has a date
+     rather than an author, no ISBN, and no catalogue to look it up in. It
+     lives on the same shelf so that one search covers both, but it sits out of
+     everything that only makes sense for books. */
+  function isMagazine(b) {
+    return b.kind === 'magazine';
   }
 
   function statusOf(b) {
@@ -243,6 +262,7 @@
   /* ====================================================================== */
 
   function matches(b) {
+    if (filters.kind !== 'all' && (isMagazine(b) ? 'magazine' : 'book') !== filters.kind) return false;
     if (filters.owner !== 'all' && ownerOf(b) !== filters.owner) return false;
     if (filters.status !== 'all' && statusOf(b) !== filters.status) return false;
     if (filters.shelf !== 'all' && (b.location || '') !== filters.shelf) return false;
@@ -250,7 +270,7 @@
     if (filters.nodesc && !needsDescription(b)) return false;
     if (!filters.q) return true;
     var hay = [
-      b.title, b.subtitle, authorLine(b), b.publisher, b.notes,
+      b.title, b.subtitle, authorLine(b), b.publisher, b.notes, b.description,
       (b.subjects || []).join(' '), b.isbn13, b.isbn10, b.location
     ].join(' ').toLowerCase();
     return filters.q.toLowerCase().split(/\s+/).every(function (term) {
@@ -289,15 +309,20 @@
 
   function renderStats() {
     var all = books();
-    var by = function (s) { return all.filter(function (b) { return statusOf(b) === s; }).length; };
+    /* Reading status is a book idea. Counting 100 magazine issues as "to read"
+       would be a lie told in a large font, so the status tiles count books and
+       the magazines get a tile of their own. */
+    var vols = all.filter(function (b) { return !isMagazine(b); });
+    var mags = all.filter(isMagazine);
+    var by = function (s) { return vols.filter(function (b) { return statusOf(b) === s; }).length; };
     var authors = {};
-    all.forEach(function (b) { authorsOf(b).forEach(function (a) { authors[a.toLowerCase()] = 1; }); });
-    var pagesRead = all.reduce(function (sum, b) {
+    vols.forEach(function (b) { authorsOf(b).forEach(function (a) { authors[a.toLowerCase()] = 1; }); });
+    var pagesRead = vols.reduce(function (sum, b) {
       return statusOf(b) === 'read' && Number(b.pages) ? sum + Number(b.pages) : sum;
     }, 0);
 
     var cells = [
-      ['lib.stat.books',   all.length],
+      ['lib.stat.books',   vols.length],
       ['lib.stat.read',    by('read')],
       ['lib.stat.reading', by('reading')],
       ['lib.stat.unread',  by('unread')],
@@ -305,6 +330,7 @@
       ['lib.stat.authors', Object.keys(authors).length],
       ['lib.stat.pages',   pagesRead]
     ];
+    if (mags.length) cells.splice(1, 0, ['lib.stat.magazines', mags.length]);
 
     $('stats').innerHTML = cells.map(function (c) {
       return '<div class="stat"><div class="stat__value">' + I18N.formatNumber(c[1]) +
@@ -315,19 +341,29 @@
   function cardFor(b) {
     var cover = coverOf(b);
     var status = statusOf(b);
+    var mag = isMagazine(b);
+    /* No catalogue carries covers for back issues, so a magazine gets the one
+       thing the shelf photo does show: the yellow border and its date. */
     var art = cover
       ? '<img class="book__cover" src="' + esc(cover) + '" alt="" loading="lazy" ' +
         'onerror="this.classList.add(\'is-broken\')">'
-      : '<div class="book__cover book__cover--blank" style="--spine-hue:' + spineHue(b) + '">' +
-        '<span>' + esc(b.title || '?') + '</span></div>';
+      : mag
+        ? '<div class="book__cover book__cover--issue"><span>' +
+          esc(b.subtitle || b.title || '?') + '</span></div>'
+        : '<div class="book__cover book__cover--blank" style="--spine-hue:' + spineHue(b) + '">' +
+          '<span>' + esc(b.title || '?') + '</span></div>';
 
     return '<article class="book" role="button" tabindex="0" data-id="' + esc(b.id) + '">' +
       art +
       '<div class="book__body">' +
         '<h3 class="book__title">' + esc(b.title || '—') + '</h3>' +
-        (authorLine(b) ? '<p class="book__author">' + esc(authorLine(b)) + '</p>' : '') +
+        (mag
+          ? (b.subtitle ? '<p class="book__author">' + esc(b.subtitle) + '</p>' : '')
+          : (authorLine(b) ? '<p class="book__author">' + esc(authorLine(b)) + '</p>' : '')) +
         '<div class="book__meta">' +
-          '<span class="' + STATUS_CHIP[status] + '">' + esc(I18N.t('lib.status.' + status)) + '</span>' +
+          (mag
+            ? '<span class="chip chip--issue">' + esc(I18N.t('lib.kind.magazine')) + '</span>'
+            : '<span class="' + STATUS_CHIP[status] + '">' + esc(I18N.t('lib.status.' + status)) + '</span>') +
           '<span class="chip chip--terracotta">' + esc(I18N.t('lib.owner.' + ownerOf(b))) + '</span>' +
           (needsCheck(b) ? '<span class="chip chip--danger" title="' +
             esc(I18N.t('lib.check.' + b.confidence)) + '">' + esc(I18N.t('lib.check.chip')) + '</span>' : '') +
@@ -335,6 +371,8 @@
         '</div>' +
         (b.rating ? '<div class="stars stars--sm">' + stars(b.rating, false) + '</div>' : '') +
         (b.description ? '<p class="book__desc">' + esc(b.description) + '</p>' : '') +
+        (mag && (b.subjects || []).length
+          ? '<p class="book__desc">' + esc(b.subjects.join(' · ')) + '</p>' : '') +
       '</div>' +
     '</article>';
   }
@@ -349,6 +387,11 @@
 
     /* The button disappears when the count reaches zero, which is the only
        "all done" signal this page has any business giving. */
+    /* An "add more" action, not a first-run one: on an empty shelf the empty
+       state already offers the inventory, and once the issues are in,
+       re-importing can do nothing — either way the button would be noise. */
+    $('import-mags').hidden = !books().length || books().some(isMagazine);
+
     var toDescribe = books().filter(needsDescription).length;
     $('f-nodesc').hidden = toDescribe === 0;
     $('nodesc-count').textContent = toDescribe ? ' (' + I18N.formatNumber(toDescribe) + ')' : '';
@@ -393,6 +436,7 @@
     $('f-owner').value = filters.owner;
     $('f-status').value = filters.status;
     $('f-sort').value = filters.sort;
+    $('f-kind').value = filters.kind;
     $('f-check').setAttribute('aria-pressed', String(filters.check));
     $('f-nodesc').setAttribute('aria-pressed', String(filters.nodesc));
   }
@@ -575,6 +619,9 @@
 
   /** Loose key for spotting a book we already have. */
   function bookKey(b) {
+    // An issue has no author and shares its title with every other issue, so
+    // it is identified by its date instead.
+    if (isMagazine(b)) return 'magazine|' + String(b.issue || b.subtitle || b.id).toLowerCase();
     return [
       String(b.title || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(),
       String((b.authors || [])[0] || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
@@ -584,12 +631,15 @@
   /* The inventory was catalogued from photographs of the shelves: titles,
      authors, categories and where each book sits, and nothing else. Anything
      the catalogues can add comes later, from "fill in the gaps". */
-  function importInventory(btn) {
+  /* Both seeds load through here. Rows already on the shelf are skipped by
+     their key, so importing twice adds nothing and importing the magazines
+     after the books does not disturb them. */
+  function importSeed(btn, url, listKey) {
     var was = btn.textContent;
     btn.disabled = true;
     btn.textContent = I18N.t('lib.importing');
 
-    fetch('/data/library-seed.json')
+    return fetch(url)
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
@@ -598,14 +648,23 @@
         var have = {};
         books().forEach(function (b) { have[bookKey(b)] = true; });
 
-        var fresh = (payload.books || []).filter(function (b) { return !have[bookKey(b)]; });
-        if (!fresh.length) { Shell.toast(I18N.t('lib.importNone')); return; }
+        var fresh = (payload[listKey] || []).filter(function (b) { return !have[bookKey(b)]; });
+        if (!fresh.length) { Shell.toast(I18N.t('lib.importNone')); return 0; }
 
         store.putMany(fresh);
         Shell.toast(I18N.t('lib.imported', { n: I18N.formatNumber(fresh.length) }));
+        return fresh.length;
       })
       .catch(function () { Shell.toast(I18N.t('lib.importFail'), 'error'); })
-      .then(function () { btn.disabled = false; btn.textContent = was; });
+      .then(function (n) { btn.disabled = false; btn.textContent = was; return n; });
+  }
+
+  function importInventory(btn) {
+    return importSeed(btn, '/data/library-seed.json', 'books');
+  }
+
+  function importMagazines(btn) {
+    return importSeed(btn, '/data/magazines-seed.json', 'magazines');
   }
 
   /* ====================================================================== */
@@ -630,6 +689,7 @@
 
   function booksMissingData() {
     return books().filter(function (b) {
+      if (isMagazine(b)) return false;   // no ISBN, and no catalogue carries back issues
       return ENRICHABLE.some(function (pair) { return isBlank(b[pair[0]]); });
     });
   }
@@ -978,7 +1038,7 @@
       render();
     }, 160));
 
-    ['owner', 'status', 'shelf', 'sort'].forEach(function (key) {
+    ['kind', 'owner', 'status', 'shelf', 'sort'].forEach(function (key) {
       $('f-' + key).addEventListener('change', function () {
         filters[key] = this.value;
         render();
@@ -996,6 +1056,8 @@
       syncFilterControls();
       render();
     });
+
+    $('import-mags').addEventListener('click', function () { importMagazines(this); });
 
     $('bulk-go').addEventListener('click', runBulkEnrich);
 

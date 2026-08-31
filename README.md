@@ -123,6 +123,28 @@ you can stop. Two rules keep it honest:
 about are marked, counted and filterable, so they can be confirmed by eye
 rather than quietly trusted.
 
+**The magazines.** `data/magazines-seed.json` holds the National Geographic run
+— issue date, cover lines, and how confident the reading was — catalogued from
+a photograph of the shelf. *Add the magazines* imports it once the books are in;
+importing twice is harmless, because an issue already on the shelf is skipped by
+its date rather than its title, which every issue shares.
+
+They live in the same `books` collection so that one search covers both, and
+sit out of everything that is a book idea: reading status (they get their own
+stat tile instead of being filed as "to read"), the description gap, and the
+catalogue lookups — no ISBN, and neither Open Library nor Google Books carries
+back issues. The cover lines are stored as subjects, which is what makes *which
+issue had the Kamchatka piece?* a question the search can answer. A *Kind*
+filter separates the two when you want them apart.
+
+Pairing a date to its cover lines is the part that can go wrong: the spines
+lean, so at a glance the lines look like they belong to the next issue along.
+They do not — both are printed on the same spine face. Where a pairing could be
+checked against the issue it is known to be (January 2000 the Millennium issue,
+April 2002 *Afghan Girl*, September 2005 the Africa issue, April 2007 *Global
+Fisheries*, January 2011 *Population 7 Billion*) it matched. Issues whose spines
+could not be read carry the date alone and are marked for checking.
+
 **Descriptions.** A blurb comes from the catalogues like any other field —
 Google Books usually has one where Open Library does not — and shows as three
 clamped lines on the card and in full in the detail view. The catalogues do not
