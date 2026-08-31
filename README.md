@@ -138,6 +138,13 @@ a photograph of the shelf. *Add the magazines* imports it once the books are in;
 importing twice is harmless, because an issue already on the shelf is skipped by
 its date rather than its title, which every issue shares.
 
+Back issues have no cover art anywhere — no catalogue carries periodicals — so
+each one gets a placeholder built from what the shelf photo does show: the
+yellow border, the month, the year in large type, and the lead story off the
+spine. That last part is the point. A placeholder showing only the title and
+the border is the same picture a hundred times over, which is exactly how the
+first version looked.
+
 They live in the same `books` collection so that one search covers both, and
 sit out of everything that is a book idea: reading status (they get their own
 stat tile instead of being filed as "to read"), the description gap, and the
