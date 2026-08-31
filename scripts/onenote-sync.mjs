@@ -280,12 +280,22 @@ async function graph(url, asText = false, attempt = 0) {
  */
 async function fetchImage(src, attempt = 0) {
   const res = await fetch(src, { headers: { Authorization: `Bearer ${token}` } });
-  if (res.status === 429 && attempt < MAX_THROTTLE_RETRIES) {
-    const wait = throttleWait(res, attempt);
-    console.log(`   image throttled, waiting ${Math.round(wait / 1000)}s… (${attempt + 1}/${MAX_THROTTLE_RETRIES})`);
-    await new Promise((r) => setTimeout(r, wait));
-    return fetchImage(src, attempt + 1);
+
+  if (res.status === 429) {
+    // Unlike the page listing, a throttled picture is not worth waiting out:
+    // it is optional, `--resume` will collect it next time, and stalling the
+    // whole run for one image then aborting loses the pages that did work.
+    // One short retry, then defer.
+    if (attempt < 1) {
+      const wait = Math.min(30_000, Math.max(Number(res.headers.get('retry-after') || 0) * 1000, 10_000));
+      await new Promise((r) => setTimeout(r, wait));
+      return fetchImage(src, attempt + 1);
+    }
+    throttledInARow++;
+    return null;
   }
+
+  throttledInARow = 0;
   if (!res.ok) return null;
   return res.arrayBuffer();
 }
@@ -380,6 +390,12 @@ const manifest = [];
 let skippedExisting = 0;
 let imagesSaved = 0;
 let imageFailures = 0;
+let imagesDeferred = 0;
+let throttledInARow = 0;
+// Once Graph is throttling steadily there is no point asking for the rest;
+// the run finishes with what it has and `--resume` collects them later.
+const GIVE_UP_IMAGES_AFTER = 3;
+let stopFetchingImages = false;
 
 let matchedSections = 0;
 
@@ -445,13 +461,23 @@ for (const nb of targets) {
           if (resume) {
             try { await readFile(dest); continue; } catch { /* not fetched yet */ }
           }
+          if (stopFetchingImages) { imagesDeferred++; continue; }
           try {
             // A section can reference over a thousand pictures. Asking for
             // them flat out is what earns the throttling in the first place,
             // so go at a deliberate pace.
             await new Promise((r) => setTimeout(r, IMAGE_PACE_MS));
             const bytes = await fetchImage(src);
-            if (!bytes) { imageFailures++; continue; }
+            if (!bytes) {
+              if (throttledInARow >= GIVE_UP_IMAGES_AFTER) {
+                stopFetchingImages = true;
+                console.log('   still throttled — leaving the rest of the images for a later --resume');
+                imagesDeferred++;
+              } else {
+                imageFailures++;
+              }
+              continue;
+            }
             await writeFile(dest, Buffer.from(bytes));
             imagesSaved++;
           } catch {
@@ -492,7 +518,11 @@ await writeFile(path.join(outDir, 'manifest.json'), JSON.stringify(manifest, nul
 
 if (withImages) {
   console.log(`${imagesSaved} image(s) saved to ${outDir}/images/` +
-    (imageFailures ? `, ${imageFailures} could not be fetched` : ''));
+    (imageFailures ? `, ${imageFailures} could not be fetched` : '') +
+    (imagesDeferred ? `, ${imagesDeferred} left for later` : ''));
+  if (imagesDeferred) {
+    console.log('Re-run the same command once the throttle clears to collect the rest.');
+  }
 }
 
 const photoOnly = manifest.filter((p) => p.images > 0 && p.textLength < 120);
