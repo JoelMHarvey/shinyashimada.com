@@ -191,6 +191,18 @@ The **Lista** tab is the same vocabulary without the quiz: searchable,
 filterable by unit, and where a picture gets attached to a word that lacks
 one.
 
+## Marking written sentences
+
+The Escribir tab's third mode asks Claude to mark a sentence. Check it is
+wired up without spending anything:
+
+```bash
+curl -s "https://shinyashimada.com/api/vocab-review?health=1"
+```
+
+That reports whether the key and workspace are set, which model is in use,
+the ceilings, and what has been used this hour and today.
+
 ## Environment
 
 | Variable | Where | Purpose |
@@ -199,6 +211,10 @@ one.
 | `ONENOTE_CLIENT_ID` | your shell | Azure application ID (route B) |
 | `ONENOTE_TENANT` | your shell | Defaults to `consumers`; set to `common` or a tenant GUID for a work account |
 | `DATABASE_URL` | `.env` locally, Netlify env in production | Neon connection string |
-| `SITE_PASSCODE` | Netlify env | Required for reads, and always required for writes and image uploads |
+| `SITE_PASSCODE` | Netlify env | Required for reads, and always required for writes, image uploads and reviews |
+| `ANTHROPIC_API_KEY` | Netlify env | Marks the sentences written in the Escribir tab. Without it that one mode is unavailable; the rest of the site is unaffected |
+| `ANTHROPIC_WORKSPACE_ID` | Netlify env | Only for an identity-linked key, which rejects requests that do not name a workspace (`wrkspc_…`). Leave unset for a standard key, which rejects the header |
+| `VOCAB_REVIEW_MODEL` | Netlify env | Defaults to `claude-sonnet-5` |
+| `VOCAB_REVIEW_PER_HOUR` / `_PER_DAY` | Netlify env | Spend ceilings, default 40 and 200. Attempts count, not successes |
 | `VOCAB_API_BASE` | your shell | Where `import-images.mjs` uploads; defaults to the live site |
 | `VOCAB_IMAGE_DIR` | your shell | Local directory standing in for Netlify Blobs off-platform |
