@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>¡Vamos, Español! — Shinya Shimada</title>
 <meta name="description" content="Spanish vocabulary drills from Shin's own notebooks — beat the clock, keep the streak. Part of shinyashimada.com.">
+<link rel="stylesheet" href="/assets/css/es-autocomplete.css">
+<!-- Deferred, as every module is. Nothing below touches it at parse time:
+     the writing box asks for it when a tab is opened, long after it lands. -->
+<script type="module" src="/assets/js/es-autocomplete.js"></script>
 </head>
 <body>
 <style>
@@ -265,6 +269,37 @@
   .wscore { font-size: 12.5px; font-weight: 700; color: var(--ink-soft); margin-bottom: 10px; font-variant-numeric: tabular-nums; }
   .wthinking { color: var(--ink-soft); font-size: 14.5px; margin-top: 12px; }
 
+  /* ---- the writing pad ---- */
+  textarea.wpad { min-height: 300px; font-size: 16.5px; line-height: 1.65; }
+  .wtargets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .wchip {
+    display: flex; flex-direction: column; gap: 2px; flex: 1 1 150px;
+    background: var(--paper); border: 1.5px solid var(--line); border-radius: 11px;
+    padding: 9px 11px; font-size: 14.5px;
+  }
+  .wchip.used { border-color: var(--green); background: var(--green-soft); }
+  .wchip .word { font-weight: 800; }
+  .wchip .word::before { content: "○ "; color: var(--ink-soft); font-weight: 400; }
+  .wchip.used .word::before { content: "✓ "; color: var(--green); }
+  .wchip .mean { color: var(--ink-soft); font-size: 12.5px; line-height: 1.4; }
+  .wmeta {
+    display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;
+    font-size: 12.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  }
+  .wkeys { margin-top: 10px; font-size: 12.5px; color: var(--ink-soft); line-height: 1.7; }
+  .wkeys kbd {
+    font: inherit; font-weight: 700; border: 1px solid var(--line); border-bottom-width: 2px;
+    border-radius: 5px; padding: 1px 5px; background: var(--card); color: var(--ink);
+  }
+  .wtoggle {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+    background: none; border: 0; padding: 0; font: inherit; font-size: 12.5px;
+    color: var(--ink-soft); cursor: pointer; text-align: left;
+  }
+  .wtoggle .sw {
+    font-weight: 700; color: var(--ink); border-bottom: 1.5px dashed var(--line);
+  }
+
   /* ---- game ---- */
   .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
   .quit { background: none; border: 0; color: var(--ink-soft); font-size: 15px; font-weight: 700; cursor: pointer; padding: 6px; font-family: inherit; }
@@ -342,7 +377,7 @@
   <div class="masthead">
     <a href="/" style="text-decoration:none;color:inherit"><div class="eyebrow">← shinyashimada.com · vocabulario</div></a>
     <h1><span class="hl">¡Vamos!</span> Español</h1>
-    <p class="sub" id="subLine">Shin's own DELE notebooks. Tap the answer, write it out, or compose a sentence and have it marked.</p>
+    <p class="sub" id="subLine">Shin's own DELE notebooks. Tap the answer, write it out, or open the Taller and write freely — it finishes your words as you go.</p>
   </div>
 
   <nav class="tabs" role="tablist">
@@ -977,6 +1012,11 @@ $("lockForm").onsubmit = (ev) => {
   try { localStorage.setItem(PASS_KEY, code); } catch (e) {}
   $("lockInput").value = "";
   $("lockErr").hidden = true;
+  // The suggestion index is built once and kept. If it was built before the
+  // passcode arrived it holds general Spanish and nothing of his own, so throw
+  // it away and let the next writing box ask again, now that it will be let in.
+  acIndex = null;
+  acLoading = null;
   boot();
 };
 
@@ -1469,8 +1509,109 @@ $("tabAdd").onclick  = () => setTab("add");
 const WRITE_MODES = [
   { id: "cloze", label: "Rellenar", hint: "completa la frase" },
   { id: "define", label: "Definir",  hint: "escribe la palabra" },
-  { id: "compose", label: "Redactar", hint: "escribe una frase" }
+  { id: "compose", label: "Redactar", hint: "escribe una frase" },
+  { id: "taller",  label: "Taller",   hint: "escribe con sugerencias" }
 ];
+
+/* ------------------------------------------------- autocompletado en español
+
+   The suggestion engine lives in /assets/js/es-autocomplete.js, which loads as
+   a module and hangs itself off `window`. Everything here is the wiring: build
+   the index once, keep every attached box pointing at it, and tear the boxes
+   down when a card is redrawn so their listeners do not outlive the DOM they
+   were written for.
+
+   Only the free-writing boxes get it. Rellenar and Definir ask him to produce
+   a word from its definition — completing that word would answer the question
+   for him, which is the opposite of the exercise.
+   ------------------------------------------------------------------------- */
+
+const SPACE_LS = "vamosEspanol.spaceMode";
+let acIndex = null;
+let acLoading = null;
+let acSpaceMode = "safe";
+try { if (localStorage.getItem(SPACE_LS) === "always") acSpaceMode = "always"; } catch (e) {}
+const acBoxes = new Set();
+
+/**
+ * His notebooks and general Spanish, in that order of preference.
+ *
+ * Either half may fail — the API needs a passcode and a database, the bundled
+ * file needs nothing — and the index is built from whichever arrives. A box
+ * with only general Spanish behind it is less useful, not broken.
+ */
+function loadSuggestions() {
+  if (acLoading) return acLoading;
+  acLoading = Promise.all([
+    fetch("/data/es-common.json").then(r => (r.ok ? r.json() : null)).catch(() => null),
+    fetch(`${API}?suggest=1`, fetchOpts()).then(r => (r.ok ? r.json() : null)).catch(() => null)
+  ]).then(([general, corpus]) => {
+    if (!window.EsAutocomplete) return null;
+    acIndex = window.EsAutocomplete.buildIndex({ corpus, general });
+    for (const box of acBoxes) box.setIndex(acIndex);
+    return acIndex;
+  });
+  return acLoading;
+}
+
+function autocomplete(textarea) {
+  const engine = window.EsAutocomplete;
+  if (!engine) return null;
+  const box = engine.attach(textarea, {
+    index: acIndex || engine.buildIndex({}),
+    spaceMode: acSpaceMode
+  });
+  acBoxes.add(box);
+  loadSuggestions();
+  return box;
+}
+
+function clearAutocomplete() {
+  for (const box of acBoxes) { try { box.destroy(); } catch (e) {} }
+  acBoxes.clear();
+}
+
+function setSpaceMode(mode) {
+  acSpaceMode = mode === "always" ? "always" : "safe";
+  try { localStorage.setItem(SPACE_LS, acSpaceMode); } catch (e) {}
+  for (const box of acBoxes) box.setSpaceMode(acSpaceMode);
+}
+
+/** The keyboard, said once, under whichever box is on screen. */
+function keyHints() {
+  const wrap = document.createElement("div");
+  wrap.className = "wkeys";
+  wrap.innerHTML =
+    "<kbd>Tab</kbd> acepta la sugerencia entera · " +
+    "<kbd>espacio</kbd> acepta una palabra · " +
+    "<kbd>→</kbd> palabra a palabra · " +
+    "<kbd>↓</kbd><kbd>↑</kbd> cambia de sugerencia · " +
+    "<kbd>Esc</kbd> la descarta";
+
+  const toggle = document.createElement("button");
+  toggle.type = "button";
+  toggle.className = "wtoggle";
+  const paint = () => {
+    toggle.textContent = "";
+    const lead = document.createElement("span");
+    lead.textContent = "Espacio: ";
+    const sw = document.createElement("span");
+    sw.className = "sw";
+    // `de` is a word and `descubrir` is a suggestion. In the safe setting a
+    // completion never overrides something already spelled correctly, so
+    // typing an ordinary word and pressing space does what it always did.
+    sw.textContent = acSpaceMode === "always"
+      ? "acepta siempre"
+      : "solo completa lo que no es ya una palabra";
+    toggle.append(lead, sw);
+  };
+  toggle.onclick = () => { setSpaceMode(acSpaceMode === "always" ? "safe" : "always"); paint(); };
+  paint();
+
+  const holder = document.createElement("div");
+  holder.append(wrap, toggle);
+  return holder;
+}
 
 let writeMode = "cloze";
 let writeQueue = [];
@@ -1574,6 +1715,10 @@ async function nextWriteCard() {
     }
   }
 
+  // The pad works on three words at once rather than one, so it takes them
+  // off the queue itself.
+  if (writeMode === "taller") { drawPad(); return; }
+
   writeCard = writeQueue.pop() || null;
   if (!writeCard) {
     holder.textContent = "";
@@ -1595,6 +1740,7 @@ async function nextWriteCard() {
 
 function drawTyping() {
   const holder = $("wHolder");
+  clearAutocomplete();
   holder.textContent = "";
 
   const card = document.createElement("div");
@@ -1690,6 +1836,7 @@ function checkTyped(value, check, skip) {
 
 function drawCompose() {
   const holder = $("wHolder");
+  clearAutocomplete();
   holder.textContent = "";
 
   const card = document.createElement("div");
@@ -1730,12 +1877,18 @@ function drawCompose() {
   verdict.id = "wVerdict";
 
   holder.append(card, row, verdict);
+  // Redactar names the word before asking for a sentence, so finishing his
+  // spelling of it gives nothing away — unlike the two drills above.
+  autocomplete(input);
+  holder.appendChild(keyHints());
   send.onclick = () => reviewSentence(input.value, send, skip);
   input.focus();
 }
 
-async function reviewSentence(sentence, send, skip) {
-  if (!sentence.trim() || !writeCard) return;
+async function reviewSentence(sentence, send, skip, target) {
+  // The pad names the word it wants marked; Redactar's word is the card's.
+  const card = target || writeCard;
+  if (!sentence.trim() || !card) return;
   send.disabled = true;
   const was = send.textContent;
   send.textContent = "Corrigiendo…";
@@ -1749,7 +1902,7 @@ async function reviewSentence(sentence, send, skip) {
     const res = await fetch("/api/vocab-review", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...fetchOpts().headers },
-      body: JSON.stringify({ term: writeCard.a, definition: writeCard.q, sentence })
+      body: JSON.stringify({ term: card.term || card.a, definition: card.def || card.q, sentence })
     });
     review = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(reviewError(res.status, review));
@@ -1761,10 +1914,169 @@ async function reviewSentence(sentence, send, skip) {
     return;
   }
 
-  drawReview(review);
+  drawReview(review, sentence);
   send.textContent = was;
-  skip.textContent = "Siguiente →";
+  send.disabled = false;
+  if (!target) skip.textContent = "Siguiente →";
   skip.focus();
+}
+
+/* --------------------------------------------------------------- el taller */
+
+/*
+   A pad rather than a card: three words out of his notebook at the top, an
+   empty page under them, and the suggestions running as he types. Nothing is
+   marked until he asks, and what he has written survives a tab change — the
+   point is a place to write, not another thing to be scored on.
+*/
+
+const PAD_LS = "vamosEspanol.pad.v1";
+let padTargets = [];
+
+function padDraft() { try { return localStorage.getItem(PAD_LS) || ""; } catch (e) { return ""; } }
+function savePadDraft(text) { try { localStorage.setItem(PAD_LS, text); } catch (e) {} }
+
+/**
+ * Has he used this word? Written Spanish will not hand back the headword: a
+ * verb arrives conjugated and a noun pluralised, so the stem is what to look
+ * for once the word is long enough for a stem to mean anything.
+ */
+function usesTerm(text, term) {
+  const fold = window.EsAutocomplete ? window.EsAutocomplete.fold : (x => String(x).toLowerCase());
+  const haystack = fold(text);
+  const needle = fold(term).trim();
+  if (!needle) return false;
+  if (haystack.includes(needle)) return true;
+  return needle.length >= 6 && haystack.includes(needle.slice(0, needle.length - 2));
+}
+
+/** Sentences, with their punctuation left on the end of them. */
+function sentences(text) {
+  return String(text).split(/([.!?…]+\s+)/).reduce((acc, part, i) => {
+    if (i % 2) acc[acc.length - 1] += part; else acc.push(part);
+    return acc;
+  }, []).map(part => part.trim()).filter(Boolean);
+}
+
+/**
+ * What one press of Corregir marks: his first sentence that uses one of the
+ * three words.
+ *
+ * Reading the text in order rather than the word list matters — the words are
+ * dealt out shuffled, so picking by word would mark whichever of them the
+ * shuffle happened to put first, which from the page looks like nothing at
+ * all. The marker takes one sentence against one word, so this is one press.
+ */
+function firstMarkable(text) {
+  for (const sentence of sentences(text)) {
+    const target = padTargets.find(t => usesTerm(sentence, t.term));
+    if (target) return { sentence, target };
+  }
+  return null;
+}
+
+function drawPad() {
+  const holder = $("wHolder");
+  clearAutocomplete();
+  holder.textContent = "";
+
+  if (!padTargets.length) {
+    padTargets = shuffle(writeQueue).slice(0, 3).map(c => ({ term: c.a, def: c.q }));
+  }
+  if (!padTargets.length) {
+    const n = document.createElement("div");
+    n.className = "notice";
+    const t = document.createElement("p");
+    t.textContent = "No hay palabras en esta unidad.";
+    n.appendChild(t);
+    holder.appendChild(n);
+    return;
+  }
+
+  const card = document.createElement("div");
+  card.className = "wcard";
+
+  const label = document.createElement("div");
+  label.className = "wprompt";
+  label.textContent = "Escribe un texto con estas palabras";
+
+  const targets = document.createElement("div");
+  targets.className = "wtargets";
+  const chips = padTargets.map(t => {
+    const chip = document.createElement("div");
+    chip.className = "wchip";
+    const w = document.createElement("div");
+    w.className = "word";
+    w.textContent = t.term;
+    const m = document.createElement("div");
+    m.className = "mean";
+    m.appendChild(withBlanks(t.def || ""));
+    chip.append(w, m);
+    targets.appendChild(chip);
+    return chip;
+  });
+
+  const input = document.createElement("textarea");
+  input.className = "winput wpad";
+  input.id = "wPad";
+  input.placeholder = "Empieza a escribir… las sugerencias salen en gris.";
+  input.maxLength = 4000;
+  input.value = padDraft();
+
+  const meta = document.createElement("div");
+  meta.className = "wmeta";
+  const words = document.createElement("span");
+  const used = document.createElement("span");
+
+  card.append(label, targets, input, meta);
+  meta.append(words, used);
+
+  const row = document.createElement("div");
+  row.className = "wrow";
+  const send = document.createElement("button");
+  send.className = "btn primary";
+  send.textContent = "Corregir";
+  const fresh = document.createElement("button");
+  fresh.className = "btn ghost";
+  fresh.textContent = "Otras palabras";
+  fresh.onclick = () => { padTargets = []; nextWriteCard(); };
+  row.append(send, fresh);
+
+  const verdict = document.createElement("div");
+  verdict.id = "wVerdict";
+
+  holder.append(card, row, verdict);
+  autocomplete(input);
+  holder.appendChild(keyHints());
+
+  function tally() {
+    const text = input.value;
+    const n = text.trim() ? text.trim().split(/\s+/).length : 0;
+    words.textContent = n === 1 ? "1 palabra" : `${n} palabras`;
+    let hits = 0;
+    padTargets.forEach((t, i) => {
+      const on = usesTerm(text, t.term);
+      chips[i].classList.toggle("used", on);
+      if (on) hits++;
+    });
+    used.textContent = `${hits} de ${padTargets.length} usadas`;
+    savePadDraft(text);
+  }
+  input.addEventListener("input", tally);
+  tally();
+
+  send.onclick = () => {
+    const found = firstMarkable(input.value);
+    const v = $("wVerdict");
+    if (!found) {
+      v.className = "wthinking";
+      v.textContent = "Usa una de las tres palabras y te corrijo esa frase.";
+      return;
+    }
+    reviewSentence(found.sentence, send, fresh, found.target);
+  };
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
 }
 
 function reviewError(status, body = {}) {
@@ -1786,7 +2098,7 @@ function reviewError(status, body = {}) {
   return `No se pudo corregir (${code || status}).`;
 }
 
-function drawReview(r) {
+function drawReview(r, marked) {
   const v = $("wVerdict");
   v.textContent = "";
   const good = r.correct && r.usedWell;
@@ -1803,7 +2115,8 @@ function drawReview(r) {
     : r.correct ? "Correcto, pero no se usa así" : "Hay errores";
   v.appendChild(head);
 
-  if (r.corrected && normaliseAnswer(r.corrected) !== normaliseAnswer($("wInput").value)) {
+  const before = marked !== undefined ? marked : ($("wInput") || { value: "" }).value;
+  if (r.corrected && normaliseAnswer(r.corrected) !== normaliseAnswer(before)) {
     const c = document.createElement("div");
     c.className = "wbetter";
     c.textContent = r.corrected;
