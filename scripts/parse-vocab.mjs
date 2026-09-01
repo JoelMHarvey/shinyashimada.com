@@ -139,7 +139,12 @@ function readPage(html) {
   let pBuf = null;
   const rowStart = [];
 
-  const TAG = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g;
+  // Attribute values may contain '>' — OneNote's OCR alt text routinely does,
+  // because it is a transcript of a web page ("> Salud > Noticias"). Matching
+  // to the first '>' ends the tag early and spills the remaining attributes
+  // into the page text as if they were content, which is how src="https://…"
+  // ended up inside 47 definitions. Skip over quoted runs instead.
+  const TAG = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b(?:[^>"']|"[^"]*"|'[^']*')*>/g;
   let cursor = 0;
   let m;
 
