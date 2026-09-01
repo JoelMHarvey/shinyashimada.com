@@ -182,18 +182,27 @@ try {
   process.stdout.write('\n');
 
   let pruned = 0;
-  // An empty `keep` array would make the NOT-IN below match every row, so a
+  // An empty keep-list would make the NOT EXISTS below match every row, so a
   // no-entry import must never reach the delete.
   if (prune && entries.length) {
-    const keep = entries.map((e) => `${e.topic_id}\u0000${String(e.term).toLowerCase().trim()}`);
-    // Scoped to the topics this import actually covers: importing a single
-    // lesson file must not wipe every other lesson already in the table.
+    // Compared as two parallel arrays rather than one concatenated key:
+    // Postgres rejects NUL inside text, so the obvious separator is illegal,
+    // and any printable one could in principle occur inside a term.
+    const topics_ = entries.map((e) => e.topic_id);
+    const terms_ = entries.map((e) => String(e.term).toLowerCase().trim());
+    // Scoped to the topics this import covers, so importing one lesson file
+    // cannot wipe every other lesson already in the table.
     const { rowCount } = await client.query(
-      `DELETE FROM vocab_entries
-        WHERE language = $1
-          AND topic_id = ANY($2::text[])
-          AND (topic_id || chr(0) || lower(term)) <> ALL($3::text[])`,
-      [LANGUAGE, [...topicIds], keep]
+      `DELETE FROM vocab_entries e
+        WHERE e.language = $1
+          AND e.topic_id = ANY($2::text[])
+          AND NOT EXISTS (
+                SELECT 1
+                  FROM unnest($3::text[], $4::text[]) AS keep(topic, term)
+                 WHERE keep.topic = e.topic_id
+                   AND keep.term = lower(e.term)
+              )`,
+      [LANGUAGE, [...topicIds], topics_, terms_]
     );
     pruned = rowCount;
   } else if (prune) {
