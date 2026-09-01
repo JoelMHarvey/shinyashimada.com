@@ -12,6 +12,7 @@ Six sections:
 | **Tokyo Today** (`/tokyo/`) | Current conditions, a 24-hour temperature chart and a seven-day outlook, read as *balcony* weather, alongside headlines in the language you are reading in. |
 | **Croissant Hunt** (`/croissants/`) | A six-criterion tasting log for Tokyo pain au chocolat that produces a leaderboard. Nothing is pre-rated. |
 | **Forza Italiano!** (`/forza/`) | A1 and A2 Italian grammar drills against the clock — articles, past tenses, futuro, condizionale. Self-contained in one page. |
+| **¡Vamos, Español!** (`/vamos/`) | Shin's own DELE C1/C2 notebooks, 3,463 cards across 16 units: multiple choice against the clock, typed answers, and a writing pad that completes his Spanish as he types. |
 | **Research Library** (`/research/`) | A blank instance of the Research Hub shell from joelmharvey.com — every screen, no content. |
 
 Everything is in **English, 日本語 and Español**, switchable from the header.
@@ -78,6 +79,14 @@ returns `503 no-database` and the plant page quietly runs device-only.
   feed list, so a language asked for is the language returned on both sites.
 - `GET|POST /api/store` — the synced collections (`plants`, `tastings`,
   `books`). See `schema.sql`.
+- `GET /api/vocab` — Shin's Spanish vocabulary. `?counts=1` for the unit menu,
+  `?deck=1&topic=…` for ready-made quiz questions (the distractor picking
+  happens in SQL, where the whole unit is visible at once), `?suggest=1` for
+  the writing pad's autocomplete index. Passcode-gated; read-only, imports go
+  in through `scripts/import-vocab.mjs`.
+- `POST /api/vocab-review` — marks one sentence Shin wrote against one of his
+  words, with Claude. Costs money on every call, so it needs a passcode even
+  when nothing else does, and is capped per hour and per day.
 - `GET /api/books?isbn=…` or `?q=…` — book metadata. Asks Open Library and
   Google Books at once and folds the two answers into one record, so a title
   one knows the cover for and the other knows the blurb for comes back
@@ -303,7 +312,7 @@ so nothing queued is ever lost. `tests/browser-sync.mjs` covers both setups.
 ## Tests
 
 ```bash
-npm test              # pure logic: care scheduling, SRS, RSS parsing, Trello sync, camera, book metadata + CORS (216 assertions)
+npm test              # pure logic: care scheduling, Spanish autocomplete, RSS parsing, Trello sync, camera, book metadata + CORS
 npm run serve &       # browser tests need the site served
 npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the app flows
 ```
@@ -348,11 +357,11 @@ test tell you whether it is safe to commit.
 ```
 shinyashimada.com/
 ├── index.html, 404.html
-├── plants/ library/ tokyo/ croissants/ forza/ research/
+├── plants/ library/ tokyo/ croissants/ forza/ vamos/ research/
 ├── assets/
 │   ├── css/    site.css (design system) + one file per page
-│   └── js/     i18n · shell · store · care · charts · weather + page scripts
-├── data/       species.json · croissants.json · library-seed.json · magazines-seed.json · plants-seed.json
+│   └── js/     i18n · shell · store · care · charts · weather · es-autocomplete + page scripts
+├── data/       species.json · croissants.json · library-seed.json · magazines-seed.json · plants-seed.json · es-common.json
 ├── netlify/functions/   weather.mjs · news.mjs · store.mjs · books.mjs · …
 ├── netlify/lib/         db · records · books · cors · trello · balcony
 ├── tests/
@@ -360,8 +369,44 @@ shinyashimada.com/
 └── netlify.toml
 ```
 
-`assets/js/care.js` (watering and pruning schedules) and `assets/js/srs.js`
-(spaced repetition and answer checking) are pure modules with no DOM
-dependency, which is why they are the parts under unit test. The same holds
-for `netlify/lib/books.mjs`: all the catalogue parsing lives there, so it can
-be tested against recorded responses with no network.
+`assets/js/care.js` (watering and pruning schedules) and the ranking half of
+`assets/js/es-autocomplete.js` are pure with no DOM dependency, which is why
+they are the parts under unit test. The same holds for `netlify/lib/books.mjs`
+and `netlify/lib/vocab-suggest.mjs`: all the catalogue parsing and all the
+corpus counting live there, so both can be tested against fixtures with no
+network and no database.
+
+### The writing pad's autocomplete
+
+`/vamos/` → **Escribir** → **Taller** is a page to write on, with the rest of
+the word proposed in grey as it is typed. <kbd>Tab</kbd> takes the whole
+suggestion, <kbd>space</kbd> takes one word of it, <kbd>↓</kbd><kbd>↑</kbd>
+change it and <kbd>Esc</kbd> dismiss it.
+
+Two sources, in that order of preference. His notebooks come from
+`/api/vocab?suggest=1`, which counts word frequencies, bigrams and recurring
+runs across all 3,463 definitions and hands back the answer rather than the
+rows — the counting is far too much to repeat on a phone, and it only changes
+when he imports a word, so one build is reused for ten minutes. General
+Spanish comes from `data/es-common.json`, bundled with the site: the notebook
+vocabulary is nearly all content words, so it can define *erudición* and has
+never heard of *sin embargo*. Either half can fail and the box still works on
+what the other one knows.
+
+Two behaviours are worth knowing before changing them:
+
+- **The space bar does not always complete.** `de` is a word and `descubrir`
+  is a suggestion; a box that turns one into the other every time he types
+  `de ` is unusable. A completion never overrides something that is already a
+  Spanish word — those are Tab's job. The literal setting is one tap away
+  under the box for anyone who wants it.
+- **Only the free-writing boxes get it.** Rellenar and Definir ask him to
+  produce a word from its definition. Completing that word would answer the
+  question for him, which is the opposite of the exercise.
+
+The ghost text is not drawn at the caret: a second copy of the text sits under
+the real one with everything typed rendered transparent, so the only thing
+showing through is the proposed ending. It lands in the right place because it
+is the same string in the same box wrapping the same way — nothing measures a
+caret. That is also why suggestions stop when the caret is not at the end of
+the text.

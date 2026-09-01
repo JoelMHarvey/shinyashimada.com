@@ -1,0 +1,134 @@
+/* ==========================================================================
+   Ghost-text autocomplete for a textarea (assets/js/es-autocomplete.js).
+
+   The suggestion is not drawn at the caret — nothing here measures a caret.
+   A second copy of the text sits exactly under the real one, with everything
+   already typed rendered transparent; the only thing that shows through is
+   the proposed ending, which lands in the right place because it is the same
+   string in the same box wrapping the same way.
+
+   Colours come from whatever page hosts the box, with fallbacks so the widget
+   is not tied to one stylesheet.
+   ========================================================================== */
+
+.esac {
+  position: relative;
+  display: block;
+}
+
+.esac-mirror {
+  position: absolute;
+  margin: 0;
+  overflow: hidden;
+  pointer-events: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  border-style: solid;
+  border-color: transparent;
+  border-radius: 12px;
+  background: var(--paper, #fff);
+  color: transparent;
+}
+
+/* The real box keeps its own border and its own text; only its background is
+   given up, so the ghost underneath is visible through it. */
+.esac-input {
+  position: relative;
+  background: transparent !important;
+}
+
+.esac-typed { color: transparent; }
+
+.esac-ghost {
+  color: var(--ink-soft, #7a7a7a);
+  opacity: .78;
+}
+
+/* A completion that also puts an accent back on what was typed changes more
+   than it appends, so it is marked rather than passed off as a plain ending. */
+.esac-ghost.corrects {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.esac-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  margin-top: 6px;
+  padding: 4px;
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #e2e2e2);
+  border-radius: 12px;
+  box-shadow: var(--shadow, 0 6px 24px rgba(0, 0, 0, .12));
+  max-height: 264px;
+  overflow-y: auto;
+}
+
+.esac-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  font-size: 15px;
+  color: var(--ink, #1a1a1a);
+  text-align: left;
+  cursor: pointer;
+}
+
+.esac-item.on { background: var(--green-soft, #eef3ee); }
+.esac-item:hover { background: var(--green-soft, #eef3ee); }
+
+.esac-word { font-weight: 700; white-space: nowrap; }
+
+.esac-src {
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 99px;
+  border: 1px solid var(--line, #e2e2e2);
+  color: var(--ink-soft, #7a7a7a);
+}
+
+/* His own notebooks are the point of the exercise, so they are marked and
+   general Spanish is left plain. */
+.esac-src.corpus {
+  color: var(--red, #b3123a);
+  border-color: currentColor;
+}
+
+.esac-gloss {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--ink-soft, #7a7a7a);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Announced to a screen reader; never seen. */
+.esac-live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .esac-gloss { display: none; }
+}

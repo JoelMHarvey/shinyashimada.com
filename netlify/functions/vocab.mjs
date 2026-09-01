@@ -7,6 +7,7 @@
    GET /api/vocab?level=a2                  -> only that level
    GET /api/vocab?counts=1                  -> units with a card count each
    GET /api/vocab?deck=1&topic=unidad-6     -> ready-to-play quiz questions
+   GET /api/vocab?suggest=1                 -> autocomplete index for /vamos/
 
    The plain form hands back the raw rows and lets the page do what it likes.
    `deck=1` does the distractor picking here instead, because choosing three
@@ -25,6 +26,7 @@ import pg from 'pg';
 
 import { corsHeaders, preflight } from '../lib/cors.mjs';
 import { secretsMatch } from '../lib/records.mjs';
+import { buildSuggestIndex } from '../lib/vocab-suggest.mjs';
 import { cleanDefinition, looksLikeTerm, maskTerm, slug } from '../lib/vocab-text.mjs';
 
 const { Pool } = pg;
@@ -37,6 +39,10 @@ const SLUG_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 const LANG_RE = /^[a-z]{2}$/;
 
 let pool = null;
+
+/** The built autocomplete index, and when it was built. */
+let suggestMemo = null;
+const SUGGEST_TTL_MS = 10 * 60 * 1000;
 
 function getPool() {
   const url = process.env.DATABASE_URL;
@@ -374,6 +380,30 @@ export default async (req) => {
       return json({ topics: rows }, 200, req);
     } catch (err) {
       console.error('[vocab] counts failed', err);
+      return json({ error: 'query_failed' }, 500, req);
+    }
+  }
+
+  // The autocomplete index for the writing box. Counting bigrams over every
+  // definition in the notebook is far too much work to repeat per keystroke —
+  // or even per page load — but the answer only changes when Shin imports or
+  // adds a word, so one build is reused until it goes stale.
+  if (url.searchParams.get('suggest')) {
+    const now = Date.now();
+    if (suggestMemo && now - suggestMemo.at < SUGGEST_TTL_MS) {
+      return json(suggestMemo.body, 200, req);
+    }
+    try {
+      const { rows } = await db.query(
+        `SELECT term, definition, example_es, gloss_en, part_of_speech
+           FROM vocab_entries
+          WHERE language = 'es'`
+      );
+      const body = buildSuggestIndex(rows);
+      suggestMemo = { at: now, body };
+      return json(body, 200, req);
+    } catch (err) {
+      console.error('[vocab] suggest failed', err);
       return json({ error: 'query_failed' }, 500, req);
     }
   }
