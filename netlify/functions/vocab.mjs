@@ -364,7 +364,12 @@ export default async (req) => {
     try {
       const { rows } = await db.query(
         `SELECT t.id, t.label_en, t.label_ja, t.label_es, t.level, t.sort_order,
-                count(e.id)::int AS count
+                count(e.id)::int AS count,
+                count(e.id) FILTER (WHERE e.cloze)::int AS cloze,
+                -- A card "has a definition" unless the blank comes almost at
+                -- once, in which case it is a gapped example and nothing else.
+                -- Mirrors DEFINITION_LEAD_IN in vamos/index.html.
+                count(e.id) FILTER (WHERE NOT e.cloze OR position('____' in e.definition) > 40)::int AS defined
            FROM vocab_topics t
            LEFT JOIN vocab_entries e ON e.topic_id = t.id AND e.language = 'es'
           WHERE t.language = 'es'
