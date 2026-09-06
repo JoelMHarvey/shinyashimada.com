@@ -241,7 +241,9 @@ if (!files.length) {
 const topics = new Map();
 const entries = [];
 const seen = new Set();
+const byKey = new Map();
 const rejected = { noDefinition: 0, notATerm: 0, duplicate: 0, tooLong: 0, wrongPage: 0, overMasked: 0 };
+let pictureCards = 0;
 let rowsSeen = 0;
 let order = 0;
 
@@ -260,39 +262,65 @@ for (const file of files) {
   for (const row of readPage(html)) {
     rowsSeen++;
     const filled = row.cells.map((c) => c.text).filter(Boolean);
-    if (filled.length < 2) {
+
+    // A term with a picture beside it and no text at all is a card in its
+    // own right: for concrete vocabulary the photo is the definition, and
+    // 872 of the notebook's rows are made exactly that way. Emit it with no
+    // definition; the image is attached later by scripts/import-images.mjs.
+    const pictureOnly = filled.length === 1
+      && row.cells.slice(1).some((c) => (c.imgs || []).some((i) => i && i.ref));
+
+    if (filled.length < 2 && !pictureOnly) {
       rejected.noDefinition++;
       continue;
     }
 
     const term = filled[0];
-    const raw = cleanDefinition(filled[1]);
-    const { text: definition, masked } = maskTerm(term, raw);
+    const raw = pictureOnly ? '' : cleanDefinition(filled[1]);
+    const { text: definition, masked } = pictureOnly
+      ? { text: null, masked: false }
+      : maskTerm(term, raw);
 
     if (!looksLikeTerm(term)) {
       rejected.notATerm++;
       continue;
     }
-    if (!definition || definition.replace(/_+/g, '').trim().length < 8) {
+    if (!pictureOnly && (!definition || definition.replace(/_+/g, '').trim().length < 8)) {
       rejected.noDefinition++;
       continue;
     }
     // Masking can eat a whole word-family list ("carnada, carnadura, carnal"),
     // leaving a card nobody could answer. Half-blanked still works as a
     // collocation card ("Amor ____, instinto ____"); past half does not.
-    const words = definition.split(/\s+/);
-    if (words.filter((w) => w.includes('____')).length / words.length > 0.5) {
+    const words = (definition || '').split(/\s+/);
+    if (!pictureOnly && words.filter((w) => w.includes('____')).length / words.length > 0.5) {
       rejected.overMasked++;
       continue;
     }
-    if (maxDefinition && definition.length > maxDefinition) {
+    if (maxDefinition && definition && definition.length > maxDefinition) {
       rejected.tooLong++;
       continue;
     }
 
     const { id: topicId, label } = topicFor(row.heading, pageTitle);
+    // The same word often appears twice in a unit: once beside a photo, once
+    // with a definition. Those are two halves of one card, not a duplicate —
+    // keep the first entry and let the second fill in whatever it lacks.
     const key = `${topicId}::${term.toLowerCase()}`;
     if (seen.has(key)) {
+      const prior = byKey.get(key);
+      if (prior) {
+        if (!prior.definition && definition) {
+          prior.definition = definition;
+          prior.cloze = masked;
+          if (pictureOnly === false && prior.source !== pageTitle) prior.source = pageTitle;
+        }
+        const picture2 = row.cells.flatMap((c) => c.imgs || []).find((i) => i && i.ref) || null;
+        if (!prior.image_ref && picture2) {
+          prior.image_ref = picture2.ref;
+          prior.image_alt = picture2.alt ? picture2.alt.slice(0, 2000) : null;
+        }
+      }
       rejected.duplicate++;
       continue;
     }
@@ -314,7 +342,8 @@ for (const file of files) {
     // by scripts/import-images.mjs — the parse step never uploads anything.
     const picture = row.cells.flatMap((c) => c.imgs || []).find((i) => i && i.ref) || null;
 
-    entries.push({
+    if (pictureOnly) pictureCards++;
+    const entry = {
       topic_id: topicId,
       term,
       definition,
@@ -330,7 +359,9 @@ for (const file of files) {
       example_en: null,
       note: null,
       source: pageTitle
-    });
+    };
+    entries.push(entry);
+    byKey.set(key, entry);
   }
 }
 
@@ -354,7 +385,7 @@ if (sampleSize) {
 await writeFile(outFile, JSON.stringify(payload, null, 2) + '\n', 'utf8');
 
 console.log(`${pagesUsed} of ${files.length} pages matched --pages ${JSON.stringify(pageFilter)}; ${rowsSeen} table rows read.`);
-console.log(`${entries.length} entries across ${topics.size} topics.`);
+console.log(`${entries.length} entries across ${topics.size} topics (${pictureCards} are a picture with no text).`);
 if (sampleSize) console.log(`Wrote a ${payload.entries.length}-entry sample to ${outFile}`);
 else console.log(`Wrote ${outFile}`);
 console.log('\nrows rejected:');

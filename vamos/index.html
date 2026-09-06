@@ -283,6 +283,10 @@
   }
   .qprompt { font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
   .qtext { font-size: 26px; line-height: 1.35; font-weight: 700; text-wrap: balance; }
+  /* A picture prompt: the notebook's own photo, shown where the definition
+     would be. Capped so a tall screenshot does not push the answers off. */
+  .qimg { display: block; width: 100%; max-height: 260px; object-fit: contain;
+          border-radius: 10px; margin: 4px 0 10px; background: var(--paper); }
   .qnote { margin-top: 10px; font-size: 13.5px; color: var(--ink-soft); }
   .qtrans { margin-top: 10px; font-size: 14.5px; color: var(--ink-soft); font-style: italic; }
   .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -361,6 +365,7 @@
     <button class="lvl" data-type="all" id="typeAll">Todo<span class="tag">ambos tipos</span></button>
     <button class="lvl" data-type="cloze" id="typeCloze">Rellenar<span class="tag">frases con hueco</span></button>
     <button class="lvl" data-type="plain" id="typePlain">Definir<span class="tag">con definición</span></button>
+    <button class="lvl" data-type="photo" id="typePhoto">Foto<span class="tag">con imagen</span></button>
   </div>
 
   <div class="statrow">
@@ -437,6 +442,7 @@
   </div>
   <div class="qcard">
     <div class="qprompt" id="qPrompt">¿Cómo se dice…?</div>
+    <img id="qImage" class="qimg" alt="" hidden>
     <div class="qtext" id="qText"></div>
     <div class="qtrans" id="qTrans"></div>
     <div class="qnote" id="qNote"></div>
@@ -501,7 +507,7 @@ if (typeof store.best !== "number") store.best = 0;
 if (!store.bests || typeof store.bests !== "object") store.bests = {};
 if (store.best && store.bests.round == null) store.bests.round = store.best;
 if (!SPRINT_CHOICES.includes(store.sprintSeconds)) store.sprintSeconds = DEFAULT_SPRINT;
-if (!["all", "cloze", "plain"].includes(store.cardType)) store.cardType = "all";
+if (!["all", "cloze", "plain", "photo"].includes(store.cardType)) store.cardType = "all";
 function save() { try { localStorage.setItem(LS, JSON.stringify(store)); } catch (e) {} }
 
 const $ = id => document.getElementById(id);
@@ -633,6 +639,7 @@ function renderHome() {
   $("typeAll").classList.toggle("on", cardType === "all");
   $("typeCloze").classList.toggle("on", cardType === "cloze");
   $("typePlain").classList.toggle("on", cardType === "plain");
+  $("typePhoto").classList.toggle("on", cardType === "photo");
   $("bestScore").textContent = store.bests[bestKey("sprint")] || 0;
   $("bestLabel").textContent = `Best · ${durationLabel(sprintSeconds)}`;
   $("totalAnswered").textContent = store.answered;
@@ -725,12 +732,13 @@ const durationLabel = (secs) => (secs % 60 === 0 && secs >= 60 ? `${secs / 60} m
  * The tell is how soon the blank arrives. Mirrors the SQL in /api/vocab.
  */
 const DEFINITION_LEAD_IN = 40;
-const hasDefinition = (q) => !q.cloze || q.q.indexOf("____") >= DEFINITION_LEAD_IN;
+const hasDefinition = (q) => !q.cloze || (q.q || "").indexOf("____") >= DEFINITION_LEAD_IN;
 
 /** How many of a unit's cards the current type offers. */
 function countFor(t) {
   if (cardType === "cloze") return t.cloze ?? t.count;
   if (cardType === "plain") return t.defined ?? t.count;
+  if (cardType === "photo") return t.photo ?? 0;
   return t.count;
 }
 
@@ -738,6 +746,7 @@ function countFor(t) {
 function ofType(questions) {
   if (cardType === "cloze") return questions.filter(q => q.cloze);
   if (cardType === "plain") return questions.filter(hasDefinition);
+  if (cardType === "photo") return questions.filter(q => q.image);
   return questions;
 }
 
@@ -833,8 +842,10 @@ function nextQ() {
 
   const item = game.deck[game.i];
   $("catLabel").textContent = topicLabel(item.cat);
-  $("qPrompt").textContent = "¿Cómo se dice…?";
-  $("qText").textContent = item.q;
+  // A picture card asks "what is this?"; a text card asks for the word.
+  $("qPrompt").textContent = item.q ? "¿Cómo se dice…?" : "¿Cómo se llama?";
+  $("qText").textContent = item.q || "";
+  loadPromptImage($("qImage"), item.image);
   $("qTrans").textContent = "";
   $("qNote").textContent = "";
   $("verdict").textContent = "";
@@ -1007,6 +1018,7 @@ $("pickNone").onclick = () => { selected.clear(); renderHome(); };
 $("typeAll").onclick = () => setCardType("all");
 $("typeCloze").onclick = () => setCardType("cloze");
 $("typePlain").onclick = () => setCardType("plain");
+$("typePhoto").onclick = () => setCardType("photo");
 $("btnRound").onclick = () => startGame("round");
 $("btnSprint").onclick = () => startGame("sprint");
 $("btnMarathon").onclick = () => startGame("marathon");
@@ -1061,6 +1073,26 @@ async function showImage(img, key) {
     img.src = url;
   } catch {
     img.remove();   // a broken thumbnail helps nobody
+  }
+}
+
+/**
+ * Put a card's picture into an <img> that stays in the DOM. Unlike the list
+ * thumbnails, the quiz reuses one element per card, so on failure it is
+ * hidden rather than removed.
+ */
+async function loadPromptImage(img, key) {
+  if (!key) { img.hidden = true; img.removeAttribute("src"); return; }
+  try {
+    const res = await fetch(`/api/vocab-image?key=${encodeURIComponent(key)}`, fetchOpts());
+    if (!res.ok) throw new Error(String(res.status));
+    if (img.dataset.url) URL.revokeObjectURL(img.dataset.url);
+    const url = URL.createObjectURL(await res.blob());
+    img.dataset.url = url;
+    img.src = url;
+    img.hidden = false;
+  } catch {
+    img.hidden = true;
   }
 }
 
@@ -1206,7 +1238,8 @@ async function loadList() {
     term.textContent = e.term;
     const def = document.createElement("div");
     def.className = "def";
-    def.appendChild(withBlanks(e.definition || ""));
+    if (e.definition) def.appendChild(withBlanks(e.definition));
+    else { def.textContent = "Sólo foto"; def.style.fontStyle = "italic"; }
     const unit = document.createElement("div");
     unit.className = "unit";
     unit.textContent = topicLabel(e.topic_id);
@@ -1624,11 +1657,18 @@ function drawTyping() {
 
   const label = document.createElement("div");
   label.className = "wprompt";
-  label.textContent = writeMode === "cloze" ? "Completa la frase" : "¿Qué palabra es?";
+  label.textContent = writeMode === "cloze" ? "Completa la frase"
+                    : writeCard.q ? "¿Qué palabra es?" : "¿Cómo se llama?";
+
+  const pic = document.createElement("img");
+  pic.className = "qimg";
+  pic.alt = "";
+  pic.hidden = true;
+  loadPromptImage(pic, writeCard.image);
 
   const body = document.createElement("div");
   body.className = "wtext";
-  body.appendChild(withBlanks(writeCard.q));
+  body.appendChild(withBlanks(writeCard.q || ""));
 
   const input = document.createElement("input");
   input.className = "winput";
@@ -1638,7 +1678,7 @@ function drawTyping() {
   input.spellcheck = false;
   input.placeholder = "escribe aquí…";
 
-  card.append(label, body, input);
+  card.append(label, pic, body, input);
 
   const row = document.createElement("div");
   row.className = "wrow";
@@ -1725,9 +1765,15 @@ function drawCompose() {
   term.className = "wterm";
   term.textContent = writeCard.a;
 
+  const pic = document.createElement("img");
+  pic.className = "qimg";
+  pic.alt = "";
+  pic.hidden = true;
+  loadPromptImage(pic, writeCard.image);
+
   const def = document.createElement("div");
   def.className = "wdef";
-  def.appendChild(withBlanks(writeCard.q));
+  def.appendChild(withBlanks(writeCard.q || ""));
 
   const input = document.createElement("textarea");
   input.className = "winput";
@@ -1735,7 +1781,7 @@ function drawCompose() {
   input.placeholder = "Escribe una frase…";
   input.maxLength = 600;
 
-  card.append(label, term, def, input);
+  card.append(label, term, pic, def, input);
 
   const row = document.createElement("div");
   row.className = "wrow";
@@ -1771,7 +1817,7 @@ async function reviewSentence(sentence, send, skip) {
     const res = await fetch("/api/vocab-review", {
       method: "POST",
       headers: { "Content-Type": "application/json", ...fetchOpts().headers },
-      body: JSON.stringify({ term: writeCard.a, definition: writeCard.q, sentence })
+      body: JSON.stringify({ term: writeCard.a, definition: writeCard.q || "", sentence })
     });
     review = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(reviewError(res.status, review));

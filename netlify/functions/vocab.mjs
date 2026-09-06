@@ -109,7 +109,9 @@ function buildDeck(rows, lang, size) {
   const questions = [];
   for (const row of rows) {
     const prompt = promptOf(row);
-    if (!prompt || !row.term) continue;
+    // A card with no text but a picture is still askable: the picture is
+    // the prompt. Only a card with neither has nothing to show.
+    if ((!prompt && !row.image_key) || !row.term) continue;
 
     const siblings = byTopic.get(row.topic_id) || [];
     const samePos = siblings.filter(
@@ -133,6 +135,7 @@ function buildDeck(rows, lang, size) {
       a: row.term,
       wrong,
       cloze: Boolean(row.cloze),
+      image: row.image_key || null,
       note: row.note || null,
       example: row.example_es || null,
       exampleEn: row.example_en || null,
@@ -169,15 +172,18 @@ function prepare(raw) {
   if (!SLUG_RE.test(topicId)) return { error: `bad topic id ${JSON.stringify(topicId)}` };
 
   const rawDefinition = String(raw.definition ?? '').trim();
-  if (!rawDefinition) return { error: `"${term}" has no definition` };
+  const hasPicture = Boolean(raw.image_key);
+  if (!rawDefinition && !hasPicture) return { error: `"${term}" needs a definition or a picture` };
   if (rawDefinition.length > MAX_DEFINITION) {
     return { error: `definition for "${term}" is longer than ${MAX_DEFINITION} characters` };
   }
 
   // Exactly what the OneNote import does, from the same module, so a card
   // typed by hand behaves like one that came out of the notebook.
-  const { text: definition, masked } = maskTerm(term, cleanDefinition(rawDefinition));
-  if (!definition || definition.replace(/_+/g, '').trim().length < 8) {
+  const { text: definition, masked } = rawDefinition
+    ? maskTerm(term, cleanDefinition(rawDefinition))
+    : { text: null, masked: false };
+  if (rawDefinition && (!definition || definition.replace(/_+/g, '').trim().length < 8)) {
     return { error: `the definition for "${term}" is almost entirely the word itself` };
   }
 
@@ -369,7 +375,8 @@ export default async (req) => {
                 -- A card "has a definition" unless the blank comes almost at
                 -- once, in which case it is a gapped example and nothing else.
                 -- Mirrors DEFINITION_LEAD_IN in vamos/index.html.
-                count(e.id) FILTER (WHERE NOT e.cloze OR position('____' in e.definition) > 40)::int AS defined
+                count(e.id) FILTER (WHERE NOT e.cloze OR position('____' in e.definition) > 40)::int AS defined,
+                count(e.id) FILTER (WHERE e.image_key IS NOT NULL)::int AS photo
            FROM vocab_topics t
            LEFT JOIN vocab_entries e ON e.topic_id = t.id AND e.language = 'es'
           WHERE t.language = 'es'

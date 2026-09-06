@@ -72,10 +72,11 @@ const seen = new Set();
 for (const [i, e] of entries.entries()) {
   if (!e.term || !String(e.term).trim()) problems.push(`entries[${i}]: empty term`);
   if (!topicIds.has(e.topic_id)) problems.push(`entries[${i}] (${e.term}): unknown topic_id ${JSON.stringify(e.topic_id)}`);
-  // A card needs something to show as its prompt: a Spanish definition
-  // (the DELE decks) or a translation (a bilingual deck).
-  if (!e.definition && !e.gloss_en && !e.gloss_ja)
-    problems.push(`entries[${i}] (${e.term}): no definition and no gloss`);
+  // A card needs something to show as its prompt: a Spanish definition, a
+  // translation, or — for the 872 rows Shin made as a term beside a photo —
+  // a picture. The picture itself is attached afterwards by import-images.
+  if (!e.definition && !e.gloss_en && !e.gloss_ja && !e.image_ref)
+    problems.push(`entries[${i}] (${e.term}): no definition, no gloss, no picture`);
   const key = `${e.topic_id}\u0000${String(e.term || '').toLowerCase().trim()}`;
   if (seen.has(key)) problems.push(`entries[${i}]: duplicate ${e.term} in ${e.topic_id}`);
   seen.add(key);
