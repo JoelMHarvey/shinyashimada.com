@@ -11,8 +11,36 @@ streams:
   balcony_hd:
     - rtsp://${CAMERA_USER}:${CAMERA_PASS}@${CAMERA_IP}:554/stream1
 
+# Everything below the streams is about who can reach what. The tunnel
+# publishes this API to the internet, and go2rtc's own README is blunt about
+# it: "If an attacker gains access to the API, you are in danger." The full
+# API can stop the relay, list the camera's RTSP address with its password,
+# and add new streams from sources of the caller's choosing, from inside this
+# network. So only the pieces the player needs are switched on at all.
+
+# Only the modules this relay uses: the camera's RTSP source, the WebSocket
+# the player talks over, MSE (mp4) and HLS. Leaving out exec, echo, expr,
+# ffmpeg, http and the rest means a stream cannot be created from them, even
+# through a request that names one as its source.
+app:
+  modules: [api, ws, rtsp, mp4, hls]
+
 api:
-  listen: ":1984"
+  # Loopback only: cloudflared shares the host network and dials this, and
+  # nothing on the LAN needs it directly.
+  listen: "127.0.0.1:1984"
+  # Only the player page (/ serves stream.html and its scripts), its
+  # WebSocket and the HLS endpoints. /api/streams, /api/config, /api/exit,
+  # /api/restart and /api/log are not registered, so they cannot be called.
+  # go2rtc's own web UI at / still loads, but cannot list or edit anything.
+  allow_paths:
+    - /
+    - /api/ws
+    - /api/stream.m3u8
+    - /api/hls/playlist.m3u8
+    - /api/hls/segment.ts
+    - /api/hls/init.mp4
+    - /api/hls/segment.m4s
 
 # Bound to localhost only: nothing here should be reachable from the LAN
 # directly. The Cloudflare tunnel is the single way in.
