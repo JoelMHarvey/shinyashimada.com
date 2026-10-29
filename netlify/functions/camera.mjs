@@ -12,11 +12,12 @@
    authenticated — see homelab/README.md.
    ========================================================================== */
 
-import { secretsMatch, json } from '../lib/records.mjs';
+import { json } from '../lib/records.mjs';
+import { checkPasscode, lockedResponseInit } from '../lib/passcode.mjs';
 
 const ALLOWED_MODES = new Set(['iframe', 'hls']);
 
-export default async function handler(req) {
+export default async function handler(req, context) {
   if (req.method !== 'GET') {
     return json({ error: 'Method not allowed.' }, 405, { Allow: 'GET' });
   }
@@ -28,7 +29,12 @@ export default async function handler(req) {
       code: 'passcode-required'
     }, 503);
   }
-  if (!secretsMatch(req.headers.get('x-store-passcode'), expected)) {
+  const verdict = await checkPasscode(req, context);
+  if (verdict === 'locked') {
+    const locked = lockedResponseInit();
+    return json(locked.body, locked.status, locked.headers);
+  }
+  if (verdict !== 'ok') {
     return json({ error: 'Passcode required.', code: 'unauthorized' }, 401);
   }
 

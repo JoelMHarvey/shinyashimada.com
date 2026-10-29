@@ -20,7 +20,7 @@
    ========================================================================== */
 
 import { corsHeaders, preflight } from '../lib/cors.mjs';
-import { secretsMatch } from '../lib/records.mjs';
+import { checkPasscode, lockedResponseInit } from '../lib/passcode.mjs';
 import {
   cleanIsbn,
   isValidIsbn,
@@ -33,23 +33,25 @@ import {
 const LOOKUP_TIMEOUT_MS = 6000;
 const MAX_QUERY_LENGTH = 200;
 
-function json(body, status, req) {
+function json(body, status, req, extra = {}) {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      // Catalogue answers barely change; a shared cache spares both APIs a
-      // repeat when the other site looks up the same barcode.
-      'Cache-Control': status === 200 ? 'public, max-age=3600' : 'no-store',
-      ...corsHeaders(req)
+      // Catalogue answers barely change, so the browser keeps them an hour.
+      // Private, not public: a shared copy at Netlify's edge would answer the
+      // next caller of the same URL without asking for the passcode.
+      'Cache-Control': status === 200 ? 'private, max-age=3600' : 'no-store',
+      ...corsHeaders(req),
+      ...extra
     }
   });
 }
 
-function isAuthed(req) {
-  const expected = process.env.SITE_PASSCODE;
-  if (!expected) return true;
-  return secretsMatch(req.headers.get('x-store-passcode'), expected);
+/** 'ok', 'bad' or 'locked' (too many wrong guesses from this address). */
+async function passcodeVerdict(req, context) {
+  if (!process.env.SITE_PASSCODE) return 'ok';
+  return checkPasscode(req, context);
 }
 
 /** Fetch and parse JSON, returning null on any failure — one dead catalogue
@@ -100,14 +102,19 @@ async function lookupByQuery(q) {
   return mergeCandidates([fromOpenLibrarySearch(ol), fromGoogleBooks(google)]);
 }
 
-export default async function handler(req) {
+export default async function handler(req, context) {
   const pre = preflight(req);
   if (pre) return pre;
 
   if (req.method !== 'GET') {
     return json({ error: 'Method not allowed.', code: 'bad-method' }, 405, req);
   }
-  if (!isAuthed(req)) {
+  const verdict = await passcodeVerdict(req, context);
+  if (verdict === 'locked') {
+    const locked = lockedResponseInit();
+    return json(locked.body, locked.status, req, locked.headers);
+  }
+  if (verdict !== 'ok') {
     return json({ error: 'Passcode required.', code: 'unauthorized' }, 401, req);
   }
 

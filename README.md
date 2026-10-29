@@ -58,7 +58,7 @@ device-only storage.
 | Variable | Needed for | Notes |
 |---|---|---|
 | `DATABASE_URL` | Plant + tasting sync | Postgres connection string. A free Neon or Supabase database is plenty. The table is created on first use. |
-| `SITE_PASSCODE` | Protecting the data | A shared passphrase. Required for **all writes**, for **reading** anything except croissant tastings (so the plant inventory and the library are private while the croissant leaderboard is public), and for the book lookups. Leave it unset and the store is wide open; set it before putting anything real in. |
+| `SITE_PASSCODE` | Protecting the data | A shared passphrase. Required for **all writes**, for **reading** anything except croissant tastings (so the plant inventory and the library are private while the croissant leaderboard is public), and for the book lookups. Leave it unset and the store is wide open; set it before putting anything real in. Ten different wrong passcodes from one address within 15 minutes lock that address out until the window ends (`netlify/lib/passcode.mjs`). |
 | `TRELLO_KEY`, `TRELLO_TOKEN` | Trello sync (optional) | Turns overdue balcony jobs into Trello cards. See below. |
 | `CAMERA_STREAM_URL`, `CAMERA_LABEL`, `CAMERA_MODE` | Live balcony camera (optional) | The relay's public URL. Served only to passcode holders — see `homelab/`. |
 | `ALLOWED_ORIGINS` | Sharing the library (optional) | Comma-separated origins allowed to call the API cross-origin. Defaults to joelmharvey.com and this site; setting it replaces that list entirely. |
