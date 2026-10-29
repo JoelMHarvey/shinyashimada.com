@@ -34,12 +34,17 @@ cp .env.example .env      # fill in CAMERA_IP / CAMERA_USER / CAMERA_PASS
 docker compose up -d go2rtc
 ```
 
-Check it locally at `http://localhost:1984` — the balcony stream should be
-listed and playable. If not, nothing downstream will work, so fix it here.
+Check it locally at
+`http://127.0.0.1:1984/stream.html?src=balcony&mode=mse` — the balcony should
+play. If not, nothing downstream will work, so fix it here. (go2rtc's own web
+UI at `/` loads but lists nothing: `go2rtc.yaml` switches off every API the
+player does not need, because the tunnel puts this port on the internet. To
+use the full UI for a moment, comment out `allow_paths` and `app.modules`,
+restart go2rtc, and put them back before the tunnel is up again.)
 
 **3. Create a Cloudflare tunnel.** In the Cloudflare Zero Trust dashboard:
 Networks → Tunnels → Create a tunnel. Add a public hostname pointing at
-`http://localhost:1984`, copy the tunnel token into `.env` as `TUNNEL_TOKEN`,
+`http://127.0.0.1:1984`, copy the tunnel token into `.env` as `TUNNEL_TOKEN`,
 then:
 
 ```bash
@@ -75,6 +80,15 @@ instant.
 someone holding the passcode, which narrows who learns it — but anyone who
 *does* learn it can open the stream directly, without the site.
 
+**What it must not reach is the rest of go2rtc.** Its API can stop the relay,
+read back the camera's RTSP address with the password in it, and create new
+streams from whatever source the caller names, from inside this network; on
+older go2rtc builds that included `exec:`, which runs a command on this
+machine. `go2rtc.yaml` therefore loads only the modules the player needs and
+registers only the player's paths (`app.modules`, `api.allow_paths`). Keep it
+that way: a tunnel pointed at an unrestricted go2rtc is a door into the
+house, not a window onto the balcony.
+
 For a balcony of plants that may be a fair trade, and it is the reason this
 was worth building at all. It would not be a fair trade for a camera indoors.
 
@@ -96,7 +110,8 @@ Two smaller things worth doing either way:
 - **Card says the camera is offline** — the relay is down or this machine is
   asleep. `docker compose ps`, then `docker compose logs go2rtc`.
 - **Stream lists but will not play** — usually the RTSP credentials, or the
-  camera's IP moved. Check `http://localhost:1984` first; if it fails there,
+  camera's IP moved. Check
+  `http://127.0.0.1:1984/stream.html?src=balcony&mode=mse` first; if it fails there,
   nothing beyond it can work.
 - **Works at home, not away** — the tunnel. `docker compose logs cloudflared`.
 - **Long delay before the picture appears** — the player is probably still

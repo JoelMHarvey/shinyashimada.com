@@ -9,6 +9,16 @@ const RSS2 = `<?xml version="1.0" encoding="UTF-8"?>
   <pubDate>Wed, 26 Aug 2026 04:15:00 +0900</pubDate>
 </item>
 <item>
+  <title>A hijacked feed's script link</title>
+  <link>javascript:alert(document.domain)</link>
+  <pubDate>Wed, 26 Aug 2026 06:00:00 +0900</pubDate>
+</item>
+<item>
+  <title>The same, entity-encoded</title>
+  <link>&#106;avascript:alert(1)</link>
+  <pubDate>Wed, 26 Aug 2026 06:30:00 +0900</pubDate>
+</item>
+<item>
   <title>Second story</title>
   <link>https://example.com/b</link>
   <guid isPermaLink="false">xyz</guid>
@@ -119,6 +129,7 @@ if (JSON.parse(await cachedHit.clone().text()).cached !== true)
   fail.push('second call did not come from the memo, so the cached path is untested');
 if (cachedHit.headers.get('access-control-allow-origin') !== 'https://joelmharvey.com')
   fail.push('a cached response lost its CORS headers');
+if (en.items.some(i => !/^https?:\/\//i.test(i.link))) fail.push('a non-http(s) link reached the response');
 if (en.items.length !== 3) fail.push(`EN expected 3 deduped items, got ${en.items.length}`);
 if (en.items[0].title !== 'Atom & entry') fail.push('EN not sorted newest-first');
 if (!en.items.some(i => i.title === 'Tokyo hits 35C as heat & humidity persist')) fail.push('entity decode failed');

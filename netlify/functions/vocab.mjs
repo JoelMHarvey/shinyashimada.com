@@ -25,7 +25,7 @@
 import pg from 'pg';
 
 import { corsHeaders, preflight } from '../lib/cors.mjs';
-import { secretsMatch } from '../lib/records.mjs';
+import { checkPasscode, lockedResponseInit } from '../lib/passcode.mjs';
 import { buildSuggestIndex } from '../lib/vocab-suggest.mjs';
 import { cleanDefinition, looksLikeTerm, maskTerm, slug } from '../lib/vocab-text.mjs';
 
@@ -64,23 +64,34 @@ function getPool() {
   return pool;
 }
 
-function json(body, status, req) {
+function json(body, status, req, extra = {}) {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       // The deck changes only when Shin re-imports his notebook, but a stale
       // deck mid-game would be confusing, so keep it short and revalidated.
-      'Cache-Control': status === 200 ? 'public, max-age=60' : 'no-store',
-      ...corsHeaders(req)
+      // Private: a public copy would be kept at Netlify's edge and handed to
+      // the next caller of the same URL, passcode or not.
+      'Cache-Control': status === 200 ? 'private, max-age=60' : 'no-store',
+      ...corsHeaders(req),
+      ...extra
     }
   });
 }
 
-function isAuthed(req) {
-  const expected = process.env.SITE_PASSCODE;
-  if (!expected) return true;
-  return secretsMatch(req.headers.get('x-store-passcode'), expected);
+/** 'ok', 'bad' or 'locked' (too many wrong guesses from this address). */
+async function passcodeVerdict(req, context) {
+  if (!process.env.SITE_PASSCODE) return 'ok';
+  return checkPasscode(req, context);
+}
+
+function refuse(verdict, req) {
+  if (verdict === 'locked') {
+    const locked = lockedResponseInit();
+    return json(locked.body, locked.status, req, locked.headers);
+  }
+  return json({ error: 'unauthorized' }, 401, req);
 }
 
 /** Fisher-Yates, seeded from Math.random — deck order need not be reproducible. */
@@ -154,10 +165,9 @@ function buildDeck(rows, lang, size) {
  * match. Reads fall open when SITE_PASSCODE is unset, which is a reasonable
  * default for a personal site; letting anyone add rows would not be.
  */
-function canWrite(req) {
-  const expected = process.env.SITE_PASSCODE;
-  if (!expected) return false;
-  return secretsMatch(req.headers.get('x-store-passcode'), expected);
+async function writeVerdict(req, context) {
+  if (!process.env.SITE_PASSCODE) return 'bad';
+  return checkPasscode(req, context);
 }
 
 const MAX_WRITE_ENTRIES = 500;
@@ -207,7 +217,7 @@ function prepare(raw) {
   };
 }
 
-export default async (req) => {
+export default async (req, context) => {
   const pre = preflight(req);
   if (pre) return pre;
 
@@ -217,7 +227,8 @@ export default async (req) => {
   /* ---------------------------------------------------------------- write */
 
   if (req.method === 'POST' || req.method === 'DELETE') {
-    if (!canWrite(req)) return json({ error: 'unauthorized' }, 401, req);
+    const verdict = await writeVerdict(req, context);
+    if (verdict !== 'ok') return refuse(verdict, req);
     if (!db) return json({ error: 'no_database' }, 503, req);
 
     if (req.method === 'DELETE') {
@@ -349,7 +360,8 @@ export default async (req) => {
     }
   }
 
-  if (!isAuthed(req)) return json({ error: 'unauthorized' }, 401, req);
+  const verdict = await passcodeVerdict(req, context);
+  if (verdict !== 'ok') return refuse(verdict, req);
   if (!db) return json({ error: 'no_database' }, 503, req);
 
   const lang = LANG_RE.test(url.searchParams.get('lang') || '') ? url.searchParams.get('lang') : 'en';

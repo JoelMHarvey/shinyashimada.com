@@ -23,6 +23,7 @@
 import pg from 'pg';
 
 import { corsHeaders, preflight } from '../lib/cors.mjs';
+import { checkPasscode, lockedResponseInit } from '../lib/passcode.mjs';
 import { prepareRecords, writeRecords } from '../lib/records.mjs';
 
 const { Pool } = pg;
@@ -88,21 +89,10 @@ function json(body, status = 200, extraHeaders = {}) {
   });
 }
 
-/** Constant-time-ish comparison so the passcode cannot be probed byte by byte. */
-function secretsMatch(a, b) {
-  const x = String(a ?? '');
-  const y = String(b ?? '');
-  if (x.length !== y.length) return false;
-  let diff = 0;
-  for (let i = 0; i < x.length; i++) diff |= x.charCodeAt(i) ^ y.charCodeAt(i);
-  return diff === 0;
-}
-
-function isAuthed(req) {
-  const expected = process.env.SITE_PASSCODE;
-  if (!expected) return true;                     // no passcode configured = open
-  const given = req.headers.get('x-store-passcode');
-  return secretsMatch(given, expected);
+/** 'ok', 'bad' or 'locked' (too many wrong guesses from this address). */
+async function passcodeVerdict(req, context) {
+  if (!process.env.SITE_PASSCODE) return 'ok';    // no passcode configured = open
+  return checkPasscode(req, context);
 }
 
 function rowToRecord(row) {
@@ -114,7 +104,7 @@ function rowToRecord(row) {
   };
 }
 
-export default async function handler(req) {
+export default async function handler(req, context) {
   /* Answered before anything else: a preflight carries no passcode and must
      not be measured against one. */
   const pre = preflight(req);
@@ -124,6 +114,14 @@ export default async function handler(req) {
      rather than threading `req` through each call. */
   const cors = corsHeaders(req);
   const reply = (body, status = 200, extra = {}) => json(body, status, { ...cors, ...extra });
+
+  const refuse = (verdict) => {
+    if (verdict === 'locked') {
+      const locked = lockedResponseInit();
+      return reply(locked.body, locked.status, locked.headers);
+    }
+    return reply({ error: 'Passcode required.', code: 'unauthorized' }, 401);
+  };
 
   const url = new URL(req.url);
   const authRequired = !!process.env.SITE_PASSCODE;
@@ -166,29 +164,39 @@ export default async function handler(req) {
     if (!collection || !COLLECTION_RE.test(collection)) {
       return reply({ error: 'A valid `collection` is required.', code: 'bad-collection' }, 400);
     }
-    if (!PUBLIC_READ.has(collection) && !isAuthed(req)) {
-      return reply({ error: 'Passcode required.', code: 'unauthorized' }, 401);
+    if (!PUBLIC_READ.has(collection)) {
+      const verdict = await passcodeVerdict(req, context);
+      if (verdict !== 'ok') return refuse(verdict);
     }
 
     const since = url.searchParams.get('since');
+    if (since && Number.isNaN(Date.parse(since))) {
+      return reply({ error: '`since` must be a date.', code: 'bad-since' }, 400);
+    }
     const params = [collection];
     let sql = 'SELECT id, data, updated_at, deleted FROM store_records WHERE collection = $1';
     if (since) {
-      params.push(since);
+      params.push(new Date(since).toISOString());
       sql += ' AND updated_at > $2';
     }
     sql += ' ORDER BY updated_at DESC LIMIT 5000';
 
-    const { rows } = await db.query(sql, params);
-    return reply({ records: rows.map(rowToRecord), serverTime: new Date().toISOString() });
+    /* Caught here so a database error comes back as our JSON, not as the
+       platform's error page with the driver's message in it. */
+    try {
+      const { rows } = await db.query(sql, params);
+      return reply({ records: rows.map(rowToRecord), serverTime: new Date().toISOString() });
+    } catch (err) {
+      console.error('[store] read failed', err);
+      return reply({ error: 'Could not read.', code: 'read-failed' }, 500);
+    }
   }
 
   /* ------------------------------------------------------------ write -- */
 
   if (req.method === 'POST') {
-    if (!isAuthed(req)) {
-      return reply({ error: 'Passcode required.', code: 'unauthorized' }, 401);
-    }
+    const verdict = await passcodeVerdict(req, context);
+    if (verdict !== 'ok') return refuse(verdict);
 
     let body;
     try {

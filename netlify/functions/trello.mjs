@@ -15,22 +15,25 @@
    inconvenience — so it returns 503 rather than quietly operating in the open.
    ========================================================================== */
 
-import { getPool, ensureSchema, secretsMatch, json } from '../lib/db.mjs';
+import { getPool, ensureSchema, json } from '../lib/db.mjs';
+import { checkPasscode, lockedResponseInit } from '../lib/passcode.mjs';
 import { isConfigured, listBoards, listLists } from '../lib/trello.mjs';
 import { readSettings, writeSettings, syncBalconyToTrello } from '../lib/balcony.mjs';
 
-function authorised(req) {
-  const expected = process.env.SITE_PASSCODE;
-  if (!expected) return { ok: false, reason: 'no-passcode' };
-  return secretsMatch(req.headers.get('x-store-passcode'), expected)
-    ? { ok: true }
-    : { ok: false, reason: 'unauthorized' };
+async function authorised(req, context) {
+  if (!process.env.SITE_PASSCODE) return { ok: false, reason: 'no-passcode' };
+  const verdict = await checkPasscode(req, context);
+  return verdict === 'ok' ? { ok: true } : { ok: false, reason: verdict === 'locked' ? 'locked' : 'unauthorized' };
 }
 
-export default async function handler(req) {
+export default async function handler(req, context) {
   const url = new URL(req.url);
 
-  const auth = authorised(req);
+  const auth = await authorised(req, context);
+  if (auth.reason === 'locked') {
+    const locked = lockedResponseInit();
+    return json(locked.body, locked.status, locked.headers);
+  }
   if (!auth.ok) {
     return auth.reason === 'no-passcode'
       ? json({
