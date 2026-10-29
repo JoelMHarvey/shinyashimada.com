@@ -116,7 +116,9 @@ function parseFeed(xml, sourceName) {
   for (const block of blocks) {
     const title = clean(tagContent(block, 'title'));
     const link = itemLink(block);
-    if (!title || !link) continue;
+    // Both sites put this straight into an href, so only a web address is a
+    // link: a `javascript:` one from a hijacked feed would run on our origin.
+    if (!title || !/^https?:\/\//i.test(link)) continue;
 
     let summary = clean(
       tagContent(block, 'description') ||

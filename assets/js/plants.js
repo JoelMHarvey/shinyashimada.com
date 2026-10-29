@@ -449,7 +449,7 @@
         (u ? '<span class="plant-card__flag" data-state="' + u.state + '"></span>' : '') +
         '<span class="plant-card__top">' +
           (p.photo
-            ? '<img class="plant-card__photo" src="' + p.photo + '" alt="" loading="lazy">'
+            ? '<img class="plant-card__photo" src="' + esc(p.photo) + '" alt="" loading="lazy">'
             : '<span class="plant-card__emoji">' + emojiOf(p) + '</span>') +
           '<span><span class="plant-card__name">' + esc(displayName(p)) + '</span><br>' +
           '<span class="plant-card__species">' + esc(speciesLabel(p)) + '</span></span>' +
@@ -533,7 +533,7 @@
     }).join('');
 
     body.innerHTML =
-      (p.photo ? '<img class="detail__photo" src="' + p.photo + '" alt="">' : '') +
+      (p.photo ? '<img class="detail__photo" src="' + esc(p.photo) + '" alt="">' : '') +
       '<div class="detail__head">' +
         '<span class="detail__emoji">' + emojiOf(p) + '</span>' +
         '<span class="detail__title"><h2 style="font-size:1.35rem">' + esc(displayName(p)) + '</h2>' +
