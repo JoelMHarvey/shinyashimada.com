@@ -1,0 +1,16 @@
+# Kept out of the image: history, secrets, local state, and what only the
+# test suite needs. The rest of the repository is the site.
+.git
+.github
+.netlify
+node_modules
+.env
+.env.*
+homelab/.env
+.onenote-token.json
+.onenote-export
+.vocab-images
+data/spanish-vocab.json
+tests
+.DS_Store
+npm-debug.log*

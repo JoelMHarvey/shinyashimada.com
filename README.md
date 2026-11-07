@@ -35,6 +35,9 @@ npm install
 npx netlify dev
 ```
 
+Or run the whole thing, functions included, with no Netlify at all:
+`npm start` (see *Running without Netlify* below).
+
 Without a backend the site still works: the weather and news panels show an
 honest "could not reach" state, and the plant inventory falls back to
 device-only storage.
@@ -99,6 +102,204 @@ the same library, the third is how its Tokyo page gets headlines in the
 language it asked for. An allowlist rather than `*`, because the first two take
 a passcode header and one policy in one file is easier to keep honest than
 two.
+
+## Running without Netlify
+
+The same repository also runs as one Node process on a server of our own
+(`apps-01`, behind its shared Caddy). Netlify deploys are unchanged:
+`netlify.toml` is as it was, and Netlify's build and functions take no
+notice of `server/`, `Dockerfile` or `.dockerignore`.
+
+`server/server.mjs` does what Netlify does for this site:
+
+- **The pages**, from the repository root, the way Netlify serves its
+  publish directory: `index.html` for a directory (with the 301 that adds
+  the trailing slash), `/404` finding `404.html`, the 404 page with a 404
+  for a miss, `Cache-Control: public, max-age=0, must-revalidate` with an
+  ETag so an unchanged file is a cheap 304, and nothing under `node_modules`,
+  no dotfiles, no `netlify.toml`.
+- **`netlify.toml`'s `[[redirects]]` and `[[headers]]`**, read from the file
+  itself at start-up (`server/netlify-config.mjs`), so `/api/*` reaches the
+  functions through the same rule it does on Netlify and the security headers
+  are the same ones. A `_redirects` or `_headers` file would be read too
+  (there are none).
+- **Every function** at `/.netlify/functions/<name>[/…]` and, through that
+  rule, `/api/<name>[/…]`, called with a standard `Request` and a `context`
+  whose `ip` is the visitor's address. The scheduled one has no URL, as on
+  Netlify (403).
+- **The daily Trello sync** on its own schedule, `0 21 * * *` UTC, read from
+  the function's `export const config` (below).
+- **`GET /api/health/live`**: 200 without touching the database. The
+  container's health check.
+
+TLS, compression and the domain are Caddy's. The visitor's address is the
+last `X-Forwarded-For` entry, which Caddy writes itself (it replaces whatever
+the client sent); a client's own `x-nf-client-connection-ip` is overwritten.
+
+### Running it
+
+```bash
+npm ci
+npm start                                  # http://127.0.0.1:8000
+node --env-file=.env server/server.mjs     # with the variables below
+
+docker build -t shinyashimada-app .
+docker run --rm -p 8000:8000 --env-file .env shinyashimada-app
+```
+
+The image is `node:22.23.4-bookworm-slim`, runs as the `node` user,
+installs with `npm ci --omit=dev`, exposes 8000 and checks itself on
+`/api/health/live`.
+
+### Environment
+
+Names only; the values live in the server's env file, never here.
+
+| Variable | Required? | For |
+|---|---|---|
+| `DATABASE_URL` | yes, for anything that remembers | the store, the library, the vocabulary, the Trello settings. On `apps-01`: `postgres://…@postgres:5432/shinyashimada`. Without it the site runs device-only, as on Netlify |
+| `SITE_PASSCODE` | yes, before real data | as on Netlify (above) |
+| `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | yes, to replace Netlify Blobs | the private bucket (below). `S3_ENDPOINT=https://nbg1.your-objectstorage.com`, `S3_REGION=nbg1` |
+| `S3_FORCE_PATH_STYLE` | no | `true` for `https://endpoint/bucket/key`; virtual-host style otherwise |
+| `ANTHROPIC_API_KEY` | for `/api/vocab-review` | plus the optional `ANTHROPIC_WORKSPACE_ID`, `VOCAB_REVIEW_MODEL`, `VOCAB_REVIEW_PER_HOUR`, `VOCAB_REVIEW_PER_DAY` |
+| `TRELLO_KEY`, `TRELLO_TOKEN` | for the Trello sync | |
+| `CAMERA_STREAM_URL`, `CAMERA_LABEL`, `CAMERA_MODE` | for the camera | |
+| `ALLOWED_ORIGINS` | no | as on Netlify |
+| `PORT`, `HOST` | no | default `8000`, `0.0.0.0` |
+| `SITE_URL` | no | default `https://shinyashimada.com` |
+| `TRUST_PROXY` | no | `false` to ignore `X-Forwarded-*` when nothing is in front |
+| `SCHEDULED_FUNCTIONS` | no | `off` in any second copy of the app (below) |
+| `VOCAB_IMAGE_DIR` | no | where pictures go when no bucket is set; the image sets `/app/.vocab-images` |
+
+### The database
+
+Two sets of tables, both in one database: `store_records` (plants, tastings,
+books, the Trello settings; created by the functions on first use,
+`schema.sql`) and `vocab_topics` / `vocab_entries` (`schema-vocab.sql`,
+applied by `scripts/migrate-vocab.mjs`). Nothing in them is Netlify's, so the
+move is a `pg_dump` and a restore.
+
+### Netlify Blobs, and the bucket that replaces them
+
+Three stores, all reached through `netlify/lib/blob-store.mjs`, which opens
+the S3 bucket when `S3_BUCKET` and `S3_ENDPOINT` are set and Netlify Blobs
+otherwise:
+
+| Store | Holds | Used by |
+|---|---|---|
+| `vocab-images` | the vocabulary cards' pictures, keyed by a hash of their bytes | `/api/vocab-image` (`netlify/lib/images.mjs`) |
+| `passcode-failures` | wrong-passcode fingerprints per address per 15 minutes | every gated function (`netlify/lib/passcode.mjs`) |
+| `vocab-usage` | hourly and daily review counts | `/api/vocab-review` (`netlify/lib/rate-limit.mjs`) |
+
+In the bucket each store is a prefix (`vocab-images/<key>`); a blob's
+metadata travels as `x-amz-meta-blob-metadata`. The client is
+`netlify/lib/s3-blobs.mjs`: AWS Signature V4 on `node:crypto`, no SDK. With no
+bucket set the pictures go to `VOCAB_IMAGE_DIR` and the counters to memory,
+which is what the code already did outside Netlify.
+
+Only the pictures need copying. The counters cover a window of a day at most:
+
+```bash
+NETLIFY_SITE_ID=… NETLIFY_AUTH_TOKEN=… S3_ENDPOINT=… S3_REGION=nbg1 \
+S3_BUCKET=… S3_ACCESS_KEY_ID=… S3_SECRET_ACCESS_KEY=… \
+  node scripts/copy-blobs-to-s3.mjs --dry-run      # then without --dry-run
+```
+
+It skips keys already in the bucket, so it can be run again after the
+switch to catch a picture uploaded in between, and prints keys and counts,
+never the token. `--all` copies the counters too.
+
+### The schedule
+
+`balcony-trello-sync` declares `export const config = { schedule: '0 21 * * *' }`.
+The server reads that at start-up and runs the function in-process at 21:00
+UTC (06:00 in Tokyo) with a small cron of its own (`server/cron.mjs`, no
+dependency). Chosen over a host cron job calling an endpoint because there is
+nothing else to set up or keep in step: no crontab on the host, no bearer
+secret, no URL that has to exist only for the cron, and the schedule stays
+in the one place Netlify reads it from.
+
+Two guards. Only one container should run it, so a second copy of the app
+(there is none) gets `SCHEDULED_FUNCTIONS=off`; and a run that is still
+going when the next one is due is skipped. The sync is idempotent anyway
+(a job with an open card is never posted twice). A run due while the
+container is restarting is missed, not caught up, as on Netlify; the panel's
+*Sync now* covers that day.
+
+### Moving: the checklist
+
+Done in this order. Nothing here has been done yet.
+
+1. **The bucket.** Create a private bucket in Hetzner Object Storage, `nbg1`,
+   and an access key for it only.
+2. **The database.** Create `shinyashimada` on `apps-01`'s Postgres 17.
+   `pg_dump --no-owner --no-acl` from Neon (Singapore), restore it, then
+   compare row counts of `store_records`, `vocab_topics` and `vocab_entries`.
+   Shin's writes during the copy would be lost, so do it when he is not using
+   the site, or put the site in read-only by unsetting `DATABASE_URL` on
+   Netlify for the minutes it takes and redeploying (a function sees an env
+   change only after a deploy; the pages then run device-only and sync when
+   they next can).
+3. **The env file** on the server: everything in the table above, from
+   Netlify (`netlify env:list --context production --plain`; values marked
+   secret come back empty, fetch those from their source). `DATABASE_URL`
+   becomes the server's own.
+4. **The pictures:** `scripts/copy-blobs-to-s3.mjs` (above).
+5. **The app** on `apps-01`: build the image from this repo, start it on the
+   `edge` and `data` networks, and check `/api/health/live`,
+   `/api/store?health=1` (`"database": true`) and a page through
+   `curl --resolve shinyashimada.com:443:46.225.39.190`.
+6. **Caddy.** `shinyashimada.com` to the app on port 8000, and
+   `www.shinyashimada.com` as a 301 to the apex (what Netlify does today).
+   Netlify also sends `Strict-Transport-Security: max-age=31536000`; add it in
+   the site block to keep it.
+7. **DNS.** Today (checked 7 November 2026 with `dig`):
+   - nameservers `dns1`–`dns4.p09.nsone.net`: **Netlify DNS** (the SOA names
+     `domains+netlify.netlify.com`); the domain is registered at **GoDaddy**.
+   - `shinyashimada.com` A `13.215.239.219`, `52.74.6.109` (Netlify's load
+     balancer; TTL 120)
+   - `www.shinyashimada.com` A, the same two (TTL 112); it 301s to the apex
+   - no MX, TXT or CAA records.
+
+   The zone lives in Netlify, so leaving Netlify means moving the zone as well
+   as the records: recreate it at the new DNS host with apex A
+   `46.225.39.190` and `www` A `46.225.39.190` (or a CNAME to the apex), then
+   change the nameservers at GoDaddy. The records' TTLs are already two
+   minutes, but a nameserver change rides on the `.com` delegation's TTL (up
+   to two days), so for that long some visitors still reach Netlify: keep it
+   serving. Check that the new host serves the zone
+   (`dig @<new ns> shinyashimada.com`) before switching. Caddy gets its
+   certificate once the A records point at `apps-01`.
+8. **Stop Netlify's Trello sync** the moment the server's database is the
+   live one: unset `TRELLO_KEY` and `TRELLO_TOKEN` on Netlify and redeploy
+   (its function then logs "skipped"). Otherwise both run at 21:00 UTC, and Netlify's reads
+   the frozen Neon copy: two syncs racing on one Trello list post duplicate
+   cards, and the stale one re-posts jobs already done.
+9. **After.** Run the picture copy again; check the balcony, the library,
+   a vocabulary deck, a picture and, the next morning, the Trello sync in
+   the container's log (`[cron] balcony-trello-sync ran: 200`). Keep the
+   Netlify site and Neon database for two weeks as the way back (until the
+   delegation has moved everyone, Netlify's copy also takes writes into Neon:
+   check `store_records` there for anything newer than the switch), then
+   delete the site.
+
+### What does not work the same way
+
+- **No CDN.** Netlify caches `/api/weather` and `/api/news` at its edge
+  (`s-maxage`); here the functions' own ten-minute memo does that job, per
+  process. Pages are served from Nuremberg rather than Netlify's Singapore
+  edge, a longer round trip from Tokyo.
+- **The visitor's address is only as good as the proxy chain.** It is the
+  address Caddy saw. If Cloudflare's proxy (or any other) ever sits in front
+  of Caddy, that is Cloudflare's address, every visitor shares one passcode
+  allowance, and one guesser locks everyone out. Caddy would then need
+  `trusted_proxies` so the real address comes through.
+- **`/api/health/live`** exists only here; on Netlify it is a 404.
+- **Files only Netlify publishes:** the image leaves out `tests/`, so
+  `/tests/…` is a 404 here and a 200 there. Nothing links to it.
+- **Netlify publishes the new files.** `server/` and `Dockerfile` are
+  served as static files on the Netlify site, as the functions' source
+  already is. Nothing in them is secret.
 
 ## The shared library
 
@@ -312,7 +513,7 @@ so nothing queued is ever lost. `tests/browser-sync.mjs` covers both setups.
 ## Tests
 
 ```bash
-npm test              # pure logic: care scheduling, Spanish autocomplete, RSS parsing, Trello sync, camera, book metadata + CORS
+npm test              # pure logic: care scheduling, Spanish autocomplete, RSS parsing, Trello sync, camera, book metadata + CORS, the self-hosting server
 npm run serve &       # browser tests need the site served
 npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the app flows
 ```
@@ -363,7 +564,8 @@ shinyashimada.com/
 │   └── js/     i18n · shell · store · care · charts · weather · es-autocomplete + page scripts
 ├── data/       species.json · croissants.json · library-seed.json · magazines-seed.json · plants-seed.json · es-common.json
 ├── netlify/functions/   weather.mjs · news.mjs · store.mjs · books.mjs · …
-├── netlify/lib/         db · records · books · cors · trello · balcony
+├── netlify/lib/         db · records · books · cors · trello · balcony · blob-store · s3-blobs
+├── server/              the Node server for running without Netlify (+ Dockerfile)
 ├── tests/
 ├── schema.sql
 └── netlify.toml

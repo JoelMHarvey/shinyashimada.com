@@ -1,7 +1,8 @@
 /* ==========================================================================
    Where a vocabulary card's picture lives.
 
-   Netlify Blobs in production, a directory on disk when running locally, so
+   Netlify Blobs on Netlify, an S3 bucket on our own server when S3_BUCKET
+   is set (blob-store.mjs), a directory on disk otherwise, so
    the upload and browse flows can be exercised without deploying. Both are
    behind the same three calls: put, get, remove.
 
@@ -34,8 +35,8 @@ export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
  */
 async function blobStore() {
   try {
-    const { getStore } = await import('@netlify/blobs');
-    return getStore(STORE);
+    const { openStore } = await import('./blob-store.mjs');
+    return await openStore(STORE);
   } catch {
     return null;
   }
