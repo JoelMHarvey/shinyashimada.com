@@ -20,6 +20,11 @@
    a client writes that header itself, so keying on it would hand every
    request a fresh allowance.
 
+   Off Netlify, server/server.mjs supplies `context.ip` from the address
+   Caddy saw (the last X-Forwarded-For entry, which Caddy itself writes), and
+   the counters live in the S3 bucket when one is configured
+   (blob-store.mjs).
+
    Counters live in Netlify Blobs with strong consistency (an eventually
    consistent read would let a burst of guesses all see the same old count),
    or in memory where there is no blob store (dev, tests). A missing header is
@@ -38,8 +43,8 @@ const memory = new Map();
 
 async function store() {
   try {
-    const { getStore } = await import('@netlify/blobs');
-    return getStore({ name: STORE, consistency: 'strong' });
+    const { openStore } = await import('./blob-store.mjs');
+    return await openStore(STORE, { consistency: 'strong' });
   } catch {
     return null;
   }

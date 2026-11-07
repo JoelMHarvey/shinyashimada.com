@@ -18,8 +18,8 @@ const STORE = 'vocab-usage';
 
 async function store() {
   try {
-    const { getStore } = await import('@netlify/blobs');
-    return getStore(STORE);
+    const { openStore } = await import('./blob-store.mjs');
+    return await openStore(STORE);
   } catch {
     return null;
   }
