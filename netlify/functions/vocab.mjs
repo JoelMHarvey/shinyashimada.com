@@ -55,7 +55,7 @@ function getPool() {
       connectionTimeoutMillis: 8_000,
       // Neon terminates TLS with a certificate the Lambda trust store does
       // not carry; the connection is still encrypted.
-      ssl: url.includes('localhost') || url.includes('127.0.0.1')
+      ssl: url.includes('localhost') || url.includes('127.0.0.1') || /[?&]sslmode=disable\b/.test(url)
         ? false
         : { rejectUnauthorized: false }
     });
