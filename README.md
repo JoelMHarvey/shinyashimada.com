@@ -184,6 +184,7 @@ Names only; the values live in the server's env file, never here.
 | `TRUST_PROXY` | no | `false` to ignore `X-Forwarded-*` when nothing is in front |
 | `SCHEDULED_FUNCTIONS` | no | `off` in any second copy of the app (below) |
 | `HEARTBEAT_URL`, `HEARTBEAT_TOKEN` | no | the check-in to Mission Control after the daily sync (below). Either one unset or empty: no check-in |
+| `SENTRY_DSN` | no | the DSN Joel gives for GlitchTip. Set, server errors are sent there with personal data removed (`server/error-report.mjs`). Unset, nothing is sent and errors stay in the container's log |
 | `VOCAB_IMAGE_DIR` | no | where pictures go when no bucket is set; the image sets `/app/.vocab-images` |
 
 ### The database
