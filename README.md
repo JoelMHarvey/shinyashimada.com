@@ -183,6 +183,7 @@ Names only; the values live in the server's env file, never here.
 | `SITE_URL` | no | default `https://shinyashimada.com` |
 | `TRUST_PROXY` | no | `false` to ignore `X-Forwarded-*` when nothing is in front |
 | `SCHEDULED_FUNCTIONS` | no | `off` in any second copy of the app (below) |
+| `HEARTBEAT_URL`, `HEARTBEAT_TOKEN` | no | the check-in to Mission Control after the daily sync (below). Either one unset or empty: no check-in |
 | `VOCAB_IMAGE_DIR` | no | where pictures go when no bucket is set; the image sets `/app/.vocab-images` |
 
 ### The database
@@ -239,6 +240,16 @@ going when the next one is due is skipped. The sync is idempotent anyway
 (a job with an open card is never posted twice). A run due while the
 container is restarting is missed, not caught up, as on Netlify; the panel's
 *Sync now* covers that day.
+
+After a run that worked (the function answered 2xx) the server checks in to
+Mission Control: one GET to
+`{HEARTBEAT_URL}/{HEARTBEAT_TOKEN}/shinyashimada-balcony-trello-sync?project=shinyashimada&expected=86400&grace=7200`
+(`server/heartbeat.mjs`). `HEARTBEAT_URL` is `https://ops.joelmharvey.com/api/heartbeat`;
+both values go in `/etc/shinyashimada`, and the container is made again to
+read them. A run that throws or answers anything else does not check in. The
+check-in waits ten seconds at most and a failure is one `[heartbeat]` log
+line, without the token; it never fails the sync. A run that is skipped
+(Trello not set, sync switched off) answers 200, so it checks in too.
 
 ### Updating the server's copy
 
@@ -607,7 +618,7 @@ so nothing queued is ever lost. `tests/browser-sync.mjs` covers both setups.
 ## Tests
 
 ```bash
-npm test              # pure logic: care scheduling, Spanish autocomplete, RSS parsing, Trello sync, camera, book metadata + CORS, the self-hosting server
+npm test              # pure logic: care scheduling, Spanish autocomplete, RSS parsing, Trello sync, camera, book metadata + CORS, the self-hosting server, the heartbeat check-in
 npm run serve &       # browser tests need the site served
 npm run test:browser  # page smoke, mobile overflow, sync behaviour, and the app flows
 ```
