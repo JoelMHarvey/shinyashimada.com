@@ -79,8 +79,9 @@ describe('error-report', () => {
     for (const secret of SECRETS) assert.ok(!blob.includes(secret), secret);
     const value = event.exception.values[0];
     assert.equal(value.type, 'TypeError');
-    assert.ok(value.value.includes("'email'"));
-    assert.ok(value.value.includes('"users"'));
+    // quoted text goes whole, even a single word: it may be a name
+    assert.ok(!value.value.includes("'email'"));
+    assert.ok(value.value.includes('[text]'));
     assert.ok(value.value.includes('[email]'));
     assert.equal(event.transaction, 'POST /.netlify/functions/store');
     assert.ok(value.stacktrace.frames.length > 0);
@@ -96,6 +97,18 @@ describe('error-report', () => {
       assert.deepEqual(Object.keys(frame).sort(), ['filename', 'function', 'in_app', 'lineno']);
       assert.ok(!frame.filename.includes(home), frame.filename);
     }
+  });
+
+  test('drops a dumped query and short amounts', () => {
+    const message =
+      '\nInvalid `store.put()` call:\n\n' +
+      '{ data: { name: \'Shiso\', owner: "Jane", total: 1284.5, note: \'see you at 9\' } }\n\n' +
+      'Unique constraint failed on the fields: (`owner`), total 284.50 on 2026-11-22 at 09:15';
+    const out = scrub(message);
+    for (const secret of ['Shiso', 'Jane', '1284', '284.50', 'see you', '2026', '09:15', 'data:']) assert.ok(!out.includes(secret), secret);
+    assert.ok(out.includes('`store.put()`'));
+    assert.equal(scrub("KeyError: 'Jane'"), 'KeyError: [text]');
+    assert.equal(scrub('passphrase "open-sesame-balcony" refused'), 'passphrase [text] refused');
   });
 
   test('caps the message', () => {

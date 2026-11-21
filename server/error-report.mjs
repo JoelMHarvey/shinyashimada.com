@@ -16,35 +16,52 @@
  * JavaScript for this server. Keep the scrubbing and the event the same.
  */
 
-export const MAX_MESSAGE = 300;
+export const MAX_MESSAGE = 200;
 export const MAX_FRAMES = 40;
 export const MAX_EVENTS_PER_MINUTE = 20;
 const TIMEOUT_MS = 3000;
 
-const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
-const URL_RE = /\b[a-z][a-z0-9+.-]*:\/\/[^\s'"<>)]+/gi;
-const IPV4 = /\b\d{1,3}(?:\.\d{1,3}){3}\b/g;
-const IPV6 = /(?<![\w:.])(?:[0-9A-Fa-f]{0,4}:){2,7}[0-9A-Fa-f]{0,4}(?![\w:])/g;
-const PG_VALUE = /=\s*\([^)]*\)/g;
-const TOKEN = /\b[A-Za-z0-9_-]{24,}\b/g;
-const NUMBER = /\d{5,}/g;
-const QUOTED = /"([^"\n]*)"|'([^'\n]*)'|`([^`\n]*)`/g;
-const IDENT = /^[A-Za-z_][A-Za-z0-9_.\-/]{0,60}$/;
+const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g
+const URL_RE = /\b[a-z][a-z0-9+.-]*:\/\/[^\s'"<>)]+/gi
+const IPV6 = /(?<![\w:.])(?:[0-9A-Fa-f]{0,4}:){2,7}[0-9A-Fa-f]{0,4}(?![\w:])/g
+const PG_VALUE = /=\s*\([^)]*\)/g
+const QUOTED = /"[^"\n]*"|'[^'\n]*'/g
+const BACKTICK = /`([^`\n]*)`/g
+const CODE = /^[A-Za-z_][A-Za-z0-9_.]{0,60}(?:\(\))?$/
+const TOKEN = /\b[A-Za-z0-9_-]{24,}\b/g
+const NUMBER = /\d[\d.,:/-]*/g
+const ERROR_CODE = /^[A-Z0-9_]{2,24}$/
 
-/** Remove personal data from an error message. Order matters. */
+/**
+ * Remove personal data from an error message. Order matters.
+ *
+ * Strict on purpose: a message can quote what a person typed, or print the
+ * whole query it was given (Prisma does). So only the first and last lines are
+ * kept (the middle of a long message is where arguments are dumped), everything
+ * in single or double quotes goes, every number goes, and so do emails, links,
+ * IP addresses and long tokens. Code names in backticks stay. What cannot be
+ * caught is free text with no quotes round it inside those two lines.
+ */
 export function scrub(text) {
-  let s = text == null ? '' : String(text);
-  s = s.replace(EMAIL, '[email]');
-  s = s.replace(URL_RE, '[url]');
-  s = s.replace(PG_VALUE, '=([value])');
-  s = s.replace(IPV6, '[ip]');
-  s = s.replace(IPV4, '[ip]');
-  // A lone identifier in quotes (a column, a key, a module) is kept; anything
-  // with spaces or odd characters is treated as something a person typed.
-  s = s.replace(QUOTED, (m, a, b, c) => (IDENT.test(a ?? b ?? c ?? '') ? m : `${m[0]}[text]${m[0]}`));
-  s = s.replace(TOKEN, '[token]');
-  s = s.replace(NUMBER, '[number]');
-  return s.split(/\s+/).filter(Boolean).join(' ').slice(0, MAX_MESSAGE);
+  let s = text == null ? '' : String(text)
+  let lines = s.split('\n').map((l) => l.trim()).filter(Boolean)
+  if (lines.length > 2) lines = [lines[0], lines[lines.length - 1]]
+  s = lines.join(' | ')
+  s = s.replace(EMAIL, '[email]')
+  s = s.replace(URL_RE, '[url]')
+  s = s.replace(PG_VALUE, '=([value])')
+  s = s.replace(QUOTED, '[text]')
+  s = s.replace(BACKTICK, (m, inner) => (CODE.test(inner) ? m : '[text]'))
+  s = s.replace(IPV6, '[ip]')
+  s = s.replace(TOKEN, '[token]')
+  s = s.replace(NUMBER, '[n]')
+  return s.split(/\s+/).filter(Boolean).join(' ').slice(0, MAX_MESSAGE)
+}
+
+/** A machine code for the error (Prisma P2002, ECONNREFUSED, SQLSTATE), never text. */
+export function errorCode(error) {
+  const code = error?.code
+  return typeof code === 'string' && ERROR_CODE.test(code) ? code : ''
 }
 
 /** Store URL and public key for a DSN, or null when it is missing or malformed. */
@@ -95,6 +112,8 @@ export function buildEvent(error, ctx) {
   const err = error instanceof Error ? error : new Error(typeof error === 'string' ? error : 'non-error thrown');
   const tags = { app: ctx.app };
   if (ctx.where) tags.where = scrub(ctx.where).slice(0, 80);
+  const code = errorCode(error);
+  if (code) tags.code = code;
   const digest = err.digest;
   if (typeof digest === 'string' && /^[\w-]{1,20}$/.test(digest)) tags.digest = digest;
   return {
