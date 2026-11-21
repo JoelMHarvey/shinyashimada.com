@@ -27,6 +27,9 @@
                           only one runs the daily Trello sync
      HEARTBEAT_URL,       both set: a scheduled run that worked checks in to
      HEARTBEAT_TOKEN      Mission Control (server/heartbeat.mjs); else nothing
+     SENTRY_DSN           default unset; the DSN for GlitchTip. Set, server
+                          errors are sent there with personal data removed
+                          (server/error-report.mjs). Unset, nothing is sent
    ========================================================================== */
 
 import http from 'node:http';
@@ -34,6 +37,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { schedule } from './cron.mjs';
+import { installProcessHandlers, reportError } from './error-report.mjs';
 import { installNetlifyGlobal, loadFunctions, makeContext } from './functions.mjs';
 import { runWithHeartbeat } from './heartbeat.mjs';
 import { fillTarget, headersFor, loadRoutingConfig, matchPattern } from './netlify-config.mjs';
@@ -54,6 +58,9 @@ const HOP_BY_HOP = new Set([
 ]);
 
 const off = (v) => /^(0|false|off|no)$/i.test(String(v ?? ''));
+
+/** The name errors are filed under in GlitchTip. */
+const APP_NAME = 'shinyashimada';
 
 /** The visitor's address: Caddy's last X-Forwarded-For entry, or the socket. */
 export function clientIp(req, { trustProxy = true } = {}) {
@@ -93,7 +100,8 @@ export async function createApp({
   functionsDir = path.join(root, 'netlify', 'functions'),
   env = process.env,
   scheduler = !off(env.SCHEDULED_FUNCTIONS),
-  log = console
+  log = console,
+  report = reportError
 } = {}) {
   installNetlifyGlobal(env);
   const trustProxy = !off(env.TRUST_PROXY);
@@ -103,6 +111,14 @@ export async function createApp({
 
   const customPaths = new Map();
   for (const fn of functions.values()) for (const p of fn.paths) customPaths.set(p, fn);
+
+  /* Errors go to GlitchTip when SENTRY_DSN is set. Only the error, the kind
+     of place it happened and a function's name are passed on: never the
+     address asked for, a header or a body. */
+  const tell = (err, where, route) => {
+    Promise.resolve().then(() => report(err, { app: APP_NAME, where, ...(route ? { route } : {}) })).catch(() => {});
+  };
+  const fnRoute = (req, fn) => `${req.method} ${FUNCTIONS_PREFIX}${fn.name}`;
 
   /* ------------------------------------------------------ responses -- */
 
@@ -185,12 +201,20 @@ export async function createApp({
       response = await fn.call(request, context);
     } catch (err) {
       log.error(`[functions] ${fn.name} threw`, err);
+      tell(err, `function:${fn.name}`, fnRoute(req, fn));
       return send(res, 500, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
         JSON.stringify({ error: 'Internal error.', code: 'function-error' }), req.method);
     }
     if (!(response instanceof Response)) {
       log.error(`[functions] ${fn.name} returned no Response`);
+      tell(new Error(`function ${fn.name} returned no Response`), `function:${fn.name}`, fnRoute(req, fn));
       return send(res, 500, { 'Content-Type': 'text/plain; charset=utf-8' }, 'Function returned no Response', req.method);
+    }
+
+    // A function that caught its own error and answered 500: say so, by name.
+    // 502 (a service it calls is down) and 503 (not set up) are answers, not faults.
+    if (response.status === 500) {
+      tell(new Error(`function ${fn.name} answered ${response.status}`), `function:${fn.name}`, fnRoute(req, fn));
     }
 
     res.statusCode = response.status;
@@ -295,6 +319,7 @@ export async function createApp({
       await route(req, res);
     } catch (err) {
       log.error('[server] request failed', err);
+      tell(err, 'request', req.method);
       if (!res.headersSent) {
         send(res, 500, { 'Content-Type': 'text/plain; charset=utf-8' }, 'Internal Server Error', req.method);
       } else {
@@ -327,8 +352,12 @@ export async function createApp({
           await runWithHeartbeat(fn.name, fn.schedule, async () => {
             const response = await fn.call(req, makeContext({ ip: '127.0.0.1', siteUrl }));
             log.log(`[cron] ${fn.name} ran: ${response?.status}`);
+            if (response?.status >= 500) tell(new Error(`cron ${fn.name} answered ${response.status}`), `cron:${fn.name}`);
             return response;
           }, { env, log });
+        } catch (err) {
+          tell(err, `cron:${fn.name}`);
+          throw err;
         } finally {
           running = false;
         }
@@ -355,6 +384,7 @@ export async function createApp({
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 
 if (isMain) {
+  installProcessHandlers(APP_NAME);
   const port = Number(process.env.PORT) || 8000;
   const host = process.env.HOST || '0.0.0.0';
   const app = await createApp();
