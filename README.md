@@ -1,7 +1,15 @@
 # shinyashimada.com
 
-A rebuild of the old WordPress site as a static, trilingual site on Netlify,
-with a small serverless backend for the things that need to remember state.
+A rebuild of the old WordPress site as a static, trilingual site, with a
+small backend for the things that need to remember state.
+
+**Where it runs.** Since November 2026 the site runs on a server of our own,
+`apps-01`: one Node process in Docker serves the pages and the functions,
+with Postgres on the same server and the pictures in a private bucket. It was
+built for Netlify and the code still sits under `netlify/`, but the domain no
+longer points at Netlify. DNS is at Cloudflare. It is built and deployed by hand; see
+*Updating the server's copy* below. When something is wrong, see
+[`docs/RUNBOOK.md`](docs/RUNBOOK.md).
 
 Six sections:
 
@@ -43,6 +51,11 @@ honest "could not reach" state, and the plant inventory falls back to
 device-only storage.
 
 ## Deploying to Netlify
+
+This is how the site ran until November 2026. It is kept because the
+repository still deploys to Netlify unchanged, and because the variables and
+routes below are the same on the server. The live site is the one described
+under *Running without Netlify*.
 
 1. **Connect this repository.** Leave **Base directory**, **Build command**,
    **Publish directory** and **Functions directory** empty in the Netlify UI —
@@ -105,8 +118,9 @@ two.
 
 ## Running without Netlify
 
-The same repository also runs as one Node process on a server of our own
-(`apps-01`, behind its shared Caddy). Netlify deploys are unchanged:
+This is how the live site runs. The same repository runs as one Node process
+on a server of our own (`apps-01`, behind its shared Caddy). Netlify deploys
+are unchanged:
 `netlify.toml` is as it was, and Netlify's build and functions take no
 notice of `server/`, `Dockerfile` or `.dockerignore`.
 
@@ -226,9 +240,80 @@ going when the next one is due is skipped. The sync is idempotent anyway
 container is restarting is missed, not caught up, as on Netlify; the panel's
 *Sync now* covers that day.
 
+### Updating the server's copy
+
+A merge to `main` changes nothing on the server. This repository has no
+workflow, so nothing builds or deploys by itself: the site is deployed by
+hand, on purpose (decided 21 November 2026). After a merge:
+
+1. **Test first**, on your own machine: `npm test`. It needs `TZ=UTC` on a
+   machine east of UTC until four date assertions in `tests/care.test.mjs`
+   are fixed.
+2. **On `apps-01`, bring the copy up to date.** The site's folder is
+   `/srv/shinyashimada` and its settings are in `/etc/shinyashimada`.
+
+   ```bash
+   cd /srv/shinyashimada
+   git pull --ff-only
+   git log --oneline -1          # the commit about to go live
+   ```
+
+   Whether that folder is a git checkout of this repository is not verified;
+   if it is not, copy the repository there instead.
+3. **Keep the way back, then build.** The image is the whole site, pages
+   included, so every change needs a build, a content-only one too.
+
+   ```bash
+   docker tag <image> <image>:previous
+   docker build -t <image> .
+   ```
+
+   The `Dockerfile`'s own example calls the image `shinyashimada-app`. The
+   name in use on the server is not verified: `docker ps` shows it.
+4. **Start the new one in place of the old.** The container needs the
+   settings file, the `edge` network (Caddy reaches it there on port 8000,
+   by the name in Caddy's site file) and the `data` network (Postgres). How
+   it was first started, `docker run` or a compose file kept on the server,
+   is not verified, so read it off the running container before stopping it:
+
+   ```bash
+   docker inspect <container>    # name, networks, env file, restart policy
+   ```
+
+   Then make it again the same way with the new image. With a compose file
+   that is `docker compose up -d`; with `docker run` it is `docker stop`,
+   `docker rm` and the same `docker run` as before. The site is away for the
+   few seconds in between. Write the exact command here once it has been
+   read off the server.
+5. **Check it.**
+
+   ```bash
+   curl -sS https://shinyashimada.com/api/health/live          # {"ok":true}
+   curl -sS 'https://shinyashimada.com/api/store?health=1'     # "database": true
+   docker logs --tail 20 <container>                           # the [cron] line with the next run
+   ```
+
+   Then open the balcony with the passcode. `/api/store?health=1` says
+   `"ok": true` even with the database down, so read `database`.
+6. **If it is wrong, go back:** start the container from `<image>:previous`.
+   `docs/RUNBOOK.md` has the rest.
+
+A change to a setting needs no build: edit the file in `/etc/shinyashimada`,
+make the container again, and run `sudo systemctl start db-backup-settings`
+so the nightly settings backup has the new value.
+
+A change to `docs/` or this README needs no deploy at all. Note that the
+server serves the repository root, so once the image is next built these
+files are readable at the site's address, as they already are on GitHub.
+Nothing in them is secret, and nothing secret should be added.
+
 ### Moving: the checklist
 
-Done in this order. Nothing here has been done yet.
+Done in this order, in November 2026: Caddy's certificate for the domain
+dates from 7 November, and the site answers from `apps-01`. The steps are kept as
+the record of what was done and as the way to do it again. Step 9's last
+part is the one thing not confirmed: whether the Netlify site and the Neon
+database have since been deleted.
 
 1. **The bucket.** Create a private bucket in Hetzner Object Storage, `nbg1`,
    and an access key for it only.
@@ -248,12 +333,17 @@ Done in this order. Nothing here has been done yet.
 5. **The app** on `apps-01`: build the image from this repo, start it on the
    `edge` and `data` networks, and check `/api/health/live`,
    `/api/store?health=1` (`"database": true`) and a page through
-   `curl --resolve shinyashimada.com:443:46.225.39.190`.
+   `curl --resolve shinyashimada.com:443:<the address of apps-01>`.
 6. **Caddy.** `shinyashimada.com` to the app on port 8000, and
    `www.shinyashimada.com` as a 301 to the apex (what Netlify does today).
    Netlify also sends `Strict-Transport-Security: max-age=31536000`; add it in
    the site block to keep it.
-7. **DNS.** Today (checked 7 November 2026 with `dig`):
+7. **DNS.** Done: the zone is now at **Cloudflare** and both names point
+   at `apps-01` directly, with Cloudflare's proxy off (checked 21 November
+   2026 with `dig`). The domain is still registered at GoDaddy. Keep the
+   proxy off unless Caddy is given `trusted_proxies` first (see *What does
+   not work the same way*). What follows is how it stood before the move
+   (checked 7 November 2026 with `dig`):
    - nameservers `dns1`–`dns4.p09.nsone.net`: **Netlify DNS** (the SOA names
      `domains+netlify.netlify.com`); the domain is registered at **GoDaddy**.
    - `shinyashimada.com` A `13.215.239.219`, `52.74.6.109` (Netlify's load
@@ -262,8 +352,9 @@ Done in this order. Nothing here has been done yet.
    - no MX, TXT or CAA records.
 
    The zone lives in Netlify, so leaving Netlify means moving the zone as well
-   as the records: recreate it at the new DNS host with apex A
-   `46.225.39.190` and `www` A `46.225.39.190` (or a CNAME to the apex), then
+   as the records: recreate it at the new DNS host with an apex A record
+   and a `www` A record for the address of `apps-01` (or a CNAME to the
+   apex), then
    change the nameservers at GoDaddy. The records' TTLs are already two
    minutes, but a nameserver change rides on the `.com` delegation's TTL (up
    to two days), so for that long some visitors still reach Netlify: keep it
@@ -419,8 +510,11 @@ already has an open card — one card per job, however late it gets.
 2. The token needs **read and write** scope — cards are created, and completed
    ones are archived. Set an expiry you are comfortable with; when it lapses,
    the panel says so rather than failing silently.
-3. Put both in Netlify as `TRELLO_KEY` and `TRELLO_TOKEN`, then **redeploy** —
-   environment changes do not reach functions already running.
+3. Put both in the server's settings (`/etc/shinyashimada`) as `TRELLO_KEY`
+   and `TRELLO_TOKEN`, then make the container again so it reads them. (On
+   Netlify: set them there and **redeploy**; environment changes do not reach
+   functions already running.) Do not set them in both places: two syncs on
+   one Trello list post duplicate cards.
 4. On the site: Balcony → Data → *Trello sync…*, pick the board and list, choose
    the card language, and switch on the morning sync.
 
@@ -566,6 +660,7 @@ shinyashimada.com/
 ├── netlify/functions/   weather.mjs · news.mjs · store.mjs · books.mjs · …
 ├── netlify/lib/         db · records · books · cors · trello · balcony · blob-store · s3-blobs
 ├── server/              the Node server for running without Netlify (+ Dockerfile)
+├── docs/                RUNBOOK.md (down, restore, changing keys) · onenote-import.md
 ├── tests/
 ├── schema.sql
 └── netlify.toml
