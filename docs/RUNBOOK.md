@@ -122,6 +122,10 @@ Work down the list and stop when something is wrong.
 8. **The Trello cards stopped.** The log has one line a day at 21:00 UTC:
    `[cron] balcony-trello-sync ran: 200`, or `[cron] job failed`. A lapsed
    token shows in the balcony's Trello panel. See `TRELLO_TOKEN` below.
+   Mission Control shows the same thing as `shinyashimada-balcony-trello-sync`
+   going late: a good run checks in there, a failed one does not (README,
+   "The schedule"). A `[heartbeat]` line in the log means the sync ran but
+   the check-in did not get through.
 
 ## Restore the database
 
@@ -231,6 +235,7 @@ is needed for a key change.
 | `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_FORCE_PATH_STYLE` | Not secrets. They change only if the bucket moves | | |
 | `ANTHROPIC_API_KEY` (and the optional `ANTHROPIC_WORKSPACE_ID`) | Anthropic Console, API keys: create the new key, set it, restart, then delete the old one | Only `/api/vocab-review` (marking a sentence in ¡Vamos, Español!). With no key it answers 503 `no_api_key`; nothing else on the site uses it | Mark one sentence in the writing pad |
 | `TRELLO_KEY`, `TRELLO_TOKEN` | Trello's Power-Up admin page: the API key, and a token for the account with read and write scope. The token has an expiry chosen when it is made; the current one's date is not recorded anywhere, so write the new date in the fleet's status file | The morning sync and the Trello panel. A lapsed or revoked token shows in the panel as unauthorised, and the 21:00 UTC run logs a failure. The board and list chosen in the panel are kept in the database, not in the token, so they survive. Revoke the old token on Trello afterwards | Balcony, Data, *Trello sync*, *Sync now* |
+| `HEARTBEAT_TOKEN` (with `HEARTBEAT_URL`, not a secret) | Mission Control, at ops.joelmharvey.com. Where its token is kept there is **not verified** from this repository | Nothing on the site. Until the new one is set and the container made again, check-ins are refused and Mission Control shows the sync as late | The next 21:00 UTC run shows in Mission Control; the log has no `[heartbeat]` line |
 | `CAMERA_STREAM_URL` | Not issued: it is the public hostname of the Cloudflare tunnel in front of the relay at home (`homelab/README.md`). The secrets behind it (`CAMERA_USER`, `CAMERA_PASS`, `TUNNEL_TOKEN`) live in `homelab/.env` on the machine at home, never on `apps-01` | Anyone who learnt the old address can still open the stream until the tunnel's hostname is changed in Cloudflare Zero Trust. To cut it off: change the hostname there, then set the new URL here. Changing the camera's own password means editing `homelab/.env` and restarting the relay | The camera card on the balcony page plays |
 
 Not secrets, and not rotated: `CAMERA_LABEL`, `CAMERA_MODE`,

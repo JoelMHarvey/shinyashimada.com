@@ -25,6 +25,8 @@
                           the socket's address (no proxy in front)
      SCHEDULED_FUNCTIONS  default on; "off" in any second copy of the app, so
                           only one runs the daily Trello sync
+     HEARTBEAT_URL,       both set: a scheduled run that worked checks in to
+     HEARTBEAT_TOKEN      Mission Control (server/heartbeat.mjs); else nothing
    ========================================================================== */
 
 import http from 'node:http';
@@ -33,6 +35,7 @@ import { fileURLToPath } from 'node:url';
 
 import { schedule } from './cron.mjs';
 import { installNetlifyGlobal, loadFunctions, makeContext } from './functions.mjs';
+import { runWithHeartbeat } from './heartbeat.mjs';
 import { fillTarget, headersFor, loadRoutingConfig, matchPattern } from './netlify-config.mjs';
 import {
   STATIC_CACHE_CONTROL, contentTypeFor, notModified, readWithEtag, resolveStatic
@@ -319,8 +322,13 @@ export async function createApp({
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ next_run: at.toISOString() })
           });
-          const response = await fn.call(req, makeContext({ ip: '127.0.0.1', siteUrl }));
-          log.log(`[cron] ${fn.name} ran: ${response?.status}`);
+          // A 2xx run checks in to Mission Control; a throw or any other
+          // status does not (server/heartbeat.mjs).
+          await runWithHeartbeat(fn.name, fn.schedule, async () => {
+            const response = await fn.call(req, makeContext({ ip: '127.0.0.1', siteUrl }));
+            log.log(`[cron] ${fn.name} ran: ${response?.status}`);
+            return response;
+          }, { env, log });
         } finally {
           running = false;
         }
