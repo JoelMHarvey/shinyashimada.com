@@ -5,7 +5,7 @@
 #   docker run --rm -p 8000:8000 --env-file .env shinyashimada-app
 #
 # Netlify ignores this file; its deploys are unchanged.
-FROM node:22.23.4-bookworm-slim
+FROM node:26.13.1-bookworm-slim
 
 ENV NODE_ENV=production \
     PORT=8000 \
