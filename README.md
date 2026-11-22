@@ -258,9 +258,15 @@ A merge to `main` changes nothing on the server. This repository has no
 workflow, so nothing builds or deploys by itself: the site is deployed by
 hand, on purpose (decided 21 November 2026). After a merge:
 
-1. **Test first**, on your own machine: `npm test`. It needs `TZ=UTC` on a
-   machine east of UTC until four date assertions in `tests/care.test.mjs`
-   are fixed.
+1. **Check the tests passed.** Every push to `main` runs `npm test` and
+   `npm run test:browser` on GitHub (`.github/workflows/test.yml`); deploy
+   only a commit whose run is green:
+
+   ```bash
+   gh run list --repo JoelMHarvey/shinyashimada.com --branch main --limit 1
+   ```
+
+   `npm test` also passes on your own machine, whatever its timezone.
 2. **On `apps-01`, bring the copy up to date.** The site's folder is
    `/srv/shinyashimada` and its settings are in `/etc/shinyashimada`.
 

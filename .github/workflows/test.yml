@@ -2,10 +2,6 @@
 # `npm test` (Node only) and `npm run test:browser` (the pages in Chromium,
 # against the site served on port 8899 as the README says).
 #
-# The runner's clock is UTC. tests/care.test.mjs fails 4 of its 32 checks on
-# a machine set to Tokyo time and passes here: that is a fault in the test's
-# date handling, still open, and this workflow does not exercise it.
-#
 # No secret is needed. Nothing here deploys: the site is deployed by hand.
 name: test
 
