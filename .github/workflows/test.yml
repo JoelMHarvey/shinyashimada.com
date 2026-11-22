@@ -6,10 +6,6 @@
 # a machine set to Tokyo time and passes here: that is a fault in the test's
 # date handling, still open, and this workflow does not exercise it.
 #
-# One browser script fails on main today, tests/browser-mobile.mjs. It runs
-# in its own step, which reports the failure without failing the job; see the
-# comment there. Every other script must pass.
-#
 # No secret is needed. Nothing here deploys: the site is deployed by hand.
 name: test
 
@@ -43,7 +39,7 @@ jobs:
       - run: npm test
 
   browser:
-    name: browser tests (mobile overflow check fails and is reported, not enforced)
+    name: browser tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -62,25 +58,4 @@ jobs:
             sleep 1
           done
           cat /tmp/http-server.log; exit 1
-      # The scripts of `npm run test:browser`, one step each side of the one
-      # that fails. Keep this list in step with package.json.
-      - name: browser tests (all but the mobile overflow check)
-        run: |
-          node tests/browser-smoke.mjs / /plants/ /library/ /tokyo/ /croissants/ /forza/ /research/ /404.html
-          for t in sync trello camera status plants plants-seed croissants library library-import library-recover library-magazines vamos-write; do
-            echo "== tests/browser-$t.mjs"
-            node tests/browser-$t.mjs
-          done
-      # KNOWN FAILURE on main since before this workflow existed: on a phone
-      # width the header tools overflow by 8px on /, /plants/, /tokyo/,
-      # /croissants/ and /research/. It is a real fault in the pages. The step
-      # is allowed to fail so the rest of the suite still counts, and it
-      # leaves a warning on every run. When the header is fixed, delete
-      # `continue-on-error` and the warning step.
-      - name: mobile overflow check (known failure, does not fail the job)
-        id: mobile
-        continue-on-error: true
-        run: node tests/browser-mobile.mjs
-      - name: say so when the mobile check failed
-        if: steps.mobile.outcome == 'failure'
-        run: echo "::warning title=tests/browser-mobile.mjs fails::Header tools overflow on a phone width on five pages. Known, not fixed; see the mobile step's log."
+      - run: npm run test:browser
