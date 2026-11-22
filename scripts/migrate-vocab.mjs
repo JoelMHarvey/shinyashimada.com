@@ -14,6 +14,8 @@ import path from 'node:path';
 
 import pg from 'pg';
 
+import { connectionFor } from '../netlify/lib/db-ssl.mjs';
+
 const here = path.dirname(fileURLToPath(import.meta.url));
 const schemaPath = path.join(here, '..', 'schema-vocab.sql');
 
@@ -26,10 +28,7 @@ if (!url) {
 const sql = await readFile(schemaPath, 'utf8');
 
 const client = new pg.Client({
-  connectionString: url,
-  // Neon terminates TLS with a certificate the default trust store does not
-  // carry; the connection is still encrypted.
-  ssl: url.includes('localhost') ? false : { rejectUnauthorized: false }
+  ...connectionFor(url)
 });
 
 await client.connect();
