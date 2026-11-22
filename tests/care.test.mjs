@@ -19,6 +19,10 @@ function at(iso, weather = 1) {
 }
 const daysAgo = (iso, n) => { const d = new Date(iso); d.setDate(d.getDate() - n); return d.toISOString(); };
 const taskOf = (c, p, type) => c.tasksFor(p).find(t => t.type === type);
+// The scheduler works in local time (a pruning window opens at local midnight
+// on the 1st), so read the month back in local time too. Reading it in UTC put
+// the date in the month before on any machine east of Greenwich.
+const ym = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 
 /* ---- seasons ---------------------------------------------------------- */
 check('season Apr', Care.seasonOf(new Date('2026-04-15')), 'spring');
@@ -68,12 +72,12 @@ const hydrangea = id => ({ speciesId: 'hydrangea', care: id });
 check('hydrangea in July, never pruned -> due now',
   taskOf(at('2026-07-10'), hydrangea({}), 'prune').state, 'today');
 check('hydrangea in July, pruned 5 days ago -> waits a year',
-  taskOf(at('2026-07-10'), hydrangea({ pruned: daysAgo('2026-07-10', 5) }), 'prune').date.toISOString().slice(0, 7),
+  ym(taskOf(at('2026-07-10'), hydrangea({ pruned: daysAgo('2026-07-10', 5) }), 'prune').date),
   '2027-07');
 check('hydrangea in March -> next window is this July',
-  taskOf(at('2026-03-10'), hydrangea({}), 'prune').date.toISOString().slice(0, 7), '2026-07');
+  ym(taskOf(at('2026-03-10'), hydrangea({}), 'prune').date), '2026-07');
 check('hydrangea in September -> next window is next July',
-  taskOf(at('2026-09-10'), hydrangea({}), 'prune').date.toISOString().slice(0, 7), '2027-07');
+  ym(taskOf(at('2026-09-10'), hydrangea({}), 'prune').date), '2027-07');
 check('hydrangea pruned last year, July again -> due now',
   taskOf(at('2026-07-10'), hydrangea({ pruned: '2025-07-12T00:00:00Z' }), 'prune').state, 'today');
 
@@ -82,7 +86,7 @@ check('rosemary pruned in April, checked in September -> due again',
   taskOf(at('2026-09-10'), { speciesId: 'rosemary', care: { pruned: '2026-04-20T00:00:00Z' } }, 'prune').state,
   'today');
 check('rosemary pruned in April, checked in May -> already done',
-  taskOf(at('2026-05-10'), { speciesId: 'rosemary', care: { pruned: '2026-04-20T00:00:00Z' } }, 'prune').date.toISOString().slice(0, 7),
+  ym(taskOf(at('2026-05-10'), { speciesId: 'rosemary', care: { pruned: '2026-04-20T00:00:00Z' } }, 'prune').date),
   '2026-09');
 
 // Haworthia has no pruning at all.
