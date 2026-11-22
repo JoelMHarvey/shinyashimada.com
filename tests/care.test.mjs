@@ -47,8 +47,11 @@ check('manual override wins',
 /* ---- watering due dates ----------------------------------------------- */
 let c = at('2026-08-10');
 check('never watered -> due today', taskOf(c, monstera, 'water').state, 'today');
+// "Today" is the day of the test's own "now". A fixed 09:00 UTC stamp was
+// already tomorrow on a machine west of Greenwich, where "now" (UTC midnight)
+// is still the evening of the 9th.
 check('watered today -> not due',
-  taskOf(c, { speciesId: 'monstera', care: { watered: '2026-08-10T09:00:00Z' } }, 'water').days, 5);
+  taskOf(c, { speciesId: 'monstera', care: { watered: daysAgo('2026-08-10', 0) } }, 'water').days, 5);
 check('watered 8 days ago in summer -> 3 days overdue',
   taskOf(c, { speciesId: 'monstera', care: { watered: daysAgo('2026-08-10', 8) } }, 'water').days, -3);
 check('overdue state',
