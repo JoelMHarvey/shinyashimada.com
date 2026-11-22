@@ -171,7 +171,7 @@ Names only; the values live in the server's env file, never here.
 
 | Variable | Required? | For |
 |---|---|---|
-| `DATABASE_URL` | yes, for anything that remembers | the store, the library, the vocabulary, the Trello settings. On `apps-01`: `postgres://…@postgres:5432/shinyashimada`. Without it the site runs device-only, as on Netlify |
+| `DATABASE_URL` | yes, for anything that remembers | the store, the library, the vocabulary, the Trello settings. On `apps-01`: `postgres://…@postgres:5432/shinyashimada`. A database on this machine or its Docker network is reached without TLS; any other is reached with TLS and its certificate is checked (`netlify/lib/db-ssl.mjs`). Without it the site runs device-only, as on Netlify |
 | `SITE_PASSCODE` | yes, before real data | as on Netlify (above) |
 | `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | yes, to replace Netlify Blobs | the private bucket (below). `S3_ENDPOINT=https://nbg1.your-objectstorage.com`, `S3_REGION=nbg1` |
 | `S3_FORCE_PATH_STYLE` | no | `true` for `https://endpoint/bucket/key`; virtual-host style otherwise |

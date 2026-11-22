@@ -23,6 +23,7 @@
 import pg from 'pg';
 
 import { corsHeaders, preflight } from '../lib/cors.mjs';
+import { connectionFor } from '../lib/db-ssl.mjs';
 import { checkPasscode, lockedResponseInit } from '../lib/passcode.mjs';
 import { prepareRecords, writeRecords } from '../lib/records.mjs';
 
@@ -43,15 +44,12 @@ function getPool() {
   if (!url) return null;
   if (!pool) {
     pool = new Pool({
-      connectionString: url,
+      // No TLS on this machine or its Docker network; anywhere else TLS with
+      // the certificate checked. See netlify/lib/db-ssl.mjs.
+      ...connectionFor(url),
       max: 3,
       idleTimeoutMillis: 10_000,
-      connectionTimeoutMillis: 8_000,
-      // Neon and Supabase both terminate TLS with certificates the Lambda
-      // trust store does not carry; the connection is still encrypted.
-      ssl: url.includes('localhost') || url.includes('127.0.0.1') || /[?&]sslmode=disable\b/.test(url)
-        ? false
-        : { rejectUnauthorized: false }
+      connectionTimeoutMillis: 8_000
     });
     pool.on('error', (err) => console.error('[store] idle client error', err));
   }

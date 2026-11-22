@@ -33,6 +33,8 @@ import { readFile } from 'node:fs/promises';
 
 import pg from 'pg';
 
+import { connectionFor } from '../netlify/lib/db-ssl.mjs';
+
 const LANGUAGE = 'es';
 const SLUG_RE = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 
@@ -102,8 +104,7 @@ if (dryRun) {
 /* -------------------------------------------------------------------- load */
 
 const client = new pg.Client({
-  connectionString: url,
-  ssl: url.includes('localhost') ? false : { rejectUnauthorized: false }
+  ...connectionFor(url)
 });
 
 await client.connect();

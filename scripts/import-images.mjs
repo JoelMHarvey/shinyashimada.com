@@ -28,6 +28,8 @@ import path from 'node:path';
 
 import pg from 'pg';
 
+import { connectionFor } from '../netlify/lib/db-ssl.mjs';
+
 const argv = process.argv.slice(2);
 const value = (name, fallback = null) => {
   const i = argv.indexOf(`--${name}`);
@@ -88,8 +90,7 @@ if (dryRun) {
 }
 
 const client = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false }
+  ...connectionFor(process.env.DATABASE_URL)
 });
 await client.connect();
 
