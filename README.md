@@ -246,7 +246,7 @@ After a run that worked (the function answered 2xx) the server checks in to
 Mission Control: one GET to
 `{HEARTBEAT_URL}/{HEARTBEAT_TOKEN}/shinyashimada-balcony-trello-sync?project=shinyashimada&expected=86400&grace=7200`
 (`server/heartbeat.mjs`). `HEARTBEAT_URL` is `https://ops.joelmharvey.com/api/heartbeat`;
-both values go in `/etc/shinyashimada`, and the container is made again to
+both values go in `/etc/shinyashimada/app.env`, and the container is made again to
 read them. A run that throws or answers anything else does not check in. The
 check-in waits ten seconds at most and a failure is one `[heartbeat]` log
 line, without the token; it never fails the sync. A run that is skipped
@@ -255,7 +255,7 @@ line, without the token; it never fails the sync. A run that is skipped
 ### Updating the server's copy
 
 A merge to `main` changes nothing on the server. This repository has no
-workflow, so nothing builds or deploys by itself: the site is deployed by
+deploy workflow, so nothing builds or deploys by itself: the site is deployed by
 hand, on purpose (decided 21 November 2026). After a merge:
 
 1. **Check the tests passed.** Every push to `main` runs `npm test` and
@@ -267,58 +267,94 @@ hand, on purpose (decided 21 November 2026). After a merge:
    ```
 
    `npm test` also passes on your own machine, whatever its timezone.
-2. **On `apps-01`, bring the copy up to date.** The site's folder is
-   `/srv/shinyashimada` and its settings are in `/etc/shinyashimada`.
+2. **Know what is on the server.** The site runs on `apps-01` as the
+   container `shinyashimada-app-1`, from a compose file at
+   `/srv/shinyashimada/docker-compose.yml`. That folder holds only the
+   compose file: it is not a git checkout, so there is nothing to pull
+   there. The compose file names the image outright, on one line (line 5 on
+   23 November 2026), and reads the settings from one file:
+
+   ```yaml
+   image: shinyashimada-app:<first 12 characters of the commit>
+   env_file: [/etc/shinyashimada/app.env]
+   ```
+
+   The image is built on the server, from a checkout on your own Mac, sent
+   over SSH. The steps below write `<server>` for the address you use to
+   reach `apps-01` over SSH (user and host); it is not written here.
+3. **On the Mac, build the image on the server.** In a checkout of this
+   repository:
+
+   ```bash
+   git fetch origin
+   TAG=$(git rev-parse origin/main | cut -c1-12)
+   echo $TAG                     # the commit about to go live
+   git archive origin/main | DOCKER_HOST=ssh://<server> docker build -t shinyashimada-app:$TAG -
+   ```
+
+   `git archive` sends exactly what is committed on `origin/main`, whatever
+   branch or unsaved work the checkout has. The image is the whole site,
+   pages included, so every change needs a build, a content-only one too.
+   The image that is running keeps its own tag, so it stays on the server as
+   the way back.
+4. **On `apps-01`, point the compose file at the new image.** Keep a copy of
+   the file as it was, change the one image line, and read it back. Type the
+   tag from step 3 in place of `<tag>`:
 
    ```bash
    cd /srv/shinyashimada
-   git pull --ff-only
-   git log --oneline -1          # the commit about to go live
+   grep -n 'image:' docker-compose.yml          # the tag running now
+   sudo cp docker-compose.yml docker-compose.yml.bak
+   sudo sed -i 's|image: shinyashimada-app:.*|image: shinyashimada-app:<tag>|' docker-compose.yml
+   grep -n 'image:' docker-compose.yml          # the new tag
    ```
 
-   Whether that folder is a git checkout of this repository is not verified;
-   if it is not, copy the repository there instead.
-3. **Keep the way back, then build.** The image is the whole site, pages
-   included, so every change needs a build, a content-only one too.
+5. **Start the new one in place of the old.** Still in `/srv/shinyashimada`:
 
    ```bash
-   docker tag <image> <image>:previous
-   docker build -t <image> .
+   sudo docker compose up -d --wait
    ```
 
-   The `Dockerfile`'s own example calls the image `shinyashimada-app`. The
-   name in use on the server is not verified: `docker ps` shows it.
-4. **Start the new one in place of the old.** The container needs the
-   settings file, the `edge` network (Caddy reaches it there on port 8000,
-   by the name in Caddy's site file) and the `data` network (Postgres). How
-   it was first started, `docker run` or a compose file kept on the server,
-   is not verified, so read it off the running container before stopping it:
-
-   ```bash
-   docker inspect <container>    # name, networks, env file, restart policy
-   ```
-
-   Then make it again the same way with the new image. With a compose file
-   that is `docker compose up -d`; with `docker run` it is `docker stop`,
-   `docker rm` and the same `docker run` as before. The site is away for the
-   few seconds in between. Write the exact command here once it has been
-   read off the server.
-5. **Check it.**
+   `--wait` returns once the container's own health check passes, and fails
+   if it does not. The site is away for the few seconds in between.
+6. **Check it.**
 
    ```bash
    curl -sS https://shinyashimada.com/api/health/live          # {"ok":true}
    curl -sS 'https://shinyashimada.com/api/store?health=1'     # "database": true
-   docker logs --tail 20 <container>                           # the [cron] line with the next run
+   curl -sS -o /dev/null -w '%{http_code}\n' https://shinyashimada.com/api/trello   # 401 without the passcode
+   sudo docker logs --tail 20 shinyashimada-app-1              # the [cron] line with the next run
    ```
 
    Then open the balcony with the passcode. `/api/store?health=1` says
    `"ok": true` even with the database down, so read `database`.
-6. **If it is wrong, go back:** start the container from `<image>:previous`.
-   `docs/RUNBOOK.md` has the rest.
+7. **If it is wrong, go back.** In `/srv/shinyashimada`, put the old image
+   line back and start it again. The old image is still on the server, so
+   this needs no build:
 
-A change to a setting needs no build: edit the file in `/etc/shinyashimada`,
-make the container again, and run `sudo systemctl start db-backup-settings`
-so the nightly settings backup has the new value.
+   ```bash
+   sudo cp docker-compose.yml.bak docker-compose.yml
+   grep -n 'image:' docker-compose.yml          # the tag from before
+   sudo docker compose up -d --wait
+   ```
+
+   `docs/RUNBOOK.md` has the rest.
+8. **Write it down.** Change "Last deploy" below, and the same lines in
+   `docs/RUNBOOK.md`.
+
+**Last deploy:** 23 November 2026, `main` at `aa498d1`, by Joel. Seen from
+outside afterwards: every section 200, `/api/health/live` 200,
+`/api/store?health=1` reporting `"database": true`, and `/api/trello` 401
+without a key. The image from before it, `shinyashimada-app:fdc6393d8303`,
+and `/srv/shinyashimada/docker-compose.yml.bak` (the compose file that names
+it) were left on the server that day as the way back.
+
+A change to a setting needs no build: edit `/etc/shinyashimada/app.env`,
+make the container again so it reads the file
+(`sudo docker compose up -d --wait --force-recreate` in `/srv/shinyashimada`;
+a plain `docker restart` does not read it), and run
+`sudo systemctl start db-backup-settings` so the nightly settings backup has
+the new value.
 
 A change to `docs/` or this README needs no deploy at all. Note that the
 server serves the repository root, so once the image is next built these
@@ -528,7 +564,7 @@ already has an open card — one card per job, however late it gets.
 2. The token needs **read and write** scope — cards are created, and completed
    ones are archived. Set an expiry you are comfortable with; when it lapses,
    the panel says so rather than failing silently.
-3. Put both in the server's settings (`/etc/shinyashimada`) as `TRELLO_KEY`
+3. Put both in the server's settings (`/etc/shinyashimada/app.env`) as `TRELLO_KEY`
    and `TRELLO_TOKEN`, then make the container again so it reads them. (On
    Netlify: set them there and **redeploy**; environment changes do not reach
    functions already running.) Do not set them in both places: two syncs on
