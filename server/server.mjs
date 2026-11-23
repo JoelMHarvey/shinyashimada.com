@@ -12,6 +12,8 @@
        with a standard Request and a context carrying the visitor's address
      - the scheduled function on its cron, in UTC (server/cron.mjs)
      - GET /api/health/live, 200 without touching the database
+     - GET /api/health, 200 once the database answers a SELECT 1, else 503;
+       the address the watches call
 
    Behind Caddy: TLS, compression and the domain are Caddy's. The visitor's
    address is the last X-Forwarded-For entry, which Caddy writes itself
@@ -36,6 +38,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { getPool } from '../netlify/lib/db.mjs';
 import { schedule } from './cron.mjs';
 import { installProcessHandlers, reportError } from './error-report.mjs';
 import { installNetlifyGlobal, loadFunctions, makeContext } from './functions.mjs';
@@ -61,6 +64,34 @@ const off = (v) => /^(0|false|off|no)$/i.test(String(v ?? ''));
 
 /** The name errors are filed under in GlitchTip. */
 const APP_NAME = 'shinyashimada';
+
+/** How long /api/health waits for the database before calling it down. */
+export const HEALTH_DB_TIMEOUT_MS = 3000;
+
+/**
+ * Is the database answering? The same cheap check as /api/store?health=1
+ * (SELECT 1), with a time limit so a hung connection reads as down and not
+ * as a probe that never returns. False with no DATABASE_URL. Never throws.
+ */
+export async function databaseUp({ pool, timeoutMs = HEALTH_DB_TIMEOUT_MS, log = console } = {}) {
+  let timer;
+  try {
+    const db = pool === undefined ? getPool() : pool;
+    if (!db) return false;
+    await Promise.race([
+      db.query('SELECT 1'),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('timed out')), timeoutMs);
+      })
+    ]);
+    return true;
+  } catch (err) {
+    log.error('[health] database check failed', err);
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /** The visitor's address: Caddy's last X-Forwarded-For entry, or the socket. */
 export function clientIp(req, { trustProxy = true } = {}) {
@@ -101,7 +132,8 @@ export async function createApp({
   env = process.env,
   scheduler = !off(env.SCHEDULED_FUNCTIONS),
   log = console,
-  report = reportError
+  report = reportError,
+  dbCheck = () => databaseUp({ log })
 } = {}) {
   installNetlifyGlobal(env);
   const trustProxy = !off(env.TRUST_PROXY);
@@ -286,6 +318,15 @@ export async function createApp({
     if (pathname === '/api/health/live') {
       return send(res, 200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
         JSON.stringify({ ok: true }), req.method);
+    }
+
+    // For the watches: the process and the database. Open, never cached, and
+    // nothing in the answer but up or down. A database that is down is an
+    // answer (503), not a fault, so it is not sent to GlitchTip.
+    if (pathname === '/api/health') {
+      const up = await dbCheck().catch(() => false);
+      return send(res, up ? 200 : 503, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' },
+        JSON.stringify(up ? { status: 'ok', db: 'up' } : { status: 'degraded', db: 'down' }), req.method);
     }
 
     const direct = functionFor(pathname);
