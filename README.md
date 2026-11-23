@@ -145,6 +145,11 @@ notice of `server/`, `Dockerfile` or `.dockerignore`.
   the function's `export const config` (below).
 - **`GET /api/health/live`**: 200 without touching the database. The
   container's health check.
+- **`GET /api/health`**: the address the watches call. 200
+  `{"status":"ok","db":"up"}` once the database answers a `SELECT 1` (the
+  check `/api/store?health=1` makes), 503 `{"status":"degraded","db":"down"}`
+  when it does not within three seconds or `DATABASE_URL` is not set. Open,
+  never cached, nothing else in the answer.
 
 TLS, compression and the domain are Caddy's. The visitor's address is the
 last `X-Forwarded-For` entry, which Caddy writes itself (it replaces whatever
@@ -321,6 +326,7 @@ hand, on purpose (decided 21 November 2026). After a merge:
 
    ```bash
    curl -sS https://shinyashimada.com/api/health/live          # {"ok":true}
+   curl -sS https://shinyashimada.com/api/health               # {"status":"ok","db":"up"}
    curl -sS 'https://shinyashimada.com/api/store?health=1'     # "database": true
    curl -sS -o /dev/null -w '%{http_code}\n' https://shinyashimada.com/api/trello   # 401 without the passcode
    sudo docker logs --tail 20 shinyashimada-app-1              # the [cron] line with the next run
@@ -439,7 +445,7 @@ database have since been deleted.
   of Caddy, that is Cloudflare's address, every visitor shares one passcode
   allowance, and one guesser locks everyone out. Caddy would then need
   `trusted_proxies` so the real address comes through.
-- **`/api/health/live`** exists only here; on Netlify it is a 404.
+- **`/api/health/live`** and **`/api/health`** exist only here; on Netlify each is a 404.
 - **Files only Netlify publishes:** the image leaves out `tests/`, so
   `/tests/…` is a 404 here and a 200 there. Nothing links to it.
 - **Netlify publishes the new files.** `server/` and `Dockerfile` are

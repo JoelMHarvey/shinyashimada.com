@@ -14,7 +14,7 @@ import path from 'node:path';
 import { after, before, describe, test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import { createApp, clientIp } from '../server/server.mjs';
+import { createApp, clientIp, databaseUp } from '../server/server.mjs';
 import { nextRun, parseCron, schedule } from '../server/cron.mjs';
 import { loadRoutingConfig, matchPattern, parseToml } from '../server/netlify-config.mjs';
 import { createS3Blobs, signRequest } from '../netlify/lib/s3-blobs.mjs';
@@ -201,6 +201,72 @@ describe('functions behind /api and /.netlify/functions', () => {
     const res = await get(srv.base, '/api/health/live');
     assert.equal(res.status, 200);
     assert.deepEqual(await res.json(), { ok: true });
+  });
+});
+
+/* ------------------------------------------------------------ health -- */
+
+describe('GET /api/health, the address the watches call', () => {
+  const appWith = async (dbCheck) => {
+    const app = await createApp({ root: ROOT, scheduler: false, log: quiet, env: { ...process.env }, dbCheck });
+    return listen(app.handle);
+  };
+
+  test('200 {"status":"ok","db":"up"} when the database answers, never cached, no passcode', async () => {
+    const srv = await appWith(async () => true);
+    try {
+      const res = await get(srv.base, '/api/health');
+      assert.equal(res.status, 200);
+      assert.equal(res.headers.get('cache-control'), 'no-store');
+      assert.match(res.headers.get('content-type'), /application\/json/);
+      assert.equal(await res.text(), '{"status":"ok","db":"up"}');
+    } finally {
+      await srv.close();
+    }
+  });
+
+  test('503 with db "down" when it does not, or when the check itself throws', async () => {
+    for (const check of [async () => false, async () => { throw new Error('boom'); }]) {
+      const srv = await appWith(check);
+      try {
+        const res = await get(srv.base, '/api/health');
+        assert.equal(res.status, 503);
+        assert.equal(res.headers.get('cache-control'), 'no-store');
+        assert.equal(await res.text(), '{"status":"degraded","db":"down"}');
+      } finally {
+        await srv.close();
+      }
+    }
+  });
+
+  test('a down database is not reported as an error, and /api/health/live still says 200', async () => {
+    const reported = [];
+    const app = await createApp({
+      root: ROOT, scheduler: false, log: quiet, env: { ...process.env },
+      dbCheck: async () => false, report: async (err) => { reported.push(err); }
+    });
+    const srv = await listen(app.handle);
+    try {
+      assert.equal((await get(srv.base, '/api/health')).status, 503);
+      const live = await get(srv.base, '/api/health/live');
+      assert.equal(live.status, 200);
+      assert.deepEqual(await live.json(), { ok: true });
+      await new Promise((r) => setTimeout(r, 20));
+      assert.equal(reported.length, 0);
+    } finally {
+      await srv.close();
+    }
+  });
+
+  test('the check is one SELECT 1: up when it answers, down on an error, no pool or a hang', async () => {
+    const asked = [];
+    assert.equal(await databaseUp({ pool: { query: async (q) => { asked.push(q); return { rows: [] }; } }, log: quiet }), true);
+    assert.deepEqual(asked, ['SELECT 1']);
+    assert.equal(await databaseUp({ pool: { query: async () => { throw new Error('ECONNREFUSED'); } }, log: quiet }), false);
+    assert.equal(await databaseUp({ pool: null, log: quiet }), false);
+    const started = Date.now();
+    assert.equal(await databaseUp({ pool: { query: () => new Promise(() => {}) }, timeoutMs: 50, log: quiet }), false);
+    assert.ok(Date.now() - started < 1000);
   });
 });
 
